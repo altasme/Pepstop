@@ -13,24 +13,24 @@ export default function HealthBeauty() {
   return (
     <>
       <Seo path="/health-beauty" />
-      <PageBanner eyebrow={HEALTH_BEAUTY.bannerEyebrow} title={HEALTH_BEAUTY.bannerTitle} body={HEALTH_BEAUTY.bannerBody} />
+      <PageBanner title={HEALTH_BEAUTY.bannerTitle} body={HEALTH_BEAUTY.bannerBody} />
       <div className="mx-auto max-w-page px-4 sm:px-6 lg:px-8">
         {areas.map((a, i) => {
           const related = getArticlesForFocusArea(a.id);
           return (
-            <section key={a.id} id={a.id} className="scroll-mt-28 border-b border-magenta-deep/10 py-14 last:border-0 md:py-20">
+            <section key={a.id} id={a.id} className="scroll-mt-28 border-b border-ink/10 py-14 last:border-0 md:py-20">
               <Reveal>
                 <div className={`grid items-center gap-8 md:grid-cols-2 md:gap-14 ${i % 2 === 1 ? "md:[&>*:first-child]:order-2" : ""}`}>
                   <SlotImage slot="focus" src={a.image} label={a.title} alt="" sizes="(min-width: 768px) 45vw, 90vw" />
                   <div>
-                    <h2 className="font-heading text-h2 font-semibold text-magenta-deep">{a.title}</h2>
-                    <p className="mt-4 text-lg text-charcoal">{a.summary}</p>
+                    <h2 className="font-sans text-h2 font-semibold text-ink">{a.title}</h2>
+                    <p className="mt-4 text-lg text-ink">{a.summary}</p>
                     {related.length > 0 && (
                       <div className="mt-6">
-                        <h3 className="text-sm font-semibold uppercase tracking-[0.14em] text-rose-ink">{HEALTH_BEAUTY.relatedLabel}</h3>
+                        <h3 className="text-sm font-semibold text-mute">{HEALTH_BEAUTY.relatedLabel}</h3>
                         <ul className="mt-2">
                           {related.map((r) => (
-                            <li key={r.slug}><Link to={`/education/${r.slug}`} className="inline-flex min-h-11 items-center font-semibold text-magenta underline underline-offset-4 hover:text-magenta-deep">{r.title}</Link></li>
+                            <li key={r.slug}><Link to={`/education/${r.slug}`} className="inline-flex min-h-11 items-center font-semibold text-raspberry underline underline-offset-4 hover:text-ink">{r.title}</Link></li>
                           ))}
                         </ul>
                       </div>

@@ -1,7 +1,7 @@
 # HANDOVER: The Pep Stop · Phase 1 (Public Website)
 
 **Built by:** Altaventures Business Development Services
-**Handover date:** 2026-11-11 · **Spec version built:** v1.4 (storefront added per client direction; logo and palette applied)
+**Handover date:** 2026-11-11 · **Spec version built:** v1.5 (storefront added per client direction; logo and palette applied)
 **Preview URL:** https://pepstop.vanamaranto1.workers.dev (deployed 2026-11-11, noindex) · **Live URL:** not live: gates open · **Repo:** altasme/pepstop
 
 ## 1. What was delivered
@@ -34,6 +34,11 @@
 - **Fallback deploy:** `npm run deploy:inline` embeds `dist/` in one Worker script (`scripts/deploy-inline.mjs`) and deploys it with the same routes, 404 page, trailing-slash rule and `_headers`. It was used for the first deploy because the static assets upload step was rejected (401) inside the build sandbox, where a proxy rewrites the upload token. From a normal machine use `npm run deploy`; the next static-assets deploy replaces the inline script.
 - Git-connected builds (Workers Builds): build command `npm run build`, deploy command `npx wrangler deploy`. No runtime secrets. Node 20 or later.
 - Headers come from `public/_headers` (supported by Workers static assets). Custom domain: add it under the Worker, Settings, Domains and Routes.
+
+## 2.5 Design system (v1.5 redesign)
+- Standard premium beauty store, Glossier and Rare Beauty as craft bar. White ground, ink text, raspberry for action, petal panels, hairlines. Hanken Grotesk only. Flat placeholders (hairline, diagonal cross) state canvas size, aspect ratio and type. Home: announcement bar, hero, shop by category, featured range, curated statement, how ordering works, education (hidden until an article is published), raspberry contact band.
+- Direction contract: `.impeccable/surfaces/`. Design record: `DESIGN.md`. Product record: `PRODUCT.md`.
+- Slop removed: cream gradients, gold arcs, serif display, eyebrow labels, icon-on-card grids, shadowed floating cards, hover lift. `impeccable detect` reports no findings on `src`.
 
 ## 3. Where to edit content
 - Copy and config: `src/content/site.ts`. Articles: `src/content/articles.ts`. Read through `src/content/getContent.ts`.

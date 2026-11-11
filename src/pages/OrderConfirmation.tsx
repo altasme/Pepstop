@@ -46,30 +46,30 @@ export default function OrderConfirmation() {
       <PageBanner title={CONFIRMATION.title} body={CONFIRMATION.lead} />
       <section className="mx-auto grid max-w-page gap-8 px-4 py-12 sm:px-6 md:py-16 lg:grid-cols-[1fr_24rem] lg:items-start lg:px-8">
         <Card>
-          <p className="text-sm text-charcoal/80">{CONFIRMATION.reference}</p>
-          <p className="font-heading text-h3 font-semibold text-magenta-deep">{order.ref}</p>
-          <ul className="mt-4 divide-y divide-magenta-deep/10">
+          <p className="text-sm text-ink/80">{CONFIRMATION.reference}</p>
+          <p className="font-sans text-h3 font-semibold text-ink">{order.ref}</p>
+          <ul className="mt-4 divide-y divide-ink/10">
             {order.lines.map((l) => (
               <li key={`${l.name}-${l.variant}`} className="flex justify-between gap-3 py-3 text-sm">
-                <span>{l.name}, {l.variant} <span className="text-charcoal/70">x {l.qty}</span></span>
+                <span>{l.name}, {l.variant} <span className="text-ink/70">x {l.qty}</span></span>
                 <span className="font-semibold tabular-nums">{formatPhp(l.lineTotal)}</span>
               </li>
             ))}
           </ul>
-          <dl className="mt-3 space-y-1 border-t border-magenta-deep/10 pt-3 text-charcoal">
+          <dl className="mt-3 space-y-1 border-t border-ink/10 pt-3 text-ink">
             <div className="flex justify-between"><dt>{CART.shipping}</dt><dd className="text-sm">{CART.shippingTbc}</dd></div>
-            <div className="flex justify-between text-lg"><dt className="font-semibold text-magenta-deep">{CART.total}</dt><dd className="font-semibold tabular-nums">{formatPhp(order.subtotal)}</dd></div>
+            <div className="flex justify-between text-lg"><dt className="font-semibold text-ink">{CART.total}</dt><dd className="font-semibold tabular-nums">{formatPhp(order.subtotal)}</dd></div>
           </dl>
-          <dl className="mt-6 grid gap-3 text-sm text-charcoal sm:grid-cols-2">
-            <div><dt className="font-semibold text-magenta-deep">{CONFIRMATION.contactLabel}</dt><dd>{order.customer.fullName}<br />{order.customer.mobile}{order.customer.email && <><br />{order.customer.email}</>}</dd></div>
-            <div><dt className="font-semibold text-magenta-deep">{CONFIRMATION.deliverTo}</dt><dd>{addressLine(order.customer)}</dd></div>
-            <div><dt className="font-semibold text-magenta-deep">{CONFIRMATION.payWith}</dt><dd>{paymentLabel(order.customer.payment)}</dd></div>
-            {order.customer.notes && <div><dt className="font-semibold text-magenta-deep">{CHECKOUT.notesTitle}</dt><dd>{order.customer.notes}</dd></div>}
+          <dl className="mt-6 grid gap-3 text-sm text-ink sm:grid-cols-2">
+            <div><dt className="font-semibold text-ink">{CONFIRMATION.contactLabel}</dt><dd>{order.customer.fullName}<br />{order.customer.mobile}{order.customer.email && <><br />{order.customer.email}</>}</dd></div>
+            <div><dt className="font-semibold text-ink">{CONFIRMATION.deliverTo}</dt><dd>{addressLine(order.customer)}</dd></div>
+            <div><dt className="font-semibold text-ink">{CONFIRMATION.payWith}</dt><dd>{paymentLabel(order.customer.payment)}</dd></div>
+            {order.customer.notes && <div><dt className="font-semibold text-ink">{CHECKOUT.notesTitle}</dt><dd>{order.customer.notes}</dd></div>}
           </dl>
         </Card>
         <Card>
-          <h2 className="font-heading text-h3 font-semibold text-magenta-deep">{CONFIRMATION.sendTitle}</h2>
-          <p className="mt-2 text-sm text-charcoal">{CONFIRMATION.stubNote}</p>
+          <h2 className="font-sans text-h3 font-semibold text-ink">{CONFIRMATION.sendTitle}</h2>
+          <p className="mt-2 text-sm text-ink">{CONFIRMATION.stubNote}</p>
           <div className="mt-5 flex flex-col gap-3">
             <Button variant="secondary" onClick={copy}>
               {copied ? <Check className="h-5 w-5" aria-hidden="true" /> : <Copy className="h-5 w-5" aria-hidden="true" />}

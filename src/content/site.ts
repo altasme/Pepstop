@@ -193,25 +193,28 @@ export const MEDIA = {
 /* ------------------------------------------------------------------ */
 
 export const HOME = {
+  announcement: "Order by message or phone. Every order is confirmed by a person.",
   heroTitle: "Your destination for wellness, beauty, and informed self-care.",
   heroSupport: "The Pep Stop is a health and beauty brand built on clear information and attentive service.",
-  heroSecondary: { label: "Explore Health & Beauty", to: "/health-beauty" },
-  introEyebrow: "Welcome",
-  introTitle: "Care that starts with clear information.",
-  focusEyebrow: "What we focus on",
-  focusTitle: "Three areas, one approach.",
-  focusLink: "Learn more",
-  educationEyebrow: "Wellness Education",
-  educationTitle: "Learn at your own pace.",
-  educationAll: "See all articles",
-  valuesEyebrow: "How we work",
-  valuesTitle: "What we stand for.",
-  featuredEyebrow: "The Shop",
-  featuredTitle: "Featured products.",
+  heroShop: { label: "Shop the range", to: "/shop" },
+  categoriesTitle: "Shop by category",
+  categoryLink: "View range",
+  featuredTitle: "A small range, chosen with care.",
   featuredAll: "Shop all products",
-  trustEyebrow: "Shopping with us",
-  trustTitle: "A shop run by people you can talk to.",
-  contactTitle: "Have a question? Reach us directly.",
+  curatedTitle: "Fewer products. Better answers.",
+  curatedBody:
+    "We keep the range short and choose every product ourselves, so you spend less time comparing and more time asking the one question that matters. Message or call and we will talk it through with you.",
+  curatedLink: { label: "About The Pep Stop", to: "/about" },
+  howTitle: "How ordering works",
+  howSteps: [
+    { title: "Choose", body: "Add what you like to your cart and enter your delivery details at checkout." },
+    { title: "Send", body: "Your order summary opens ready to send by text, call, or message. No payment is taken on this website." },
+    { title: "Confirm", body: "We confirm availability, shipping, and payment with you personally." },
+  ],
+  approachTitle: "How we work",
+  educationTitle: "Learn at your own pace",
+  educationAll: "See all articles",
+  contactTitle: "Questions before you buy? Ask a person.",
   contactBody: "We reply to every message and pick up every call we can.",
 };
 
@@ -306,6 +309,7 @@ export const ABOUT = {
   missionTitle: "Our mission",
   visionTitle: "Our vision",
   draftNote: "Draft copy, pending review by The Pep Stop.",
+  valuesTitle: "What we stand for",
   philosophyTitle: "Our philosophy",
   philosophy: [
     "Self-care works best when it is understood. We put clear, general information first, so the choices you make are your own and made with confidence.",

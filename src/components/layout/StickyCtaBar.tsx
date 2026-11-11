@@ -16,9 +16,9 @@ export function StickyCtaBar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, [pathname]);
 
-  if (STICKY_CTA_HIDDEN_ON.includes(pathname) || !past) return null;
+  if (STICKY_CTA_HIDDEN_ON.includes(pathname) || pathname.startsWith("/shop/") || !past) return null;
   return (
-    <div className="fixed inset-x-0 bottom-0 z-30 border-t border-magenta-deep/10 bg-ivory/95 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 shadow-[0_-8px_24px_-12px_rgba(122,2,32,.25)] backdrop-blur md:hidden">
+    <div className="fixed inset-x-0 bottom-0 z-30 border-t border-ink/10 bg-white/95 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 shadow-[0_-8px_24px_-16px_rgba(26,18,23,.3)] backdrop-blur md:hidden">
       <CtaButton
         channel={{ kind: primaryCta.kind, href: primaryCta.href, icon: primaryCta.kind === "messenger" ? "messenger" : "phone", external: primaryCta.kind === "messenger" }}
         label={primaryCta.label}

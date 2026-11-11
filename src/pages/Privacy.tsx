@@ -20,16 +20,16 @@ export default function Privacy() {
     <>
       <Seo path="/privacy" />
       {LEGAL.privacyStatus === "draft" && (
-        <div role="note" className="bg-rose-ink px-4 py-3 text-center text-sm font-semibold text-white">{PRIVACY.banner}</div>
+        <div role="note" className="bg-raspberry px-4 py-3 text-center text-sm font-semibold text-white">{PRIVACY.banner}</div>
       )}
       <article className="mx-auto max-w-prose px-4 py-12 sm:px-6 md:py-20">
-        <h1 className="font-heading text-h1 font-semibold text-magenta-deep">{PRIVACY.title}</h1>
-        <p className="mt-2 text-sm text-charcoal/80">{PRIVACY.updated} {formatDate(LEGAL.updatedAt)}</p>
-        <p className="mt-6 text-lg text-charcoal">{PRIVACY.lead}</p>
+        <h1 className="font-sans text-h1 font-semibold text-ink">{PRIVACY.title}</h1>
+        <p className="mt-2 text-sm text-ink/80">{PRIVACY.updated} {formatDate(LEGAL.updatedAt)}</p>
+        <p className="mt-6 text-lg text-ink">{PRIVACY.lead}</p>
         {PRIVACY.sections.map((s) => (
           <section key={s.id} className="mt-10">
-            <h2 className="font-heading text-h3 font-semibold text-magenta-deep">{s.title}</h2>
-            <div className="mt-3 space-y-4 text-charcoal">{s.body.map((p) => <p key={p}>{fill(p)}</p>)}</div>
+            <h2 className="font-sans text-h3 font-semibold text-ink">{s.title}</h2>
+            <div className="mt-3 space-y-4 text-ink">{s.body.map((p) => <p key={p}>{fill(p)}</p>)}</div>
           </section>
         ))}
       </article>

@@ -57,7 +57,7 @@ export function MobileNav({ open, onClose }: { open: boolean; onClose: () => voi
       role="dialog"
       aria-modal="true"
       aria-label={UI.menuTitle}
-      className="on-dark fixed inset-0 z-50 flex flex-col overflow-y-auto bg-magenta-deep px-4 pb-8 pt-4 text-white sm:px-6 lg:hidden"
+      className="on-dark fixed inset-0 z-50 flex flex-col overflow-y-auto bg-ink px-4 pb-8 pt-3 text-white sm:px-6 lg:hidden"
     >
       <div className="flex items-center justify-between">
         <Logo onDark />
@@ -72,7 +72,7 @@ export function MobileNav({ open, onClose }: { open: boolean; onClose: () => voi
               <NavLink
                 to={item.to}
                 end={item.to === "/"}
-                className={({ isActive }) => `flex min-h-14 items-center font-heading text-3xl font-semibold ${isActive ? "text-gold" : "text-white"}`}
+                className={({ isActive }) => `flex min-h-14 items-center text-3xl font-semibold tracking-tight ${isActive ? "text-gold" : "text-white"}`}
               >
                 {item.label}
               </NavLink>

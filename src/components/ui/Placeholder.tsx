@@ -1,10 +1,9 @@
 import { IMAGE_SLOTS, UI, type ImageSlotKey } from "../../content/site";
 import { aspectRatioLabel, orientationLabel } from "../../lib/media";
-import { ArcMotif } from "./ArcMotif";
 
 type Props = {
   slot: ImageSlotKey;
-  /** Overrides the slot label, for example the focus area title. */
+  /** Overrides the slot label, for example a product name. */
   label?: string;
   className?: string;
   /** Hides the art direction line on small tiles. */
@@ -12,8 +11,8 @@ type Props = {
 };
 
 /**
- * Registered image placeholder (CLAUDE.md §2.1). States canvas size, aspect ratio and image type so
- * the correct asset can be supplied. Looks like a placeholder on purpose; no image is generated.
+ * Registered image placeholder (CLAUDE.md section 2.1). States canvas size, aspect ratio and image type so
+ * the correct asset can be supplied. Flat, hairline, unmistakably a placeholder; no image is generated.
  */
 export function Placeholder({ slot, label, className = "", compact = false }: Props) {
   const s = IMAGE_SLOTS[slot];
@@ -26,19 +25,21 @@ export function Placeholder({ slot, label, className = "", compact = false }: Pr
       role="img"
       aria-label={aria}
       style={{ aspectRatio: `${s.width} / ${s.height}` }}
-      className={`relative flex w-full flex-col items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-rose-ink/50 bg-gradient-to-br from-blush via-ivory to-blush p-4 text-center ${className}`}
+      className={`relative flex w-full flex-col justify-end overflow-hidden rounded-xl bg-petal p-3 text-left sm:p-4 ${className}`}
     >
-      <ArcMotif className="pointer-events-none absolute inset-x-0 bottom-0 mx-auto w-3/4 max-w-xs opacity-80" />
-      <span className="relative mb-2 rounded-full bg-magenta-deep px-2.5 py-0.5 text-xs font-semibold tracking-wide text-white">
-        {s.ph} · {UI.placeholderTag}
-      </span>
-      <span className="relative font-heading text-xl font-semibold leading-tight text-magenta-deep sm:text-2xl">{name}</span>
-      <dl className="relative mt-2 space-y-0.5 text-sm text-charcoal">
-        <div><dt className="sr-only">Canvas size</dt><dd className="font-semibold">{s.width} × {s.height} px</dd></div>
-        <div><dt className="sr-only">Aspect ratio</dt><dd>{ratio} {orientation}</dd></div>
-        <div><dt className="sr-only">Image type</dt><dd>{s.format}</dd></div>
-      </dl>
-      {!compact && <p className="relative mt-3 hidden max-w-xs text-xs leading-snug text-charcoal/80 md:block">{s.direction}</p>}
+      <svg aria-hidden="true" focusable="false" className="absolute inset-0 h-full w-full text-raspberry/20" preserveAspectRatio="none" viewBox="0 0 100 100">
+        <line x1="0" y1="0" x2="100" y2="100" stroke="currentColor" strokeWidth="0.4" vectorEffect="non-scaling-stroke" />
+        <line x1="100" y1="0" x2="0" y2="100" stroke="currentColor" strokeWidth="0.4" vectorEffect="non-scaling-stroke" />
+      </svg>
+      <span className="absolute left-3 top-3 whitespace-nowrap rounded-full bg-ink px-2.5 py-1 text-xs font-semibold text-white sm:left-4 sm:top-4">{compact ? s.ph : `${s.ph} · ${UI.placeholderTag}`}</span>
+      <div className="relative rounded-lg bg-white p-2.5 sm:p-3">
+        <p className="text-sm font-semibold leading-tight text-ink sm:text-base">{name}</p>
+        <dl className="mt-1 text-xs leading-snug text-mute sm:text-sm">
+          <div className="flex flex-wrap gap-x-2"><dt className="sr-only">Canvas size</dt><dd className="font-semibold text-ink">{s.width} × {s.height} px</dd><dt className="sr-only">Aspect ratio</dt><dd>{ratio} {orientation}</dd></div>
+          <div><dt className="sr-only">Image type</dt><dd>{s.format}</dd></div>
+        </dl>
+        {!compact && <p className="mt-2 hidden text-xs leading-snug text-mute md:block">{s.direction}</p>}
+      </div>
     </div>
   );
 }

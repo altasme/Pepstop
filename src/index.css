@@ -1,69 +1,83 @@
-@import "@fontsource/cormorant-garamond/500.css";
-@import "@fontsource/cormorant-garamond/600.css";
-@import "@fontsource/dm-sans/400.css";
-@import "@fontsource/dm-sans/500.css";
-@import "@fontsource/dm-sans/600.css";
+@import "@fontsource/hanken-grotesk/latin-400.css";
+@import "@fontsource/hanken-grotesk/latin-500.css";
+@import "@fontsource/hanken-grotesk/latin-600.css";
+@import "@fontsource/hanken-grotesk/latin-700.css";
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --magenta: #c30239;
-  --magenta-deep: #7a0220;
-  --rose: #f0829f;
-  --rose-ink: #b3103f;
+  --ink: #1a1217;
+  --raspberry: #c30239;
+  --raspberry-deep: #7a0220;
+  --petal: #fdeff2;
+  --mute: #675a61;
+  --line: #ebdde2;
   --gold: #ecb86c;
-  --gold-ink: #7a5712;
-  --ivory: #fffaf4;
-  --blush: #fbeaef;
-  --charcoal: #2a2227;
 }
 
 @layer base {
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
+    scrollbar-color: var(--raspberry) var(--petal);
+    scrollbar-width: thin;
   }
   body {
-    @apply bg-ivory font-body text-base text-charcoal antialiased;
+    @apply bg-white font-sans text-base text-ink antialiased;
     overflow-x: hidden;
+    font-feature-settings: "tnum" 1, "ss01" 1;
+    text-wrap: pretty;
+  }
+  h1, h2, h3 {
+    text-wrap: balance;
   }
   :focus-visible {
-    outline: 2px solid var(--magenta-deep);
-    outline-offset: 2px;
+    outline: 2px solid var(--ink);
+    outline-offset: 3px;
+    border-radius: 4px;
   }
   .on-dark :focus-visible {
     outline-color: var(--gold);
   }
   ::selection {
-    background: var(--blush);
-    color: var(--magenta-deep);
+    background: var(--raspberry);
+    color: #fff;
   }
+  input, textarea, select {
+    caret-color: var(--raspberry);
+  }
+  input[type="checkbox"], input[type="radio"] {
+    accent-color: var(--raspberry);
+  }
+  a {
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 1px;
+  }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: var(--petal); }
+  ::-webkit-scrollbar-thumb { background: var(--raspberry); border-radius: 999px; border: 2px solid var(--petal); }
 }
 
+@layer utilities {
+  .hide-scroll { scrollbar-width: none; }
+  .hide-scroll::-webkit-scrollbar { display: none; }
+}
+
+/* One authored motion: sections rise into place once, from a visible default. */
 .reveal-hidden {
   opacity: 0;
-  transform: translateY(14px);
+  transform: translateY(18px);
 }
 .reveal-shown {
   opacity: 1;
   transform: none;
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transition: opacity 0.7s var(--ease, cubic-bezier(0.22, 1, 0.36, 1)), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-  .reveal-hidden,
-  .reveal-shown {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
-  * {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
+  html { scroll-behavior: auto; }
+  .reveal-hidden, .reveal-shown { opacity: 1; transform: none; transition: none; }
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }

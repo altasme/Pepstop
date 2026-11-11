@@ -8,20 +8,19 @@ import { SlotImage } from "./SlotImage";
 export function ProductCard({ product }: { product: Product }) {
   const avail = SHOP.availability[product.status === "unavailable" ? "unavailable" : product.availability];
   return (
-    <Link
-      to={`/shop/${product.slug}`}
-      className="group flex h-full flex-col overflow-hidden rounded-2xl bg-white p-3 shadow-soft ring-1 ring-magenta-deep/5 transition-transform duration-200 hover:-translate-y-1"
-    >
-      <SlotImage slot="product" src={product.image} label={product.name} alt={product.name} sizes="(min-width: 1024px) 22vw, (min-width: 640px) 45vw, 90vw" compact />
-      <div className="flex flex-1 flex-col p-3 pt-4">
-        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-rose-ink">{getCategoryName(product.categoryId)}</p>
-        <h3 className="mt-1 font-heading text-2xl font-semibold leading-tight text-magenta-deep">{product.name}</h3>
-        {product.shortDescription && <p className="mt-1 text-sm text-charcoal">{product.shortDescription}</p>}
-        <div className="mt-auto flex flex-wrap items-center justify-between gap-2 pt-4">
-          <span className="font-semibold text-charcoal">{priceLabel(product)}</span>
-          <span className="text-sm text-charcoal/80">{avail}</span>
-        </div>
-        {product.isSample && <span className="mt-2 inline-block w-fit rounded-full bg-gold-ink px-2.5 py-0.5 text-xs font-semibold text-white">{SHOP.sampleBadge}</span>}
+    <Link to={`/shop/${product.slug}`} className="group flex h-full flex-col">
+      <div className="relative overflow-hidden rounded-xl">
+        <SlotImage slot="product" src={product.image} alt={product.name} sizes="(min-width: 1024px) 22vw, 45vw" compact className="transition-transform duration-500 ease-out group-hover:scale-[1.03]" />
+        {product.isSample && <span className="absolute right-3 top-3 rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-ink">{SHOP.sampleBadge}</span>}
+      </div>
+      <div className="mt-3 flex flex-1 flex-col">
+        <p className="text-sm text-mute">{getCategoryName(product.categoryId)}</p>
+        <h3 className="mt-0.5 text-base font-semibold leading-snug text-ink group-hover:underline sm:text-lg">{product.name}</h3>
+        {product.shortDescription && <p className="mt-1 text-sm text-mute">{product.shortDescription}</p>}
+        <p className="mt-2 flex flex-wrap items-baseline justify-between gap-x-3 text-sm">
+          <span className="font-semibold text-ink">{priceLabel(product)}</span>
+          <span className="text-mute">{avail}</span>
+        </p>
       </div>
     </Link>
   );

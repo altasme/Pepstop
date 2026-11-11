@@ -5,9 +5,8 @@ import { Seo } from "../lib/seo";
 import { useCart } from "../lib/cart";
 import { formatPhp } from "../lib/format";
 import { buildOrder, submitOrder, type Customer } from "../lib/orders";
-import { PageBanner } from "../components/sections/PageBanner";
+import { SectionHeading } from "../components/ui/SectionHeading";
 import { Button } from "../components/ui/Button";
-import { Card } from "../components/ui/Card";
 
 type Errors = Partial<Record<keyof Customer | "consent", string>>;
 const empty: Customer = { fullName: "", mobile: "", email: "", street: "", barangay: "", city: "", province: "", postal: "", notes: "", payment: "" };
@@ -33,13 +32,13 @@ function Field({ id, value, error, onChange, label, hint, type = "text", autoCom
     "aria-invalid": error ? true : undefined,
     "aria-describedby": [hint ? `${id}-hint` : "", error ? `${id}-err` : ""].filter(Boolean).join(" ") || undefined,
   };
-  const cls = `w-full rounded-xl border bg-white px-4 py-3 text-base text-charcoal ${error ? "border-rose-ink" : "border-charcoal/30"}`;
+  const cls = `w-full rounded-xl border bg-white px-4 py-3 text-base text-ink ${error ? "border-raspberry" : "border-line"}`;
   return (
     <div>
-      <label htmlFor={id} className="mb-1 block text-sm font-semibold text-magenta-deep">{label}</label>
+      <label htmlFor={id} className="mb-1 block text-sm font-semibold text-ink">{label}</label>
       {multiline ? <textarea {...common} rows={3} maxLength={500} className={cls} /> : <input {...common} type={type} className={`${cls} min-h-12`} />}
-      {hint && <p id={`${id}-hint`} className="mt-1 text-sm text-charcoal/80">{hint}</p>}
-      {error && <p id={`${id}-err`} className="mt-1 text-sm font-semibold text-rose-ink">{error}</p>}
+      {hint && <p id={`${id}-hint`} className="mt-1 text-sm text-ink/80">{hint}</p>}
+      {error && <p id={`${id}-err`} className="mt-1 text-sm font-semibold text-raspberry">{error}</p>}
     </div>
   );
 }
@@ -74,9 +73,9 @@ export default function Checkout() {
     return (
       <>
         <Seo path="/checkout" noindex />
-        <PageBanner title={CHECKOUT.title} />
+        <section className="mx-auto max-w-page px-4 pt-10 sm:px-6 md:pt-14 lg:px-8"><SectionHeading as="h1" title={CHECKOUT.title} /></section>
         <section className="mx-auto max-w-prose px-4 py-16 text-center">
-          <p className="font-heading text-h3 font-semibold text-magenta-deep">{CHECKOUT.emptyTitle}</p>
+          <p className="text-h3 font-semibold text-ink">{CHECKOUT.emptyTitle}</p>
           <div className="mt-6"><Button to="/shop">{CART.continue}</Button></div>
         </section>
       </>
@@ -87,13 +86,13 @@ export default function Checkout() {
   return (
     <>
       <Seo path="/checkout" noindex />
-      <PageBanner title={CHECKOUT.title} body={CHECKOUT.bannerBody} />
-      <section className="mx-auto max-w-page px-4 py-12 sm:px-6 md:py-16 lg:px-8">
+      <section className="mx-auto max-w-page px-4 pt-10 sm:px-6 md:pt-14 lg:px-8"><SectionHeading as="h1" title={CHECKOUT.title} /><p className="mt-4 max-w-prose text-lg text-ink/80">{CHECKOUT.bannerBody}</p></section>
+      <section className="mx-auto max-w-page px-4 pb-20 pt-8 sm:px-6 md:pt-10 lg:px-8">
         <form onSubmit={onSubmit} noValidate className="grid gap-8 lg:grid-cols-[1fr_24rem] lg:items-start">
           <div className="space-y-8">
-            {errCount > 0 && <p role="alert" className="rounded-xl bg-rose-ink px-4 py-3 text-sm font-semibold text-white">{CHECKOUT.errors.summary}</p>}
+            {errCount > 0 && <p role="alert" className="rounded-lg bg-raspberry px-4 py-3 text-sm font-semibold text-white">{CHECKOUT.errors.summary}</p>}
             <fieldset className="space-y-4">
-              <legend className="mb-2 font-heading text-h3 font-semibold text-magenta-deep">{CHECKOUT.contactTitle}</legend>
+              <legend className="mb-2 text-h3 font-semibold text-ink">{CHECKOUT.contactTitle}</legend>
               {F("fullName", { label: CHECKOUT.fields.fullName, autoComplete: "name" })}
               <div className="grid gap-4 sm:grid-cols-2">
                 {F("mobile", { label: CHECKOUT.fields.mobile, hint: CHECKOUT.fields.mobileHint, type: "tel", autoComplete: "tel" })}
@@ -101,7 +100,7 @@ export default function Checkout() {
               </div>
             </fieldset>
             <fieldset className="space-y-4">
-              <legend className="mb-2 font-heading text-h3 font-semibold text-magenta-deep">{CHECKOUT.addressTitle}</legend>
+              <legend className="mb-2 text-h3 font-semibold text-ink">{CHECKOUT.addressTitle}</legend>
               {F("street", { label: CHECKOUT.fields.street, autoComplete: "address-line1" })}
               <div className="grid gap-4 sm:grid-cols-2">
                 {F("barangay", { label: CHECKOUT.fields.barangay, autoComplete: "address-line2" })}
@@ -111,43 +110,43 @@ export default function Checkout() {
               </div>
             </fieldset>
             <fieldset aria-describedby="pay-note">
-              <legend className="mb-2 font-heading text-h3 font-semibold text-magenta-deep">{CHECKOUT.paymentTitle}</legend>
+              <legend className="mb-2 text-h3 font-semibold text-ink">{CHECKOUT.paymentTitle}</legend>
               <div className="grid gap-3 sm:grid-cols-2">
                 {PAYMENT_METHODS.filter((m) => m.enabled).map((m) => (
-                  <label key={m.id} className={`flex min-h-12 cursor-pointer items-center gap-3 rounded-xl border bg-white px-4 py-3 ${c.payment === m.id ? "border-magenta ring-2 ring-magenta" : "border-charcoal/30"}`}>
-                    <input id={`pay-${m.id}`} type="radio" name="payment" value={m.id} checked={c.payment === m.id} onChange={() => set("payment")(m.id)} className="h-5 w-5 accent-magenta" />
+                  <label key={m.id} className={`flex min-h-12 cursor-pointer items-center gap-3 rounded-xl border bg-white px-4 py-3 ${c.payment === m.id ? "border-ink ring-1 ring-ink" : "border-line"}`}>
+                    <input id={`pay-${m.id}`} type="radio" name="payment" value={m.id} checked={c.payment === m.id} onChange={() => set("payment")(m.id)} className="h-5 w-5 accent-raspberry" />
                     <span className="font-semibold">{m.label}</span>
                   </label>
                 ))}
               </div>
-              {errors.payment && <p className="mt-2 text-sm font-semibold text-rose-ink">{errors.payment}</p>}
-              <p id="pay-note" className="mt-3 text-sm text-charcoal/80">{CHECKOUT.paymentNote}</p>
+              {errors.payment && <p className="mt-2 text-sm font-semibold text-raspberry">{errors.payment}</p>}
+              <p id="pay-note" className="mt-3 text-sm text-ink/80">{CHECKOUT.paymentNote}</p>
             </fieldset>
             {F("notes", { label: CHECKOUT.fields.notes, hint: CHECKOUT.fields.notesHint, multiline: true })}
             <div>
               <label className="flex cursor-pointer items-start gap-3">
-                <input id="consent" type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} aria-invalid={errors.consent ? true : undefined} className="mt-1 h-5 w-5 shrink-0 accent-magenta" />
-                <span className="text-charcoal">{CHECKOUT.consent} <Link to="/privacy" className="font-semibold text-magenta underline underline-offset-4">{CHECKOUT.privacyLinkLabel}</Link>.</span>
+                <input id="consent" type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} aria-invalid={errors.consent ? true : undefined} className="mt-1 h-5 w-5 shrink-0 accent-raspberry" />
+                <span className="text-ink">{CHECKOUT.consent} <Link to="/privacy" className="font-semibold text-raspberry underline underline-offset-4">{CHECKOUT.privacyLinkLabel}</Link>.</span>
               </label>
-              {errors.consent && <p className="mt-1 text-sm font-semibold text-rose-ink">{errors.consent}</p>}
+              {errors.consent && <p className="mt-1 text-sm font-semibold text-raspberry">{errors.consent}</p>}
             </div>
           </div>
-          <Card className="lg:sticky lg:top-28">
-            <h2 className="font-heading text-h3 font-semibold text-magenta-deep">{CHECKOUT.summaryTitle}</h2>
-            <ul className="mt-4 divide-y divide-magenta-deep/10">
+          <aside className="rounded-xl bg-petal p-6 lg:sticky lg:top-28">
+            <h2 className="text-h3 font-semibold text-ink">{CHECKOUT.summaryTitle}</h2>
+            <ul className="mt-4 divide-y divide-ink/10">
               {lines.map((l) => (
                 <li key={`${l.productId}-${l.variantId}`} className="flex justify-between gap-3 py-3 text-sm">
-                  <span>{l.product.name}, {l.variant.label} <span className="text-charcoal/70">x {l.qty}</span></span>
+                  <span>{l.product.name}, {l.variant.label} <span className="text-ink/70">x {l.qty}</span></span>
                   <span className="font-semibold tabular-nums">{formatPhp(l.lineTotal)}</span>
                 </li>
               ))}
             </ul>
-            <dl className="mt-3 space-y-2 border-t border-magenta-deep/10 pt-3 text-charcoal">
+            <dl className="mt-3 space-y-2 border-t border-ink/10 pt-3 text-ink">
               <div className="flex justify-between"><dt>{CART.shipping}</dt><dd className="text-sm">{CART.shippingTbc}</dd></div>
-              <div className="flex justify-between text-lg"><dt className="font-semibold text-magenta-deep">{CART.total}</dt><dd className="font-semibold tabular-nums">{formatPhp(subtotal)}</dd></div>
+              <div className="flex justify-between text-lg"><dt className="font-semibold text-ink">{CART.total}</dt><dd className="font-semibold tabular-nums">{formatPhp(subtotal)}</dd></div>
             </dl>
             <Button submit className="mt-5 w-full">{CHECKOUT.place}</Button>
-          </Card>
+          </aside>
         </form>
       </section>
     </>

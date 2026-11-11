@@ -8,7 +8,7 @@ import { StickyCtaBar } from "./components/layout/StickyCtaBar";
 export default function Layout() {
   return (
     <CartProvider>
-      <a href="#main" className="sr-only z-50 rounded-full bg-magenta-deep px-4 py-2 text-white focus:not-sr-only focus:fixed focus:left-4 focus:top-4">
+      <a href="#main" className="sr-only z-50 rounded-full bg-ink px-4 py-2 text-white focus:not-sr-only focus:fixed focus:left-4 focus:top-4">
         {UI.skipToContent}
       </a>
       <Header />

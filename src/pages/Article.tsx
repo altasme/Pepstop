@@ -31,23 +31,23 @@ export default function Article() {
         noindex={!article.published}
       />
       <article className="mx-auto max-w-prose px-4 py-12 sm:px-6 md:py-20">
-        <Link to="/education" className="inline-flex min-h-11 items-center gap-2 font-semibold text-magenta hover:text-magenta-deep">
+        <Link to="/education" className="inline-flex min-h-11 items-center gap-2 font-semibold text-raspberry hover:text-ink">
           <ArrowLeft className="h-4 w-4" aria-hidden="true" />{EDUCATION.back}
         </Link>
-        {!article.published && <p className="mt-4 inline-block rounded-full bg-rose-ink px-3 py-1 text-xs font-semibold text-white">{UI.draftBadge}</p>}
-        <h1 className="mt-4 font-heading text-h1 font-semibold text-magenta-deep">{article.title}</h1>
-        <p className="mt-4 text-lg text-charcoal">{article.summary}</p>
-        <p className="mt-3 text-sm text-charcoal/80">{EDUCATION.updated} {formatDate(article.updatedAt)}</p>
-        <div className="mt-8 space-y-5 text-lg leading-relaxed text-charcoal">
+        {!article.published && <p className="mt-4 inline-block rounded-full bg-raspberry px-3 py-1 text-xs font-semibold text-white">{UI.draftBadge}</p>}
+        <h1 className="mt-4 font-sans text-h1 font-semibold text-ink">{article.title}</h1>
+        <p className="mt-4 text-lg text-ink">{article.summary}</p>
+        <p className="mt-3 text-sm text-ink/80">{EDUCATION.updated} {formatDate(article.updatedAt)}</p>
+        <div className="mt-8 space-y-5 text-lg leading-relaxed text-ink">
           {blocks.map((b) =>
             b.startsWith("## ") ? (
-              <h2 key={b} className="pt-4 font-heading text-h3 font-semibold text-magenta-deep">{b.slice(3)}</h2>
+              <h2 key={b} className="pt-4 font-sans text-h3 font-semibold text-ink">{b.slice(3)}</h2>
             ) : (
               <p key={b}>{b}</p>
             ),
           )}
         </div>
-        <Disclaimer text={UI.articleDisclaimer} className="mt-10 border-t border-magenta-deep/10 pt-6" />
+        <Disclaimer text={UI.articleDisclaimer} className="mt-10 border-t border-ink/10 pt-6" />
       </article>
       <ContactBlock />
     </>

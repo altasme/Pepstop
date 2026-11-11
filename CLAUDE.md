@@ -6,6 +6,7 @@
 > **Scope: Phase 1 only.** Static, prerendered, no backend, chat and phone conversion. Phase 2A (admin + catalog + inquiry form) and Phase 2B (COA directory) are reserved in §16. Do not build Phase 2 now.
 > **Content ownership:** Altaventures builds the platform. All product listings, descriptions, documents, COAs, and their regulatory status are entered and owned by The Pep Stop (§12, Appendix B.1).
 
+**v1.5 · 2026-11-11**: Visual redesign per client direction ("remove AI slop, premium, sophisticated, chic hybrid store"). Direction: the category standard played straight with Glossier and Rare Beauty as the craft bar. Fonts: Hanken Grotesk 400 to 700 (self-hosted latin subset) replaces Cormorant Garamond and DM Sans. Ground is white with petal #FDEFF2 panels and ink #1A1217; raspberry #C30239 is the action colour; gold #ECB86C survives only as a focus ring on dark. Tokens renamed (ink, raspberry, raspberry-deep, petal, mute, line, gold). Removed: ivory and blush gradients, gold arc motif, eyebrow labels, icon cards, serif display. Contrast re-measured: ink on white 18.38, mute on white 6.54, raspberry on white 6.20, white on raspberry 6.20, gold on ink 10.18. Where §6 differs, this entry wins.
 **v1.4 · 2026-11-11**: Hosting is Cloudflare Workers with static assets (`wrangler.jsonc`, `npm run deploy`), not Cloudflare Pages. Static output, no Worker script and no bindings. Wherever §1, §3, §14 or the handover template say Cloudflare Pages, read Workers static assets. The preview noindex rule now targets `*.workers.dev` in `public/_headers`.
 **v1.3 · 2026-11-11**: Logo received (★G2 closed). Palette re-measured from the logo: magenta #C30239, magenta-deep #7A0220, rose #F0829F, rose-ink #B3103F, gold #ECB86C, gold-ink #7A5712 (ivory, blush, charcoal unchanged). All text pairs in §6 pass WCAG AA; rose and gold remain decoration only on light backgrounds. Where the §6 hex values differ from this entry, this entry wins.
 **v1.2 · 2026-11-11**: Per client direction, the site is now a storefront as well as a brand site. Public `/shop`, `/shop/:slug`, `/cart`, `/checkout`, `/checkout/confirmation` are built front end only (`COMMERCE_MODE = "frontend"`: no payment collected, no backend, orders leave the browser by chat). The shop is linked in public navigation and the sitemap, superseding the unlisted `/catalog` rule for products. Products ship as labeled sample slots with no claims; the client supplies real data. Admin, database, COA directory and payment processing remain Phase 2. Where this entry conflicts with §0, §1, §4, §10 or §16, this entry wins.
@@ -168,7 +169,7 @@ public/
 The client delegated palette choice to Altaventures. On receipt of the logo, run the house two-pass extraction (32-step bucket clustering, then per-color RGB mask averaging), adjust magenta to the logo, and re-measure every pair.
 
 ```
---magenta:       #C30239   /* Primary: buttons, links, icons */
+--magenta:       #C30239   /* v1.5: now token "raspberry". Action colour */
 --magenta-deep:  #7A0220   /* Headings, footer, dark sections */
 --rose:          #F0829F   /* Secondary: fills and decorative only */
 --rose-ink:      #B3103F   /* Derived. The only pink allowed as text on light backgrounds */
