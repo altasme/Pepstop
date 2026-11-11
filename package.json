@@ -11,7 +11,8 @@
     "audit:content": "node scripts/audit.mjs",
     "deploy": "npm run build && wrangler deploy",
     "cf:preview": "npm run build && wrangler dev",
-    "cf:dry": "npm run build && wrangler deploy --dry-run"
+    "cf:dry": "npm run build && wrangler deploy --dry-run",
+    "deploy:inline": "npm run build && node scripts/deploy-inline.mjs && wrangler deploy --config .worker-inline/wrangler.jsonc"
   },
   "dependencies": {
     "@fontsource/cormorant-garamond": "^5.3.0",
