@@ -1,8 +1,8 @@
 # HANDOVER: The Pep Stop · Phase 1 (Public Website)
 
 **Built by:** Altaventures Business Development Services
-**Handover date:** 2026-11-11 · **Spec version built:** v1.3 (storefront added per client direction; logo and palette applied)
-**Preview URL:** not yet deployed (connect repo to Cloudflare Pages) · **Live URL:** not live: gates open · **Repo:** altasme/pepstop
+**Handover date:** 2026-11-11 · **Spec version built:** v1.4 (storefront added per client direction; logo and palette applied)
+**Preview URL:** not yet deployed (workers.dev URL appears after first `wrangler deploy`) · **Live URL:** not live: gates open · **Repo:** altasme/pepstop
 
 ## 1. What was delivered
 - Routes, all prerendered: `/`, `/about`, `/health-beauty`, `/education`, `/education/:slug` (published articles only; none published yet, so none generated), `/contact`, `/privacy`, `/404` plus `404.html`.
@@ -29,7 +29,10 @@
 
 ## 2. Run & deploy
 - Install `npm install` · Dev `npm run dev` · Build `npm run build` · Audit `npm run audit:content` (after build) · Types `npm run typecheck`
-- Cloudflare Pages, Git-connected, build command `npm run build`, output `dist`. No runtime secrets. Node 20 or later.
+- **Cloudflare Workers with static assets.** Config: `wrangler.jsonc` (worker name `pepstop`, assets `./dist`, `404-page` handling so unknown URLs get `404.html` with status 404, `drop-trailing-slash` so URLs match the canonical and sitemap form). There is no Worker script and no bindings; Phase 2A will add `main` plus D1 and R2 bindings here.
+- Deploy: `npm run deploy` (builds, then `wrangler deploy`). Dry run: `npm run cf:dry`. Local check on the Workers runtime: `npm run cf:preview`.
+- Git-connected builds (Workers Builds): build command `npm run build`, deploy command `npx wrangler deploy`. No runtime secrets. Node 20 or later.
+- Headers come from `public/_headers` (supported by Workers static assets). Custom domain: add it under the Worker, Settings, Domains and Routes.
 
 ## 3. Where to edit content
 - Copy and config: `src/content/site.ts`. Articles: `src/content/articles.ts`. Read through `src/content/getContent.ts`.
@@ -64,7 +67,7 @@
 - Tools: Cloudflare Web Analytics loads only when `ANALYTICS.cfBeaconToken` is set (★C8). Meta Pixel is not loaded; ID slot exists, public routes only. Conversion = outbound chat or call click. Events: `cta_*_click`, `article_view`, payloads `{ page, cta }` or `{ slug }` only. Events also dispatch a `pepstop:event` window event.
 
 ## 8. Accounts & infrastructure (pointers, never secrets)
-- Cloudflare Pages project: to be created, owner Altaventures
+- Cloudflare Worker `pepstop`: to be created, owner Altaventures (see §2 for the account-separation recommendation in Appendix C-15)
 - Cloudinary: cloud name not set · Repo: altasme/pepstop
 
 ## 9. Known limitations / conflicts noted
@@ -74,6 +77,7 @@
 - Nav button label: spec says "Message Us". While Messenger is hidden the primary CTA is the phone, so the button reads "Call Us" to stay truthful. It switches to "Message Us" when ★C3 is supplied.
 - `ORG.intro` is a two-item array instead of one string, to render the two paragraphs.
 - Article gained an optional `focusAreaId` to link articles to Health & Beauty sections.
+- The spec said Cloudflare Pages; deployment is Workers static assets per the client. Verified locally with `wrangler dev`: all routes return 200, unknown URLs return 404 with the branded page, `/shop/` redirects to `/shop`. Not yet verified on a live deploy: the `*.workers.dev` noindex header rule in `public/_headers`. Check with `curl -I` after the first deploy.
 - Vite 6 is used because `vite-react-ssg` requires Vite 6 or later.
 - The logo is a glossy, saturated raster badge. The site palette follows it, but the badge stays small in the header (44 to 56 px) with the name as live text beside it, because the lettering inside the badge is not legible at that size. The footer and mobile menu place it on an ivory circle so it reads on the dark background.
 - Not yet done (needs real devices or client input): tap test of every CTA on Android and iPhone, Lighthouse run on the deployed preview, client review.

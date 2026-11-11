@@ -6,6 +6,7 @@
 > **Scope: Phase 1 only.** Static, prerendered, no backend, chat and phone conversion. Phase 2A (admin + catalog + inquiry form) and Phase 2B (COA directory) are reserved in §16. Do not build Phase 2 now.
 > **Content ownership:** Altaventures builds the platform. All product listings, descriptions, documents, COAs, and their regulatory status are entered and owned by The Pep Stop (§12, Appendix B.1).
 
+**v1.4 · 2026-11-11**: Hosting is Cloudflare Workers with static assets (`wrangler.jsonc`, `npm run deploy`), not Cloudflare Pages. Static output, no Worker script and no bindings. Wherever §1, §3, §14 or the handover template say Cloudflare Pages, read Workers static assets. The preview noindex rule now targets `*.workers.dev` in `public/_headers`.
 **v1.3 · 2026-11-11**: Logo received (★G2 closed). Palette re-measured from the logo: magenta #C30239, magenta-deep #7A0220, rose #F0829F, rose-ink #B3103F, gold #ECB86C, gold-ink #7A5712 (ivory, blush, charcoal unchanged). All text pairs in §6 pass WCAG AA; rose and gold remain decoration only on light backgrounds. Where the §6 hex values differ from this entry, this entry wins.
 **v1.2 · 2026-11-11**: Per client direction, the site is now a storefront as well as a brand site. Public `/shop`, `/shop/:slug`, `/cart`, `/checkout`, `/checkout/confirmation` are built front end only (`COMMERCE_MODE = "frontend"`: no payment collected, no backend, orders leave the browser by chat). The shop is linked in public navigation and the sitemap, superseding the unlisted `/catalog` rule for products. Products ship as labeled sample slots with no claims; the client supplies real data. Admin, database, COA directory and payment processing remain Phase 2. Where this entry conflicts with §0, §1, §4, §10 or §16, this entry wins.
 **v1.1 · 2026-11-11**: Per Chief Alta: registration enforcement removed. Catalog is a client-managed CMS; regulatory compliance of listed content is the client's responsibility, recorded in the service agreement. Registration fields kept as optional display fields. Catalog ships empty; Altaventures does not author product, dosing, or protocol content. Appendix D (regulatory findings) removed.
@@ -104,7 +105,7 @@
 | Fonts | Self-hosted via `@fontsource`: Cormorant Garamond 500/600 (headings), DM Sans 400/500/600 (body) |
 | Icons | `lucide-react`, one stroke weight |
 | Media | Cloudinary (`f_auto,q_auto`, responsive `srcset`) |
-| Hosting | Cloudflare Pages, Git-connected from day one, static `dist/` |
+| Hosting | Cloudflare Workers static assets (`wrangler.jsonc`), Git-connected, static `dist/` |
 | Analytics | Cloudflare Web Analytics (cookieless) |
 
 Build output is a fully static `dist/` with no runtime secrets.
