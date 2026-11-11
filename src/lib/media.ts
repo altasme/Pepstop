@@ -4,11 +4,13 @@ const WIDTHS = [320, 480, 640, 800, 1024, 1280, 1600];
 
 /** Cloudinary delivery URL with automatic format and quality. Returns null until a cloud name is set. */
 export function cloudinaryUrl(publicId: string, width: number): string | null {
+  if (publicId.startsWith("/")) return publicId; // local asset in public/
   if (!MEDIA.cloudName) return null;
   return `https://res.cloudinary.com/${MEDIA.cloudName}/image/upload/f_auto,q_auto,w_${width}/${publicId}`;
 }
 
 export function cloudinarySrcSet(publicId: string, maxWidth: number): string | null {
+  if (publicId.startsWith("/")) return null;
   if (!MEDIA.cloudName) return null;
   return WIDTHS.filter((w) => w <= maxWidth)
     .map((w) => `${cloudinaryUrl(publicId, w)} ${w}w`)

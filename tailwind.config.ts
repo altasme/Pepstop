@@ -5,9 +5,9 @@ export default {
   theme: {
     extend: {
       colors: {
-        magenta: { DEFAULT: "#9C1A5E", deep: "#5E0F3A" },
-        rose: { DEFAULT: "#E68AAE", ink: "#A8395F" },
-        gold: { DEFAULT: "#C9A45C", ink: "#7D6128" },
+        magenta: { DEFAULT: "#C30239", deep: "#7A0220" },
+        rose: { DEFAULT: "#F0829F", ink: "#B3103F" },
+        gold: { DEFAULT: "#ECB86C", ink: "#7A5712" },
         ivory: "#FFFAF4",
         blush: "#FBEAEF",
         charcoal: "#2A2227",
@@ -24,7 +24,7 @@ export default {
       },
       maxWidth: { page: "72rem", prose: "40rem" },
       boxShadow: {
-        soft: "0 1px 2px rgba(94,15,58,.06), 0 12px 32px -12px rgba(94,15,58,.18)",
+        soft: "0 1px 2px rgba(122,2,32,.06), 0 12px 32px -12px rgba(122,2,32,.18)",
       },
     },
   },

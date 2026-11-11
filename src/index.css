@@ -9,12 +9,12 @@
 @tailwind utilities;
 
 :root {
-  --magenta: #9c1a5e;
-  --magenta-deep: #5e0f3a;
-  --rose: #e68aae;
-  --rose-ink: #a8395f;
-  --gold: #c9a45c;
-  --gold-ink: #7d6128;
+  --magenta: #c30239;
+  --magenta-deep: #7a0220;
+  --rose: #f0829f;
+  --rose-ink: #b3103f;
+  --gold: #ecb86c;
+  --gold-ink: #7a5712;
   --ivory: #fffaf4;
   --blush: #fbeaef;
   --charcoal: #2a2227;

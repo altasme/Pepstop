@@ -1,7 +1,7 @@
 # HANDOVER: The Pep Stop · Phase 1 (Public Website)
 
 **Built by:** Altaventures Business Development Services
-**Handover date:** 2026-11-11 · **Spec version built:** v1.2 (storefront added per client direction)
+**Handover date:** 2026-11-11 · **Spec version built:** v1.3 (storefront added per client direction; logo and palette applied)
 **Preview URL:** not yet deployed (connect repo to Cloudflare Pages) · **Live URL:** not live: gates open · **Repo:** altasme/pepstop
 
 ## 1. What was delivered
@@ -12,16 +12,18 @@
 - **Products are labeled sample slots** (`src/content/products.ts`): generic names, no descriptions or claims, PHP 0.00. Sample products are noindex and excluded from the sitemap. The client replaces them and removes `isSample`. Altaventures does not author product content.
 - Front end only. No `functions/`, `admin/`, `catalog/`, API calls, forms, cart or payment code. `npm run audit:content` enforces this.
 - Phase 2 readiness: activation constants in `site.ts`, a single content seam in `getContent.ts`, Article and FocusArea shapes that match the Phase 2A store, Cloudinary helper in `src/lib/media.ts`, reserved routes documented in `src/App.tsx`.
-- Placeholders shipped (none of them are generated images). Each renders canvas size, aspect ratio and file type:
+- **Logo (★G2 closed):** supplied as an SVG wrapping two embedded PNGs (a masked raster, not vector paths). Kept untouched in `design/logo-original.svg` (2.4 MB, not deployed). Web exports are in `public/images/` (160, 320, 640 px WebP). A true vector or a clean transparent PNG at 2000 px or more would be better for print and large displays; ask the designer if needed.
+- **Palette re-measured against the logo (two-pass: 32-step bucket clustering, then per-family RGB mean).** Logo families: crimson #940219, raspberry #C30239, hot pink #EA0662, gold #ECB86C, cream #FAEDE4. Tokens now: magenta #C30239, magenta-deep #7A0220 (darker shade of the logo crimson), rose #F0829F, rose-ink #B3103F, gold #ECB86C, gold-ink #7A5712. Measured contrast: charcoal on ivory 14.91, magenta on ivory 5.97 and blush 5.35, white on magenta 6.20, magenta-deep on ivory 10.89, white on magenta-deep 11.31, gold on magenta-deep 6.27, rose-ink on ivory 6.61 and blush 5.92, gold-ink on ivory 6.32 and blush 5.66. Rose on ivory 2.41 and gold on ivory 1.74 fail, so they stay decorative only.
+- Placeholders still shipped (none of them are generated images). Each renders canvas size, aspect ratio and file type:
 
 | ID | Where | Canvas | Ratio | Type |
 |---|---|---|---|---|
 | PH-01 | Home hero | 1200 × 1500 px | 4:5 portrait | JPG or WebP |
 | PH-02 | Focus tiles (Home, Health & Beauty), 3 images | 1200 × 900 px | 4:3 landscape | JPG or WebP |
 | PH-09 | Product images (shop cards, product page, cart), one per product | 1000 × 1000 px | 1:1 square | JPG or WebP |
-| PH-03 | Logo, header and footer (wordmark shown) | 960 × 240 px | 4:1 | SVG preferred, or transparent PNG |
-| PH-03 | Favicon (none set) | 512 × 512 px | 1:1 | PNG |
-| PH-03 | Open Graph image (tag omitted until supplied) | 1200 × 630 px | 40:21 | PNG or JPG |
+| PH-03 | Logo: **supplied, closed.** Header and footer badge plus live wordmark text | 640 × 640 px (source 1218 × 1218) | 1:1 | WebP, transparent |
+| PH-03 | Favicon (192 and 48 px) and Apple touch icon (180 px): **derived from the logo** | 192 × 192 px | 1:1 | PNG |
+| PH-03 | Open Graph image: **logo on ivory** | 1200 × 630 px | 40:21 | PNG |
 
   Slots live in `IMAGE_SLOTS` in `src/content/site.ts`. To replace one: upload to Cloudinary, set `MEDIA.cloudName`, then set the slot `src` (or `FocusArea.image`, `ORG.logo`). The placeholder disappears automatically.
 
@@ -51,12 +53,12 @@
 
 ## 6. Launch-integrity status
 - [ ] ★G1 registration details in footer and Privacy (PH-06 omitted until supplied)
-- [ ] ★G2 logo received; palette re-measured
+- [x] ★G2 logo received 2026-11-11; palette re-measured
 - [ ] ★G3 service agreement with content-responsibility clause signed [date pending]
 - [x] No hidden catalog: the shop is public and linked. Admin, `/api`, COA routes absent (audit checks the built output)
 - [x] Banned-vocabulary sweep run 2026-11-11 over `src/content`; justified hits: none
 - [x] Licensed imagery only (no images shipped)
-- Remaining placeholders: PH-01, PH-02, PH-03, PH-04, PH-05, PH-06, PH-07
+- Remaining placeholders: PH-01, PH-02, PH-04, PH-05, PH-06, PH-07, PH-09 (PH-03 closed)
 
 ## 7. Analytics
 - Tools: Cloudflare Web Analytics loads only when `ANALYTICS.cfBeaconToken` is set (★C8). Meta Pixel is not loaded; ID slot exists, public routes only. Conversion = outbound chat or call click. Events: `cta_*_click`, `article_view`, payloads `{ page, cta }` or `{ slug }` only. Events also dispatch a `pepstop:event` window event.
@@ -73,7 +75,7 @@
 - `ORG.intro` is a two-item array instead of one string, to render the two paragraphs.
 - Article gained an optional `focusAreaId` to link articles to Health & Beauty sections.
 - Vite 6 is used because `vite-react-ssg` requires Vite 6 or later.
-- OG image and favicon are not set; no tag is emitted and a blank data-URI favicon avoids a 404 until supplied.
+- The logo is a glossy, saturated raster badge. The site palette follows it, but the badge stays small in the header (44 to 56 px) with the name as live text beside it, because the lettering inside the badge is not legible at that size. The footer and mobile menu place it on an ivory circle so it reads on the dark background.
 - Not yet done (needs real devices or client input): tap test of every CTA on Android and iPhone, Lighthouse run on the deployed preview, client review.
 - Banned-vocabulary hits: none.
 

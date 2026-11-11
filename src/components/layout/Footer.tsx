@@ -12,7 +12,7 @@ export function Footer() {
   const legal = ORG.legalName && ORG.registration ? `${ORG.legalName} · ${ORG.registration}` : null; // PH-06
   return (
     <footer className="on-dark relative overflow-hidden bg-magenta-deep pb-28 pt-14 text-white md:pb-10">
-      <ArcMotif className="pointer-events-none absolute -top-6 right-0 w-72 opacity-40" dark />
+      <ArcMotif className="pointer-events-none absolute -top-6 right-0 w-72 opacity-40" />
       <div className="relative mx-auto max-w-page px-4 sm:px-6 lg:px-8">
         <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
           <div>

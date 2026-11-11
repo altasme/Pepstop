@@ -14,7 +14,7 @@ export const ORG = {
   tagline: "Your destination for wellness, beauty, and informed self-care.",
   legalName: null as null | string, // ★G1
   registration: null as null | string, // ★G1
-  logo: null as null | string, // ★G2, Cloudinary public id. null = PH-03 wordmark
+  logo: "/images/logo-320.webp" as null | string, // ★G2 closed 2026-11-11. Local path or Cloudinary id. null = PH-03 wordmark
   intro: [
     "The Pep Stop is a health and beauty brand built on clear information and attentive service. We believe good self-care starts with understanding what you are choosing, and why.",
     "Whether you are building a skincare routine, looking for everyday wellness ideas, or simply have a question, you can reach us directly. Message or call us and tell us what you would like to know.",
@@ -106,6 +106,13 @@ export type ImageSlot = {
   direction: string;
 };
 
+/** Supplied logo (★G2). Transparent badge, 1:1. Original kept in design/logo-original.svg. */
+export const LOGO_ASSET = {
+  srcSet: "/images/logo-160.webp 160w, /images/logo-320.webp 320w, /images/logo-640.webp 640w",
+  width: 640,
+  height: 640,
+};
+
 export const IMAGE_SLOTS = {
   hero: {
     id: "hero",
@@ -144,12 +151,12 @@ export const IMAGE_SLOTS = {
     id: "logo",
     ph: "PH-03",
     label: "Logo (header and footer)",
-    width: 960,
-    height: 240,
-    format: "SVG preferred, or PNG with transparent background",
-    src: null,
-    alt: "The Pep Stop",
-    direction: "Supplied by the client (★G2).",
+    width: 640,
+    height: 640,
+    format: "WebP with transparent background (supplied)",
+    src: "/images/logo-320.webp",
+    alt: "The Pep Stop, Health & Beauty",
+    direction: "Supplied by the client (★G2). Closed.",
   },
   favicon: {
     id: "favicon",
@@ -158,9 +165,9 @@ export const IMAGE_SLOTS = {
     width: 512,
     height: 512,
     format: "PNG",
-    src: null,
+    src: "/favicon.png",
     alt: "",
-    direction: "Square mark derived from the supplied logo (★G2).",
+    direction: "Derived from the supplied logo (★G2).",
   },
   og: {
     id: "og",
@@ -169,9 +176,9 @@ export const IMAGE_SLOTS = {
     width: 1200,
     height: 630,
     format: "PNG or JPG",
-    src: null,
+    src: "/og/og-default.png",
     alt: "The Pep Stop, Health & Beauty",
-    direction: "Logo on ivory or blush. Keep key content inside the central 1000 by 500 px.",
+    direction: "Supplied logo centered on ivory. Keep key content inside the central 1000 by 500 px.",
   },
 } satisfies Record<string, ImageSlot>;
 

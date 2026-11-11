@@ -11,8 +11,10 @@ type Props = {
   jsonLd?: object;
 };
 
+const absolute = (u: string | null) => (u && u.startsWith("/") ? `${SEO.siteUrl}${u}` : u);
+
 function ogImage(): string | null {
-  return IMAGE_SLOTS.og.src ? cloudinaryUrl(IMAGE_SLOTS.og.src, 1200) : null;
+  return IMAGE_SLOTS.og.src ? absolute(cloudinaryUrl(IMAGE_SLOTS.og.src, 1200)) : null;
 }
 
 /** Per-route title, description, OG, canonical and optional JSON-LD. */
@@ -35,6 +37,8 @@ export function Seo({ path, title, description, noindex, type = "website", jsonL
       <meta property="og:description" content={d} />
       <meta property="og:url" content={url} />
       {image && <meta property="og:image" content={image} />}
+      {image && <meta property="og:image:width" content="1200" />}
+      {image && <meta property="og:image:height" content="630" />}
       <meta name="twitter:card" content={image ? "summary_large_image" : "summary"} />
       {jsonLd && <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>}
     </Head>
@@ -43,7 +47,7 @@ export function Seo({ path, title, description, noindex, type = "website", jsonL
 
 /** Organization schema for Home. No Product schema anywhere. */
 export function organizationJsonLd() {
-  const logo = ORG.logo ? cloudinaryUrl(ORG.logo, 600) : null;
+  const logo = ORG.logo ? absolute(cloudinaryUrl(ORG.logo, 600)) : null;
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
