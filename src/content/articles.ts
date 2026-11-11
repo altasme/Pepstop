@@ -1,7 +1,7 @@
 /**
  * Wellness Education articles (CLAUDE.md §9.4).
  * Body format: paragraphs separated by a blank line; a line starting with "## " is a subheading.
- * Drafts below are general and unpublished. Only the client may set `published: false`.
+ * Drafts below are general and unpublished. Only the client may set `published: true`.
  * Product-specific articles are client content and are not written here.
  */
 export type Article = {
@@ -20,7 +20,7 @@ export const ARTICLES: Article[] = [
     title: "Building a simple skincare routine",
     summary: "A short, general guide to starting with a few steps you can keep up every day.",
     focusAreaId: "beauty-skincare",
-    published: true,
+    published: false,
     updatedAt: "2026-11-11",
     body: `A skincare routine does not need to be long to be useful. Many people begin with three steps and add more only if they want to.
 

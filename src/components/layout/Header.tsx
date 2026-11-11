@@ -6,6 +6,7 @@ import { primaryCta } from "../../lib/cta";
 import { trackCta } from "../../lib/analytics";
 import { Logo } from "../ui/Logo";
 import { MobileNav } from "./MobileNav";
+import { CartButton } from "./CartButton";
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -33,7 +34,7 @@ export function Header() {
                   to={item.to}
                   end={item.to === "/"}
                   className={({ isActive }) =>
-                    `inline-flex min-h-11 items-center rounded-full px-4 text-base font-medium transition-colors hover:text-magenta ${isActive ? "text-magenta underline decoration-gold decoration-2 underline-offset-8" : "text-charcoal"}`
+                    `inline-flex min-h-11 items-center rounded-full px-3 text-base font-medium transition-colors hover:text-magenta ${isActive ? "text-magenta underline decoration-gold decoration-2 underline-offset-8" : "text-charcoal"}`
                   }
                 >
                   {item.label}
@@ -42,7 +43,8 @@ export function Header() {
             ))}
           </ul>
         </nav>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 sm:gap-2">
+          <CartButton />
           <a
             href={primaryCta.href}
             {...(primaryCta.kind === "messenger" ? { target: "_blank", rel: "noopener noreferrer" } : {})}

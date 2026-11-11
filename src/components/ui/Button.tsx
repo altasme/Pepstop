@@ -23,10 +23,16 @@ type Props = {
   href?: string;
   external?: boolean;
   onClick?: () => void;
+  /** Render a real <button> (no to/href). */
+  submit?: boolean;
+  disabled?: boolean;
 };
 
-export function Button({ children, variant = "primary", className = "", to, href, external, onClick }: Props) {
+export function Button({ children, variant = "primary", className = "", to, href, external, onClick, submit, disabled }: Props) {
   const cls = `${base} ${variants[variant]} ${className}`;
+  if (!to && !href) {
+    return <button type={submit ? "submit" : "button"} className={`${cls} disabled:opacity-50`} onClick={onClick} disabled={disabled}>{children}</button>;
+  }
   if (to) return <Link to={to} className={cls} onClick={onClick}>{children}</Link>;
   return (
     <a

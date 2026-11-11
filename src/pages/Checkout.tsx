@@ -1,0 +1,155 @@
+import { useState, type FormEvent } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { CART, CHECKOUT, PAYMENT_METHODS } from "../content/site";
+import { Seo } from "../lib/seo";
+import { useCart } from "../lib/cart";
+import { formatPhp } from "../lib/format";
+import { buildOrder, submitOrder, type Customer } from "../lib/orders";
+import { PageBanner } from "../components/sections/PageBanner";
+import { Button } from "../components/ui/Button";
+import { Card } from "../components/ui/Card";
+
+type Errors = Partial<Record<keyof Customer | "consent", string>>;
+const empty: Customer = { fullName: "", mobile: "", email: "", street: "", barangay: "", city: "", province: "", postal: "", notes: "", payment: "" };
+
+function validate(c: Customer, consent: boolean): Errors {
+  const e: Errors = {};
+  const E = CHECKOUT.errors;
+  (["fullName", "mobile", "street", "barangay", "city", "province", "postal"] as const).forEach((k) => { if (!c[k].trim()) e[k] = E.required; });
+  if (c.mobile.trim() && !/^(09|\+639)\d{9}$/.test(c.mobile.replace(/[\s-]/g, ""))) e.mobile = E.mobile;
+  if (c.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(c.email.trim())) e.email = E.email;
+  if (c.postal.trim() && !/^\d{4}$/.test(c.postal.trim())) e.postal = E.postal;
+  if (!c.payment) e.payment = E.payment;
+  if (!consent) e.consent = E.consent;
+  return e;
+}
+
+type FieldExtra = { label: string; hint?: string; type?: string; autoComplete?: string; multiline?: boolean };
+
+function Field({ id, value, error, onChange, label, hint, type = "text", autoComplete, multiline }: FieldExtra & { id: keyof Customer; value: string; error?: string; onChange: (v: string) => void }) {
+  const common = {
+    id, name: id, value, autoComplete,
+    onChange: (e: { target: { value: string } }) => onChange(e.target.value),
+    "aria-invalid": error ? true : undefined,
+    "aria-describedby": [hint ? `${id}-hint` : "", error ? `${id}-err` : ""].filter(Boolean).join(" ") || undefined,
+  };
+  const cls = `w-full rounded-xl border bg-white px-4 py-3 text-base text-charcoal ${error ? "border-rose-ink" : "border-charcoal/30"}`;
+  return (
+    <div>
+      <label htmlFor={id} className="mb-1 block text-sm font-semibold text-magenta-deep">{label}</label>
+      {multiline ? <textarea {...common} rows={3} maxLength={500} className={cls} /> : <input {...common} type={type} className={`${cls} min-h-12`} />}
+      {hint && <p id={`${id}-hint`} className="mt-1 text-sm text-charcoal/80">{hint}</p>}
+      {error && <p id={`${id}-err`} className="mt-1 text-sm font-semibold text-rose-ink">{error}</p>}
+    </div>
+  );
+}
+
+export default function Checkout() {
+  const { lines, subtotal, clear } = useCart();
+  const navigate = useNavigate();
+  const [c, setC] = useState<Customer>(empty);
+  const [consent, setConsent] = useState(false);
+  const [errors, setErrors] = useState<Errors>({});
+  const set = (k: keyof Customer) => (v: string) => setC((p) => ({ ...p, [k]: v }));
+
+  const onSubmit = (ev: FormEvent) => {
+    ev.preventDefault();
+    const errs = validate(c, consent);
+    setErrors(errs);
+    const first = Object.keys(errs)[0];
+    if (first) {
+      document.getElementById(first === "payment" ? "pay-gcash" : first)?.focus();
+      return;
+    }
+    submitOrder(buildOrder({ ...c, mobile: c.mobile.replace(/\s+/g, " ").trim() }, lines, subtotal));
+    clear();
+    navigate("/checkout/confirmation");
+  };
+
+  const F = (id: keyof Customer, extra: FieldExtra) => (
+    <Field key={id} id={id} value={c[id]} error={errors[id]} onChange={set(id)} {...extra} />
+  );
+
+  if (lines.length === 0) {
+    return (
+      <>
+        <Seo path="/checkout" noindex />
+        <PageBanner title={CHECKOUT.title} />
+        <section className="mx-auto max-w-prose px-4 py-16 text-center">
+          <p className="font-heading text-h3 font-semibold text-magenta-deep">{CHECKOUT.emptyTitle}</p>
+          <div className="mt-6"><Button to="/shop">{CART.continue}</Button></div>
+        </section>
+      </>
+    );
+  }
+
+  const errCount = Object.keys(errors).length;
+  return (
+    <>
+      <Seo path="/checkout" noindex />
+      <PageBanner title={CHECKOUT.title} body={CHECKOUT.bannerBody} />
+      <section className="mx-auto max-w-page px-4 py-12 sm:px-6 md:py-16 lg:px-8">
+        <form onSubmit={onSubmit} noValidate className="grid gap-8 lg:grid-cols-[1fr_24rem] lg:items-start">
+          <div className="space-y-8">
+            {errCount > 0 && <p role="alert" className="rounded-xl bg-rose-ink px-4 py-3 text-sm font-semibold text-white">{CHECKOUT.errors.summary}</p>}
+            <fieldset className="space-y-4">
+              <legend className="mb-2 font-heading text-h3 font-semibold text-magenta-deep">{CHECKOUT.contactTitle}</legend>
+              {F("fullName", { label: CHECKOUT.fields.fullName, autoComplete: "name" })}
+              <div className="grid gap-4 sm:grid-cols-2">
+                {F("mobile", { label: CHECKOUT.fields.mobile, hint: CHECKOUT.fields.mobileHint, type: "tel", autoComplete: "tel" })}
+                {F("email", { label: CHECKOUT.fields.email, type: "email", autoComplete: "email" })}
+              </div>
+            </fieldset>
+            <fieldset className="space-y-4">
+              <legend className="mb-2 font-heading text-h3 font-semibold text-magenta-deep">{CHECKOUT.addressTitle}</legend>
+              {F("street", { label: CHECKOUT.fields.street, autoComplete: "address-line1" })}
+              <div className="grid gap-4 sm:grid-cols-2">
+                {F("barangay", { label: CHECKOUT.fields.barangay, autoComplete: "address-line2" })}
+                {F("city", { label: CHECKOUT.fields.city, autoComplete: "address-level2" })}
+                {F("province", { label: CHECKOUT.fields.province, autoComplete: "address-level1" })}
+                {F("postal", { label: CHECKOUT.fields.postal, autoComplete: "postal-code" })}
+              </div>
+            </fieldset>
+            <fieldset aria-describedby="pay-note">
+              <legend className="mb-2 font-heading text-h3 font-semibold text-magenta-deep">{CHECKOUT.paymentTitle}</legend>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {PAYMENT_METHODS.filter((m) => m.enabled).map((m) => (
+                  <label key={m.id} className={`flex min-h-12 cursor-pointer items-center gap-3 rounded-xl border bg-white px-4 py-3 ${c.payment === m.id ? "border-magenta ring-2 ring-magenta" : "border-charcoal/30"}`}>
+                    <input id={`pay-${m.id}`} type="radio" name="payment" value={m.id} checked={c.payment === m.id} onChange={() => set("payment")(m.id)} className="h-5 w-5 accent-magenta" />
+                    <span className="font-semibold">{m.label}</span>
+                  </label>
+                ))}
+              </div>
+              {errors.payment && <p className="mt-2 text-sm font-semibold text-rose-ink">{errors.payment}</p>}
+              <p id="pay-note" className="mt-3 text-sm text-charcoal/80">{CHECKOUT.paymentNote}</p>
+            </fieldset>
+            {F("notes", { label: CHECKOUT.fields.notes, hint: CHECKOUT.fields.notesHint, multiline: true })}
+            <div>
+              <label className="flex cursor-pointer items-start gap-3">
+                <input id="consent" type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} aria-invalid={errors.consent ? true : undefined} className="mt-1 h-5 w-5 shrink-0 accent-magenta" />
+                <span className="text-charcoal">{CHECKOUT.consent} <Link to="/privacy" className="font-semibold text-magenta underline underline-offset-4">{CHECKOUT.privacyLinkLabel}</Link>.</span>
+              </label>
+              {errors.consent && <p className="mt-1 text-sm font-semibold text-rose-ink">{errors.consent}</p>}
+            </div>
+          </div>
+          <Card className="lg:sticky lg:top-28">
+            <h2 className="font-heading text-h3 font-semibold text-magenta-deep">{CHECKOUT.summaryTitle}</h2>
+            <ul className="mt-4 divide-y divide-magenta-deep/10">
+              {lines.map((l) => (
+                <li key={`${l.productId}-${l.variantId}`} className="flex justify-between gap-3 py-3 text-sm">
+                  <span>{l.product.name}, {l.variant.label} <span className="text-charcoal/70">x {l.qty}</span></span>
+                  <span className="font-semibold tabular-nums">{formatPhp(l.lineTotal)}</span>
+                </li>
+              ))}
+            </ul>
+            <dl className="mt-3 space-y-2 border-t border-magenta-deep/10 pt-3 text-charcoal">
+              <div className="flex justify-between"><dt>{CART.shipping}</dt><dd className="text-sm">{CART.shippingTbc}</dd></div>
+              <div className="flex justify-between text-lg"><dt className="font-semibold text-magenta-deep">{CART.total}</dt><dd className="font-semibold tabular-nums">{formatPhp(subtotal)}</dd></div>
+            </dl>
+            <Button submit className="mt-5 w-full">{CHECKOUT.place}</Button>
+          </Card>
+        </form>
+      </section>
+    </>
+  );
+}

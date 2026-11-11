@@ -1,12 +1,15 @@
 # HANDOVER: The Pep Stop · Phase 1 (Public Website)
 
 **Built by:** Altaventures Business Development Services
-**Handover date:** 2026-11-11 · **Spec version built:** v1.1
+**Handover date:** 2026-11-11 · **Spec version built:** v1.2 (storefront added per client direction)
 **Preview URL:** not yet deployed (connect repo to Cloudflare Pages) · **Live URL:** not live: gates open · **Repo:** altasme/pepstop
 
 ## 1. What was delivered
 - Routes, all prerendered: `/`, `/about`, `/health-beauty`, `/education`, `/education/:slug` (published articles only; none published yet, so none generated), `/contact`, `/privacy`, `/404` plus `404.html`.
 - Also generated at build: `sitemap.xml` (public routes only), `robots.txt`, `_headers` (security headers, noindex on pages.dev hosts).
+- **Storefront (v1.2):** `/shop` (search, category filter, sort), `/shop/:slug` (variants, quantity, add to cart, ask about product), `/cart`, `/checkout` (validated delivery form, GCash, Maya, bank transfer, cash on delivery choice), `/checkout/confirmation`. Home shows featured products and a "shopping with us" business strip alongside the brand sections.
+- **How orders work now:** the cart lives in the browser (localStorage). Placing an order stores a summary in sessionStorage and shows the confirmation screen. Nothing is transmitted by the site. The customer sends the prefilled summary by text or WhatsApp (when enabled), copies it for Messenger or Viber, or calls. No payment is collected. `src/lib/orders.ts` `submitOrder` is the single place the Phase 2A orders endpoint plugs in.
+- **Products are labeled sample slots** (`src/content/products.ts`): generic names, no descriptions or claims, PHP 0.00. Sample products are noindex and excluded from the sitemap. The client replaces them and removes `isSample`. Altaventures does not author product content.
 - Front end only. No `functions/`, `admin/`, `catalog/`, API calls, forms, cart or payment code. `npm run audit:content` enforces this.
 - Phase 2 readiness: activation constants in `site.ts`, a single content seam in `getContent.ts`, Article and FocusArea shapes that match the Phase 2A store, Cloudinary helper in `src/lib/media.ts`, reserved routes documented in `src/App.tsx`.
 - Placeholders shipped (none of them are generated images). Each renders canvas size, aspect ratio and file type:
@@ -15,6 +18,7 @@
 |---|---|---|---|---|
 | PH-01 | Home hero | 1200 × 1500 px | 4:5 portrait | JPG or WebP |
 | PH-02 | Focus tiles (Home, Health & Beauty), 3 images | 1200 × 900 px | 4:3 landscape | JPG or WebP |
+| PH-09 | Product images (shop cards, product page, cart), one per product | 1000 × 1000 px | 1:1 square | JPG or WebP |
 | PH-03 | Logo, header and footer (wordmark shown) | 960 × 240 px | 4:1 | SVG preferred, or transparent PNG |
 | PH-03 | Favicon (none set) | 512 × 512 px | 1:1 | PNG |
 | PH-03 | Open Graph image (tag omitted until supplied) | 1200 × 630 px | 40:21 | PNG or JPG |
@@ -34,21 +38,22 @@
 |---|---|---|---|---|
 | INQUIRY_MODE | chat | form | Inquiry form (slot marked in `Contact.tsx`) | 2A built, ★P4, ★P6 |
 | CONTENT_SOURCE | static | store | Admin-edited content (`getContent.ts` throws until built) | content_documents seeded |
-| CATALOGUE_SOURCE | none | db | /catalog | ★P1, ★P5 |
+| CATALOGUE_SOURCE | static | db | Products from D1 instead of `products.ts` | ★P1, ★P5 |
 | ADMIN_ENABLED | absent | true | /admin | WorkOS, ★P3 |
 | COA_ENABLED | absent | true | COA directory | ★P2 |
-| COMMERCE_MODE | none | not activatable | n/a | New spec (§10) |
+| COMMERCE_MODE | frontend | live | Server-side orders and payment handling | Orders endpoint, payment provider and proof workflow, shipping rules (new scope) |
 
 ## 5. Draft and withheld content
 - Draft copy: intro, mission, vision (`missionStatus: "draft"`, a note shows on About), values, focus areas, About text, Privacy Policy.
 - Unpublished articles: `building-a-simple-skincare-routine`, `why-sleep-shows-on-your-skin`, `reading-a-product-label`. Education shows "Articles are coming soon." and Home hides the highlights until one is published.
+- Sample products 1 to 6 (labeled, zero price) until real data is supplied. Shipping fee, payment instructions, payment account details and delivery areas are not stated anywhere yet and need client input.
 - Hidden channels: Messenger (★C3 Facebook URL missing), Viber and WhatsApp (★C4 unconfirmed), email (★C2 missing). Only Call and Text render. Business hours (★C6) hidden.
 
 ## 6. Launch-integrity status
 - [ ] ★G1 registration details in footer and Privacy (PH-06 omitted until supplied)
 - [ ] ★G2 logo received; palette re-measured
 - [ ] ★G3 service agreement with content-responsibility clause signed [date pending]
-- [x] No catalog link on public site (audit checks the built output)
+- [x] No hidden catalog: the shop is public and linked. Admin, `/api`, COA routes absent (audit checks the built output)
 - [x] Banned-vocabulary sweep run 2026-11-11 over `src/content`; justified hits: none
 - [x] Licensed imagery only (no images shipped)
 - Remaining placeholders: PH-01, PH-02, PH-03, PH-04, PH-05, PH-06, PH-07
@@ -61,6 +66,9 @@
 - Cloudinary: cloud name not set · Repo: altasme/pepstop
 
 ## 9. Known limitations / conflicts noted
+- **Spec conflict, resolved in favor of the client's direction:** CLAUDE.md v1.1 set `COMMERCE_MODE = "none"`, kept products in an unlisted catalog on the client's own domain, and said checkout would be a new spec. The client asked for an ecommerce store that also showcases the business, so v1.2 builds the storefront front end only. The responsibility questions behind the old rules still apply: product listings, prices, claims, and registration details are client content (Appendix B.1), ★G3 should be signed before real products go live, and the Appendix C-15 hosting-account risk note stands. Raise with Chief Alta before launch.
+- The shop is publicly linked and indexable. If the client wants it unlisted, add noindex to the shop pages and remove it from nav and sitemap.
+- The cart cannot verify stock or compute shipping; both are confirmed by The Pep Stop after the order is sent.
 - Nav button label: spec says "Message Us". While Messenger is hidden the primary CTA is the phone, so the button reads "Call Us" to stay truthful. It switches to "Message Us" when ★C3 is supplied.
 - `ORG.intro` is a two-item array instead of one string, to render the two paragraphs.
 - Article gained an optional `focusAreaId` to link articles to Health & Beauty sections.

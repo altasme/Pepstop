@@ -62,8 +62,9 @@ export const CTA = {
 /** Phase 2 activation constants (CLAUDE.md §16.1). Only the values in the Phase 1 column are live. */
 export const INQUIRY_MODE: "chat" | "form" = "chat"; // 2A: "form"
 export const CONTENT_SOURCE: "static" | "store" = "static"; // 2A: "store"
-export const CATALOGUE_SOURCE: "none" | "db" = "none"; // 2A: "db"
-export const COMMERCE_MODE = "none" as const; // not a Phase 2 switch (§10)
+export const CATALOGUE_SOURCE: "static" | "db" = "static"; // 2A: "db" (products from D1)
+/** v1.2: storefront UI is built. "frontend" = cart and checkout screens only, orders leave the browser by chat, no payment collected. "live" needs the Phase 2 backend. */
+export const COMMERCE_MODE: "frontend" | "live" = "frontend";
 
 export const CHAT_HELPER = {
   withChat: "Tell us your name and what you would like to know.",
@@ -76,6 +77,7 @@ export const CHAT_HELPER = {
 
 export const NAV = [
   { label: "Home", to: "/" },
+  { label: "Shop", to: "/shop" },
   { label: "About", to: "/about" },
   { label: "Health & Beauty", to: "/health-beauty" },
   { label: "Wellness Education", to: "/education" },
@@ -83,7 +85,7 @@ export const NAV = [
 ];
 
 /** Routes where the mobile sticky CTA bar is hidden (§9.8). */
-export const STICKY_CTA_HIDDEN_ON = ["/contact", "/privacy", "/404"];
+export const STICKY_CTA_HIDDEN_ON = ["/contact", "/privacy", "/404", "/cart", "/checkout", "/checkout/confirmation"];
 
 /* ------------------------------------------------------------------ */
 /* Image slots. No images are generated or bundled. Each slot renders  */
@@ -126,6 +128,17 @@ export const IMAGE_SLOTS = {
     src: null,
     alt: "",
     direction: "Licensed lifestyle image: skincare ritual, morning routine, or active lifestyle. Adults 30 to 60, mixed gender.",
+  },
+  product: {
+    id: "product",
+    ph: "PH-09",
+    label: "Product image",
+    width: 1000,
+    height: 1000,
+    format: "JPG or WebP",
+    src: null,
+    alt: "",
+    direction: "Clean product photo on ivory or blush, supplied by the client. One image per product, plus optional extras.",
   },
   logo: {
     id: "logo",
@@ -186,9 +199,22 @@ export const HOME = {
   educationAll: "See all articles",
   valuesEyebrow: "How we work",
   valuesTitle: "What we stand for.",
+  featuredEyebrow: "The Shop",
+  featuredTitle: "Featured products.",
+  featuredAll: "Shop all products",
+  trustEyebrow: "Shopping with us",
+  trustTitle: "A shop run by people you can talk to.",
   contactTitle: "Have a question? Reach us directly.",
   contactBody: "We reply to every message and pick up every call we can.",
 };
+
+/** Business strip on Home and Shop. Statements describe how we work; no delivery times or guarantees are promised. */
+export const TRUST = [
+  { id: "ask", title: "Ask before you buy", body: "Message or call us about any product. We answer plainly." },
+  { id: "info", title: "Clear product information", body: "Variants, packaging, and storage are listed on every product page." },
+  { id: "order", title: "Order your way", body: "Check out online, then confirm your order with us by message." },
+  { id: "care", title: "Attentive service", body: "Every message and call gets a considered, courteous reply." },
+];
 
 export type FocusArea = { id: string; title: string; summary: string; order: number; image: string | null };
 
@@ -296,6 +322,124 @@ export const CONTACT_PAGE = {
   facebookLabel: "Facebook",
 };
 
+export const SHOP = {
+  bannerEyebrow: "Shop",
+  bannerTitle: "Shop The Pep Stop",
+  bannerBody: "Browse our products, read the details, and order when you are ready. Questions are always welcome.",
+  searchLabel: "Search products",
+  searchPlaceholder: "Search by name",
+  categoryLabel: "Category",
+  allCategories: "All",
+  sortLabel: "Sort by",
+  sorts: { featured: "Featured", name: "Name", priceLow: "Price, low to high", priceHigh: "Price, high to low" },
+  results: (n: number) => `${n} ${n === 1 ? "product" : "products"}`,
+  empty: "No products match your search.",
+  emptyStore: "Products are coming soon.",
+  emptyStoreHint: "Message or call us to ask what is available.",
+  clear: "Clear filters",
+  sampleBadge: "Sample slot",
+  sampleNote: "Sample slot. Replace with real product data in src/content/products.ts.",
+  from: "From",
+  addToCart: "Add to cart",
+  added: "Added to cart",
+  viewCart: "View cart",
+  chooseOption: "Choose an option",
+  quantity: "Quantity",
+  availability: { available: "Available", ask: "Ask for availability", unavailable: "Unavailable" },
+  askAbout: "Ask about this product",
+  priceOnRequest: "Ask for price",
+  detailsTitle: "Details",
+  specsTitle: "Specifications",
+  packagingTitle: "Packaging",
+  storageTitle: "Storage",
+  regLabel: "Reg. No.",
+  notProvided: "To be provided by The Pep Stop.",
+  back: "All products",
+  relatedTitle: "More from the shop",
+  productDisclaimer: "Product information is provided by The Pep Stop. It is general information and not medical advice. For health concerns, consult a licensed physician.",
+};
+
+export const CART = {
+  title: "Your cart",
+  empty: "Your cart is empty.",
+  emptyHint: "Browse the shop and add what you would like to order.",
+  continue: "Continue shopping",
+  checkout: "Proceed to checkout",
+  remove: "Remove",
+  subtotal: "Subtotal",
+  shipping: "Shipping",
+  shippingTbc: "Confirmed with your order",
+  total: "Estimated total",
+  item: "Item",
+  price: "Price",
+  qty: "Qty",
+  lineTotal: "Total",
+  openCart: (n: number) => `Cart, ${n} ${n === 1 ? "item" : "items"}`,
+  note: "Shipping and final availability are confirmed by The Pep Stop after you send your order.",
+  decrease: "Decrease quantity",
+  increase: "Increase quantity",
+};
+
+export const PAYMENT_METHODS = [
+  { id: "gcash", label: "GCash", enabled: true },
+  { id: "maya", label: "Maya", enabled: true },
+  { id: "bank", label: "Bank transfer", enabled: true },
+  { id: "cod", label: "Cash on delivery", enabled: true },
+];
+
+export const CHECKOUT = {
+  title: "Checkout",
+  bannerBody: "Tell us where to send your order and how you would like to pay. No payment is taken on this website.",
+  contactTitle: "Your details",
+  addressTitle: "Delivery address",
+  paymentTitle: "Payment method",
+  paymentNote: "No payment is collected here. Payment instructions are sent by The Pep Stop when your order is confirmed.",
+  notesTitle: "Order notes",
+  summaryTitle: "Order summary",
+  place: "Place order",
+  consent: "I agree that The Pep Stop may use these details to process my order, as described in the Privacy Policy.",
+  privacyLinkLabel: "Privacy Policy",
+  emptyTitle: "Nothing to check out yet.",
+  fields: {
+    fullName: "Full name",
+    mobile: "Mobile number",
+    mobileHint: "For example 0991 018 9669",
+    email: "Email (optional)",
+    street: "House number and street",
+    barangay: "Barangay",
+    city: "City or municipality",
+    province: "Province",
+    postal: "Postal code",
+    notes: "Notes for The Pep Stop (optional)",
+    notesHint: "Please do not include medical history.",
+  },
+  errors: {
+    required: "This field is required.",
+    mobile: "Enter a valid Philippine mobile number, for example 0991 018 9669.",
+    email: "Enter a valid email address.",
+    postal: "Enter a 4 digit postal code.",
+    payment: "Choose a payment method.",
+    consent: "Please confirm to continue.",
+    summary: "Please fix the highlighted fields.",
+  },
+};
+
+export const CONFIRMATION = {
+  title: "Your order summary is ready.",
+  lead: "Last step: send this summary to The Pep Stop so we can confirm availability, shipping, and payment with you.",
+  stubNote: "This website does not transmit orders by itself yet. Your order is complete only once you send it to us.",
+  reference: "Order reference",
+  sendTitle: "Send your order",
+  copy: "Copy order summary",
+  copied: "Copied",
+  deliverTo: "Deliver to",
+  payWith: "Payment method",
+  contactLabel: "Contact",
+  none: "We could not find an order in this browser.",
+  noneHint: "Orders are kept only in the browser that placed them. You can start again from the shop.",
+  messageIntro: "Hi The Pep Stop, I would like to place this order.",
+};
+
 export const NOT_FOUND = {
   title: "We could not find that page.",
   body: "The page may have moved, or the link may be mistyped.",
@@ -353,7 +497,7 @@ export const PRIVACY = {
       id: "collect",
       title: "What we collect",
       body: [
-        "This website does not have a sign-up or contact form and does not set advertising cookies.",
+        "This website does not set advertising cookies. When you shop, your cart is kept in your own browser. When you check out, the details you type (name, mobile number, address, notes, and payment method choice) stay in your browser until you choose to send your order to us by message or phone.",
         "If you message or call us, we receive what you choose to send, such as your name, your phone number or messaging profile, and the content of your message.",
         "We use Cloudflare Web Analytics, which is cookieless. It records aggregate page views and clicks on our contact buttons. It does not identify you personally.",
       ],
@@ -428,6 +572,13 @@ export const SEO = {
       title: "Contact | The Pep Stop",
       description: "Reach The Pep Stop by message or phone. Tell us your name and what you would like to know.",
     },
+    "/shop": {
+      title: "Shop | The Pep Stop",
+      description: "Browse The Pep Stop products, read the details, and order online. Confirm your order by message.",
+    },
+    "/cart": { title: "Your Cart | The Pep Stop", description: "Review the items in your cart." },
+    "/checkout": { title: "Checkout | The Pep Stop", description: "Enter your delivery details to place your order." },
+    "/checkout/confirmation": { title: "Order Summary | The Pep Stop", description: "Send your order summary to The Pep Stop." },
     "/privacy": {
       title: "Privacy Policy | The Pep Stop",
       description: "How The Pep Stop handles personal information under the Data Privacy Act of 2012.",

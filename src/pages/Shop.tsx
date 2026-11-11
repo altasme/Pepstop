@@ -1,0 +1,84 @@
+import { useMemo, useState } from "react";
+import { SHOP } from "../content/site";
+import { getCategories, getProducts } from "../content/getContent";
+import { Seo } from "../lib/seo";
+import { PageBanner } from "../components/sections/PageBanner";
+import { TrustStrip } from "../components/sections/TrustStrip";
+import { ContactBlock } from "../components/sections/ContactBlock";
+import { ProductCard } from "../components/ui/ProductCard";
+import { Button } from "../components/ui/Button";
+import { Disclaimer } from "../components/ui/Disclaimer";
+
+type Sort = keyof typeof SHOP.sorts;
+const minPrice = (p: ReturnType<typeof getProducts>[number]) => Math.min(...p.variants.map((v) => v.pricePhp ?? Infinity));
+
+export default function Shop() {
+  const all = getProducts();
+  const categories = getCategories();
+  const [cat, setCat] = useState("all");
+  const [q, setQ] = useState("");
+  const [sort, setSort] = useState<Sort>("featured");
+
+  const shown = useMemo(() => {
+    const term = q.trim().toLowerCase();
+    const list = all.filter((p) => (cat === "all" || p.categoryId === cat) && (!term || p.name.toLowerCase().includes(term)));
+    if (sort === "name") list.sort((a, b) => a.name.localeCompare(b.name));
+    if (sort === "priceLow") list.sort((a, b) => minPrice(a) - minPrice(b));
+    if (sort === "priceHigh") list.sort((a, b) => minPrice(b) - minPrice(a));
+    return list;
+  }, [all, cat, q, sort]);
+
+  const chip = (active: boolean) =>
+    `inline-flex min-h-11 items-center rounded-full border px-4 text-sm font-semibold transition-colors ${active ? "border-magenta bg-magenta text-white" : "border-magenta/40 text-magenta hover:bg-blush"}`;
+  const field = "min-h-12 w-full rounded-xl border border-charcoal/30 bg-white px-4 text-base text-charcoal";
+
+  return (
+    <>
+      <Seo path="/shop" />
+      <PageBanner eyebrow={SHOP.bannerEyebrow} title={SHOP.bannerTitle} body={SHOP.bannerBody} />
+      <section className="mx-auto max-w-page px-4 py-12 sm:px-6 md:py-16 lg:px-8">
+        {all.length === 0 ? (
+          <div className="mx-auto max-w-prose rounded-2xl bg-blush p-10 text-center">
+            <p className="font-heading text-h3 font-semibold text-magenta-deep">{SHOP.emptyStore}</p>
+            <p className="mt-2 text-charcoal">{SHOP.emptyStoreHint}</p>
+          </div>
+        ) : (
+          <>
+            <div className="grid gap-4 md:grid-cols-[1fr_14rem] md:items-end">
+              <div>
+                <label htmlFor="shop-search" className="mb-1 block text-sm font-semibold text-magenta-deep">{SHOP.searchLabel}</label>
+                <input id="shop-search" type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={SHOP.searchPlaceholder} className={field} />
+              </div>
+              <div>
+                <label htmlFor="shop-sort" className="mb-1 block text-sm font-semibold text-magenta-deep">{SHOP.sortLabel}</label>
+                <select id="shop-sort" value={sort} onChange={(e) => setSort(e.target.value as Sort)} className={field}>
+                  {(Object.keys(SHOP.sorts) as Sort[]).map((k) => <option key={k} value={k}>{SHOP.sorts[k]}</option>)}
+                </select>
+              </div>
+            </div>
+            <div role="group" aria-label={SHOP.categoryLabel} className="mt-5 flex flex-wrap gap-2">
+              <button type="button" aria-pressed={cat === "all"} className={chip(cat === "all")} onClick={() => setCat("all")}>{SHOP.allCategories}</button>
+              {categories.map((c) => (
+                <button key={c.id} type="button" aria-pressed={cat === c.id} className={chip(cat === c.id)} onClick={() => setCat(c.id)}>{c.name}</button>
+              ))}
+            </div>
+            <p className="mt-6 text-sm text-charcoal/80" role="status" aria-live="polite">{SHOP.results(shown.length)}</p>
+            {shown.length === 0 ? (
+              <div className="mt-6 rounded-2xl bg-blush p-8 text-center">
+                <p className="text-charcoal">{SHOP.empty}</p>
+                <div className="mt-4"><Button variant="secondary" onClick={() => { setQ(""); setCat("all"); }}>{SHOP.clear}</Button></div>
+              </div>
+            ) : (
+              <ul className="mt-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {shown.map((p) => <li key={p.id}><ProductCard product={p} /></li>)}
+              </ul>
+            )}
+          </>
+        )}
+        <Disclaimer text={SHOP.productDisclaimer} className="mt-12" />
+      </section>
+      <TrustStrip />
+      <ContactBlock />
+    </>
+  );
+}
