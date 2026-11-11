@@ -43,7 +43,7 @@ export default function Shop() {
       <PageBanner title={SHOP.bannerTitle} body={SHOP.bannerBody} />
       <section className="mx-auto max-w-page px-4 py-10 sm:px-6 md:py-14 lg:px-8">
         {all.length === 0 ? (
-          <div className="mx-auto max-w-prose rounded-xl bg-petal p-10 text-center">
+          <div className="mx-auto max-w-prose bg-petal p-10 text-center">
             <p className="font-sans text-h3 font-semibold text-ink">{SHOP.emptyStore}</p>
             <p className="mt-2 text-ink">{SHOP.emptyStoreHint}</p>
           </div>
@@ -69,7 +69,7 @@ export default function Shop() {
             </div>
             <p className="mt-6 text-sm text-mute" role="status" aria-live="polite">{SHOP.results(shown.length)}</p>
             {shown.length === 0 ? (
-              <div className="mt-6 rounded-xl bg-petal p-8 text-center">
+              <div className="mt-6 bg-petal p-8 text-center">
                 <p className="text-ink">{SHOP.empty}</p>
                 <div className="mt-4"><Button variant="secondary" onClick={() => { setQ(""); setCat("all"); }}>{SHOP.clear}</Button></div>
               </div>

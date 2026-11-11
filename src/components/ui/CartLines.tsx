@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Trash2 } from "lucide-react";
 import { CART } from "../../content/site";
 import { useCart } from "../../lib/cart";
-import { formatPhp } from "../../lib/format";
+import { amountLabel, formatPhp } from "../../lib/format";
 import { QuantityStepper } from "./QuantityStepper";
 import { SlotImage } from "./SlotImage";
 
@@ -16,11 +16,11 @@ export function CartLines() {
           <div className="min-w-0">
             <Link to={`/shop/${l.product.slug}`} className="text-lg font-semibold text-ink hover:underline">{l.product.name}</Link>
             <p className="text-sm text-mute">{l.variant.label}</p>
-            <p className="mt-1 text-sm text-mute">{formatPhp(l.unitPrice)}</p>
+            <p className="mt-1 text-sm text-mute">{l.unpriced ? CART.priceTbc : formatPhp(l.unitPrice)}</p>
           </div>
           <div className="col-span-2 flex flex-wrap items-center justify-between gap-3 sm:col-span-1 sm:flex-col sm:items-end">
             <QuantityStepper value={l.qty} onChange={(n) => setQty(l.productId, l.variantId, n)} label={`${CART.qty}: ${l.product.name}, ${l.variant.label}`} />
-            <p className="font-semibold tabular-nums">{formatPhp(l.lineTotal)}</p>
+            {!l.unpriced && <p className="font-semibold tabular-nums">{amountLabel(l.lineTotal, false)}</p>}
             <button type="button" onClick={() => remove(l.productId, l.variantId)} className="inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-mute underline hover:text-raspberry">
               <Trash2 className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />{CART.remove}<span className="sr-only"> {l.product.name}, {l.variant.label}</span>
             </button>

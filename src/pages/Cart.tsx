@@ -1,13 +1,13 @@
 import { CART } from "../content/site";
 import { Seo } from "../lib/seo";
 import { useCart } from "../lib/cart";
-import { formatPhp } from "../lib/format";
+import { amountLabel } from "../lib/format";
 import { Button } from "../components/ui/Button";
 import { CartLines } from "../components/ui/CartLines";
 import { SectionHeading } from "../components/ui/SectionHeading";
 
 export default function Cart() {
-  const { lines, subtotal } = useCart();
+  const { lines, subtotal, hasUnpriced } = useCart();
   return (
     <>
       <Seo path="/cart" noindex />
@@ -22,11 +22,11 @@ export default function Cart() {
         ) : (
           <div className="mt-10 grid gap-10 lg:grid-cols-[1fr_22rem] lg:items-start">
             <CartLines />
-            <aside className="rounded-xl bg-petal p-6 lg:sticky lg:top-28">
+            <aside className="bg-petal p-6 lg:sticky lg:top-28">
               <dl className="space-y-3 text-ink">
-                <div className="flex justify-between"><dt>{CART.subtotal}</dt><dd className="font-semibold tabular-nums">{formatPhp(subtotal)}</dd></div>
+                <div className="flex justify-between"><dt>{CART.subtotal}</dt><dd className="text-right font-semibold tabular-nums">{amountLabel(subtotal, hasUnpriced)}</dd></div>
                 <div className="flex justify-between gap-4"><dt>{CART.shipping}</dt><dd className="text-right text-sm text-mute">{CART.shippingTbc}</dd></div>
-                <div className="flex justify-between border-t border-ink/15 pt-3 text-lg"><dt className="font-semibold">{CART.total}</dt><dd className="font-semibold tabular-nums">{formatPhp(subtotal)}</dd></div>
+                <div className="flex justify-between border-t border-ink/15 pt-3 text-lg"><dt className="font-semibold">{CART.total}</dt><dd className="text-right font-semibold tabular-nums">{amountLabel(subtotal, hasUnpriced)}</dd></div>
               </dl>
               <p className="mt-4 text-sm text-mute">{CART.note}</p>
               <div className="mt-5 flex flex-col gap-3">

@@ -12,14 +12,15 @@ type Props = {
   priority?: boolean;
   className?: string;
   compact?: boolean;
+  badge?: string;
 };
 
 /** Renders the licensed asset when its Cloudinary id is set, otherwise the registered placeholder. */
-export function SlotImage({ slot, src, alt, label, sizes = "100vw", priority = false, className = "", compact }: Props) {
+export function SlotImage({ slot, src, alt, label, sizes = "100vw", priority = false, className = "", compact, badge }: Props) {
   const s = IMAGE_SLOTS[slot];
   const id = src ?? s.src;
   const url = id ? cloudinaryUrl(id, s.width) : null;
-  if (!id || !url) return <Placeholder slot={slot} label={label} className={className} compact={compact} />;
+  if (!id || !url) return <Placeholder slot={slot} label={label} className={className} compact={compact} badge={badge} />;
   return (
     <img
       src={url}
@@ -31,7 +32,7 @@ export function SlotImage({ slot, src, alt, label, sizes = "100vw", priority = f
       loading={priority ? "eager" : "lazy"}
       decoding="async"
       fetchPriority={priority ? "high" : "auto"}
-      className={`h-auto w-full rounded-xl object-cover ${className}`}
+      className={`h-auto w-full object-cover ${className}`}
       style={{ aspectRatio: `${s.width} / ${s.height}` }}
     />
   );

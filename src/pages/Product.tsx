@@ -42,7 +42,7 @@ export default function Product() {
   if (!product) return <NotFound />;
 
   const unavailable = product.status === "unavailable" || product.availability === "unavailable";
-  const selectedId = variantId || (product.variants.length === 1 ? product.variants[0].id : "");
+  const selectedId = variantId || product.variants.find((v) => v.available)?.id || "";
   const selected = product.variants.find((v) => v.id === selectedId);
   const chat = getChannels().find((c) => ["messenger", "viber", "whatsapp"].includes(c.kind)) ?? { kind: "call" as const, href: CTA.call.href, icon: "phone" as const, external: false };
   const others = getProducts().filter((p) => p.id !== product.id).slice(0, 4);

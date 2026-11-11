@@ -27,7 +27,7 @@ export function Logo({ onDark = false, compact = false }: { onDark?: boolean; co
       )}
       <span className="flex flex-col gap-1">
         <span className={`text-lg font-bold uppercase leading-none tracking-[0.12em] sm:text-xl ${onDark ? "text-white" : "text-ink"}`}>{ORG.name}</span>
-        <span className={`text-[0.7rem] font-medium leading-none tracking-[0.04em] ${onDark ? "text-white/75" : "text-mute"}`}>{ORG.descriptor}</span>
+        <span className={`text-xs font-medium leading-none tracking-[0.04em] ${onDark ? "text-white/75" : "text-mute"}`}>{ORG.descriptor}</span>
       </span>
     </Link>
   );

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Check, Copy } from "lucide-react";
 import { CART, CHECKOUT, CONFIRMATION } from "../content/site";
 import { Seo } from "../lib/seo";
-import { formatPhp } from "../lib/format";
+import { amountLabel } from "../lib/format";
 import { getChannels } from "../lib/cta";
 import { addressLine, loadLastOrder, orderText, paymentLabel, smsHrefWithBody, whatsappHrefWithBody, type Order } from "../lib/orders";
 import { PageBanner } from "../components/sections/PageBanner";
@@ -52,13 +52,13 @@ export default function OrderConfirmation() {
             {order.lines.map((l) => (
               <li key={`${l.name}-${l.variant}`} className="flex justify-between gap-3 py-3 text-sm">
                 <span>{l.name}, {l.variant} <span className="text-ink/70">x {l.qty}</span></span>
-                <span className="font-semibold tabular-nums">{formatPhp(l.lineTotal)}</span>
+                <span className="font-semibold tabular-nums">{amountLabel(l.lineTotal, l.unpriced)}</span>
               </li>
             ))}
           </ul>
           <dl className="mt-3 space-y-1 border-t border-ink/10 pt-3 text-ink">
             <div className="flex justify-between"><dt>{CART.shipping}</dt><dd className="text-sm">{CART.shippingTbc}</dd></div>
-            <div className="flex justify-between text-lg"><dt className="font-semibold text-ink">{CART.total}</dt><dd className="font-semibold tabular-nums">{formatPhp(order.subtotal)}</dd></div>
+            <div className="flex justify-between text-lg"><dt className="font-semibold text-ink">{CART.total}</dt><dd className="font-semibold tabular-nums">{amountLabel(order.subtotal, order.hasUnpriced)}</dd></div>
           </dl>
           <dl className="mt-6 grid gap-3 text-sm text-ink sm:grid-cols-2">
             <div><dt className="font-semibold text-ink">{CONFIRMATION.contactLabel}</dt><dd>{order.customer.fullName}<br />{order.customer.mobile}{order.customer.email && <><br />{order.customer.email}</>}</dd></div>

@@ -8,8 +8,15 @@ export function formatPhp(amount: number): string {
   return `PHP ${amount.toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
-import { SHOP } from "../content/site";
+import { CART, SHOP } from "../content/site";
+
+const SHOP_PRICE_TBC = CART.priceTbc;
 import type { Product } from "../content/products";
+
+/** Amount, or the "confirmed when we reply" text when a price is not set. */
+export function amountLabel(amount: number, unpriced: boolean): string {
+  return unpriced ? SHOP_PRICE_TBC : formatPhp(amount);
+}
 
 /** Card and page price label. Honors showPrice and optional prices. */
 export function priceLabel(p: Product): string {

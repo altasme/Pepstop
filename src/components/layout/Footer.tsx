@@ -13,14 +13,14 @@ export function Footer() {
   return (
     <footer className="on-dark bg-ink pb-28 pt-16 text-white md:pb-10">
       <div className="mx-auto max-w-page px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-12 md:grid-cols-[1.5fr_1fr_1fr]">
+        <div className="grid gap-12 md:grid-cols-[1.2fr_1.2fr_1fr]">
           <div>
             <Logo onDark />
             <p className="mt-5 max-w-xs text-white/80">{ORG.tagline}</p>
           </div>
           <nav aria-label={UI.footerNavLabel}>
             <h2 className={colHead}>{UI.footerExploreTitle}</h2>
-            <ul className="mt-3">
+            <ul className="mt-3 sm:columns-2 sm:gap-8">
               {NAV.map((n) => (
                 <li key={n.to}><Link to={n.to} className={link}>{n.label}</Link></li>
               ))}

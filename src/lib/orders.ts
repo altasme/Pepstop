@@ -5,7 +5,7 @@
  */
 import { CONFIRMATION, CONTACT, ORG, PAYMENT_METHODS } from "../content/site";
 import type { ResolvedLine } from "./cart";
-import { formatPhp } from "./format";
+import { amountLabel } from "./format";
 
 export type Customer = {
   fullName: string; mobile: string; email: string;
@@ -17,8 +17,9 @@ export type Order = {
   ref: string;
   placedAt: string;
   customer: Customer;
-  lines: { name: string; variant: string; qty: number; unitPrice: number; lineTotal: number; isSample: boolean }[];
+  lines: { name: string; variant: string; qty: number; unitPrice: number; lineTotal: number; isSample: boolean; unpriced: boolean }[];
   subtotal: number;
+  hasUnpriced: boolean;
 };
 
 const KEY = "pepstop:lastOrder";
@@ -27,13 +28,14 @@ export function makeRef(): string {
   return `PS-${Date.now().toString(36).toUpperCase()}${Math.random().toString(36).slice(2, 5).toUpperCase()}`;
 }
 
-export function buildOrder(customer: Customer, lines: ResolvedLine[], subtotal: number): Order {
+export function buildOrder(customer: Customer, lines: ResolvedLine[], subtotal: number, hasUnpriced: boolean): Order {
   return {
     ref: makeRef(),
     placedAt: new Date().toISOString(),
     customer,
     subtotal,
-    lines: lines.map((l) => ({ name: l.product.name, variant: l.variant.label, qty: l.qty, unitPrice: l.unitPrice, lineTotal: l.lineTotal, isSample: !!l.product.isSample })),
+    hasUnpriced,
+    lines: lines.map((l) => ({ name: l.product.name, variant: l.variant.label, qty: l.qty, unitPrice: l.unitPrice, lineTotal: l.lineTotal, isSample: !!l.product.isSample, unpriced: l.unpriced })),
   };
 }
 
@@ -64,12 +66,12 @@ export function addressLine(c: Customer): string {
 
 /** Plain text summary used for the chat message and the copy button. */
 export function orderText(o: Order): string {
-  const items = o.lines.map((l) => `- ${l.name} (${l.variant}) x ${l.qty}: ${formatPhp(l.lineTotal)}`).join("\n");
+  const items = o.lines.map((l) => `- ${l.name} (${l.variant}) x ${l.qty}: ${amountLabel(l.lineTotal, l.unpriced)}`).join("\n");
   return [
     CONFIRMATION.messageIntro,
     `${CONFIRMATION.reference}: ${o.ref}`,
     items,
-    `Subtotal: ${formatPhp(o.subtotal)} (shipping to be confirmed)`,
+    `Subtotal: ${amountLabel(o.subtotal, o.hasUnpriced)} (shipping to be confirmed)`,
     `Name: ${o.customer.fullName}`,
     `Mobile: ${o.customer.mobile}${o.customer.email ? ` | Email: ${o.customer.email}` : ""}`,
     `Deliver to: ${addressLine(o.customer)}`,

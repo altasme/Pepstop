@@ -24,7 +24,7 @@ export function Header() {
 
   return (
     <>
-      <p className="on-dark bg-ink px-4 py-2 text-center text-[0.8125rem] font-medium text-white">{HOME.announcement}</p>
+      <p className="on-dark bg-ink px-4 py-2 text-center text-sm font-medium text-white">{HOME.announcement}</p>
       <header className={`sticky top-0 z-40 border-b bg-white/95 backdrop-blur transition-[border-color] duration-200 ${scrolled ? "border-line" : "border-transparent"}`}>
         <div className={`mx-auto flex max-w-page items-center justify-between gap-4 px-4 transition-all duration-200 ease-out sm:px-6 lg:px-8 ${scrolled ? "py-2" : "py-3"}`}>
           <Logo compact={scrolled} />

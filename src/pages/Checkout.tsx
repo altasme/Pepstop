@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { CART, CHECKOUT, PAYMENT_METHODS } from "../content/site";
 import { Seo } from "../lib/seo";
 import { useCart } from "../lib/cart";
-import { formatPhp } from "../lib/format";
+import { amountLabel } from "../lib/format";
 import { buildOrder, submitOrder, type Customer } from "../lib/orders";
 import { SectionHeading } from "../components/ui/SectionHeading";
 import { Button } from "../components/ui/Button";
@@ -44,7 +44,7 @@ function Field({ id, value, error, onChange, label, hint, type = "text", autoCom
 }
 
 export default function Checkout() {
-  const { lines, subtotal, clear } = useCart();
+  const { lines, subtotal, hasUnpriced, clear } = useCart();
   const navigate = useNavigate();
   const [c, setC] = useState<Customer>(empty);
   const [consent, setConsent] = useState(false);
@@ -60,7 +60,7 @@ export default function Checkout() {
       document.getElementById(first === "payment" ? "pay-gcash" : first)?.focus();
       return;
     }
-    submitOrder(buildOrder({ ...c, mobile: c.mobile.replace(/\s+/g, " ").trim() }, lines, subtotal));
+    submitOrder(buildOrder({ ...c, mobile: c.mobile.replace(/\s+/g, " ").trim() }, lines, subtotal, hasUnpriced));
     clear();
     navigate("/checkout/confirmation");
   };
@@ -131,19 +131,19 @@ export default function Checkout() {
               {errors.consent && <p className="mt-1 text-sm font-semibold text-raspberry">{errors.consent}</p>}
             </div>
           </div>
-          <aside className="rounded-xl bg-petal p-6 lg:sticky lg:top-28">
+          <aside className="bg-petal p-6 lg:sticky lg:top-28">
             <h2 className="text-h3 font-semibold text-ink">{CHECKOUT.summaryTitle}</h2>
             <ul className="mt-4 divide-y divide-ink/10">
               {lines.map((l) => (
                 <li key={`${l.productId}-${l.variantId}`} className="flex justify-between gap-3 py-3 text-sm">
                   <span>{l.product.name}, {l.variant.label} <span className="text-ink/70">x {l.qty}</span></span>
-                  <span className="font-semibold tabular-nums">{formatPhp(l.lineTotal)}</span>
+                  <span className="font-semibold tabular-nums">{amountLabel(l.lineTotal, l.unpriced)}</span>
                 </li>
               ))}
             </ul>
             <dl className="mt-3 space-y-2 border-t border-ink/10 pt-3 text-ink">
               <div className="flex justify-between"><dt>{CART.shipping}</dt><dd className="text-sm">{CART.shippingTbc}</dd></div>
-              <div className="flex justify-between text-lg"><dt className="font-semibold text-ink">{CART.total}</dt><dd className="font-semibold tabular-nums">{formatPhp(subtotal)}</dd></div>
+              <div className="flex justify-between text-lg"><dt className="font-semibold text-ink">{CART.total}</dt><dd className="text-right font-semibold tabular-nums">{amountLabel(subtotal, hasUnpriced)}</dd></div>
             </dl>
             <Button submit className="mt-5 w-full">{CHECKOUT.place}</Button>
           </aside>

@@ -3,7 +3,7 @@ import { getProductById } from "../content/getContent";
 import type { Product, Variant } from "../content/products";
 
 export type CartLine = { productId: string; variantId: string; qty: number };
-export type ResolvedLine = CartLine & { product: Product; variant: Variant; unitPrice: number; lineTotal: number };
+export type ResolvedLine = CartLine & { product: Product; variant: Variant; unitPrice: number; lineTotal: number; unpriced: boolean };
 
 const KEY = "pepstop:cart";
 const MAX_QTY = 99;
@@ -12,6 +12,8 @@ type CartApi = {
   lines: ResolvedLine[];
   count: number;
   subtotal: number;
+  /** True when any line has no price yet; totals are then confirmed by reply. */
+  hasUnpriced: boolean;
   add: (productId: string, variantId: string, qty: number) => void;
   setQty: (productId: string, variantId: string, qty: number) => void;
   remove: (productId: string, variantId: string) => void;
@@ -66,13 +68,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
       const variant = product?.variants.find((v) => v.id === l.variantId);
       if (!product || !variant) continue;
       const unitPrice = variant.pricePhp ?? 0;
-      lines.push({ ...l, product, variant, unitPrice, lineTotal: unitPrice * l.qty });
+      lines.push({ ...l, product, variant, unitPrice, lineTotal: unitPrice * l.qty, unpriced: variant.pricePhp === null || !product.showPrice });
     }
     const clamp = (q: number) => Math.max(1, Math.min(MAX_QTY, Math.floor(q) || 1));
     return {
       lines: ready ? lines : [],
       count: ready ? lines.reduce((n, l) => n + l.qty, 0) : 0,
       subtotal: lines.reduce((n, l) => n + l.lineTotal, 0),
+      hasUnpriced: lines.some((l) => l.unpriced),
       add: (productId, variantId, qty) =>
         update((prev) => {
           const i = prev.findIndex((l) => l.productId === productId && l.variantId === variantId);

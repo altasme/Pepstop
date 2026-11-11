@@ -12,7 +12,7 @@ export default function About() {
     <>
       <Seo path="/about" />
       <PageBanner title={ABOUT.bannerTitle} body={ABOUT.bannerBody} />
-      <section className="mx-auto grid max-w-page gap-8 px-4 py-14 sm:px-6 md:grid-cols-2 md:py-20 lg:px-8">
+      <section className="mx-auto grid max-w-page gap-6 px-4 py-14 sm:px-6 md:grid-cols-[1fr_1.4fr] md:gap-16 md:py-20 lg:px-8">
         <SectionHeading title={ABOUT.introTitle} />
         <div className="space-y-5 text-lg text-ink">{ORG.intro.map((p) => <p key={p}>{p}</p>)}</div>
       </section>

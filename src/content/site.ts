@@ -199,11 +199,11 @@ export const HOME = {
   heroShop: { label: "Shop the range", to: "/shop" },
   categoriesTitle: "Shop by category",
   categoryLink: "View range",
-  featuredTitle: "A small range, chosen with care.",
+  featuredTitle: "The range",
   featuredAll: "Shop all products",
-  curatedTitle: "Fewer products. Better answers.",
+  curatedTitle: "Fewer products. Easier questions.",
   curatedBody:
-    "We keep the range short and choose every product ourselves, so you spend less time comparing and more time asking the one question that matters. Message or call and we will talk it through with you.",
+    "Our range is kept short so questions are easy to answer. Message or call and we will talk it through with you.",
   curatedLink: { label: "About The Pep Stop", to: "/about" },
   howTitle: "How ordering works",
   howSteps: [
@@ -215,7 +215,7 @@ export const HOME = {
   educationTitle: "Learn at your own pace",
   educationAll: "See all articles",
   contactTitle: "Questions before you buy? Ask a person.",
-  contactBody: "We reply to every message and pick up every call we can.",
+  contactBody: "Message or call and we will talk it through with you.",
 };
 
 /** Business strip on Home and Shop. Statements describe how we work; no delivery times or guarantees are promised. */
@@ -348,8 +348,8 @@ export const SHOP = {
   emptyStore: "Products are coming soon.",
   emptyStoreHint: "Message or call us to ask what is available.",
   clear: "Clear filters",
-  sampleBadge: "Sample slot",
-  sampleNote: "Sample slot. Replace with real product data in src/content/products.ts.",
+  sampleBadge: "Sample",
+  sampleNote: "Sample slot. Product details, price, and photo to be supplied by The Pep Stop.",
   from: "From",
   addToCart: "Add to cart",
   added: "Added to cart",
@@ -380,6 +380,7 @@ export const CART = {
   subtotal: "Subtotal",
   shipping: "Shipping",
   shippingTbc: "Confirmed with your order",
+  priceTbc: "Confirmed when we reply",
   total: "Estimated total",
   item: "Item",
   price: "Price",

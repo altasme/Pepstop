@@ -9,9 +9,8 @@ export function ProductCard({ product }: { product: Product }) {
   const avail = SHOP.availability[product.status === "unavailable" ? "unavailable" : product.availability];
   return (
     <Link to={`/shop/${product.slug}`} className="group flex h-full flex-col">
-      <div className="relative overflow-hidden rounded-xl">
-        <SlotImage slot="product" src={product.image} alt={product.name} sizes="(min-width: 1024px) 22vw, 45vw" compact className="transition-transform duration-500 ease-out group-hover:scale-[1.03]" />
-        {product.isSample && <span className="absolute right-3 top-3 rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-ink">{SHOP.sampleBadge}</span>}
+      <div className="relative overflow-hidden">
+        <SlotImage slot="product" src={product.image} alt={product.name} sizes="(min-width: 1024px) 22vw, 45vw" compact badge={product.isSample ? SHOP.sampleBadge : undefined} className="transition-transform duration-500 ease-out group-hover:scale-[1.03]" />
       </div>
       <div className="mt-3 flex flex-1 flex-col">
         <p className="text-sm text-mute">{getCategoryName(product.categoryId)}</p>

@@ -3,7 +3,7 @@
  * product_categories) so CATALOGUE_SOURCE = "db" swaps the source in getContent.ts only.
  *
  * Altaventures does not author product content. The records below are LABELED SAMPLE SLOTS:
- * generic names, no descriptions, no claims, zero prices. The client replaces them with real
+ * generic names, no descriptions, no claims, no prices. The client replaces them with real
  * records (set isSample to false or delete the field). Sample products are noindex and excluded
  * from the sitemap.
  */
@@ -51,8 +51,8 @@ const sample = (n: number, categoryId: string): Product => ({
   fullDescription: "",
   specifications: [],
   variants: [
-    { id: `sample-${n}-a`, label: "Option A", pricePhp: 0, available: true },
-    { id: `sample-${n}-b`, label: "Option B", pricePhp: 0, available: true },
+    { id: `sample-${n}-a`, label: "Option A", pricePhp: null, available: true },
+    { id: `sample-${n}-b`, label: "Option B", pricePhp: null, available: true },
   ],
   packaging: "",
   storage: "",
@@ -60,7 +60,7 @@ const sample = (n: number, categoryId: string): Product => ({
   regNumber: null,
   regHolder: null,
   availability: "ask",
-  showPrice: true,
+  showPrice: false,
   status: "published",
   order: n,
   isSample: true,
