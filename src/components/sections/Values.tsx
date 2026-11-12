@@ -4,7 +4,7 @@ import { SectionHeading } from "../ui/SectionHeading";
 /** Four plain statements on a hairline. No icons, no cards. */
 export function Values() {
   return (
-    <section className="bg-white">
+    <section className="bg-petal">
       <div className="mx-auto max-w-page px-4 py-16 sm:px-6 md:py-24 lg:px-8">
         <SectionHeading title={ABOUT.valuesTitle} />
         <ul className="mt-10 grid gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
