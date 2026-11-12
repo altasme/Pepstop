@@ -18,7 +18,7 @@ export const ARTICLES: Article[] = [
   {
     slug: "building-a-simple-skincare-routine",
     title: "Building a simple skincare routine",
-    summary: "A short, general guide to starting with a few steps you can keep up every day.",
+    summary: "A short, gentle guide to starting with a few steps you can enjoy every day.",
     focusAreaId: "skin-beauty",
     published: false,
     updatedAt: "2026-11-11",
@@ -68,7 +68,7 @@ If you often have trouble sleeping, or are worried about your health, please spe
   {
     slug: "reading-a-product-label",
     title: "Reading a product label",
-    summary: "What to look for on a beauty or wellness product label before you buy.",
+    summary: "What to look for on a beauty or wellness label, so every purchase feels like a confident one.",
     focusAreaId: "skin-beauty",
     published: false,
     updatedAt: "2026-11-11",

@@ -1,7 +1,7 @@
 # HANDOVER: The Pep Stop · Phase 1 (Public Website)
 
 **Built by:** Altaventures Business Development Services
-**Handover date:** 2026-11-11 · **Spec version built:** v1.15 (storefront added per client direction; logo and palette applied)
+**Handover date:** 2026-11-11 · **Spec version built:** v1.16 (storefront added per client direction; logo and palette applied)
 **Preview URL:** https://pepstop.vanamaranto1.workers.dev (deployed 2026-11-11, noindex) · **Live URL:** not live: gates open · **Repo:** altasme/pepstop
 
 ## 1. What was delivered
@@ -79,7 +79,7 @@
 | COMMERCE_MODE | frontend | live | Server-side orders and payment handling | Orders endpoint, payment provider and proof workflow, shipping rules (new scope) |
 
 ## 5. Draft and withheld content
-- Draft copy: Home "Why shop with The Pep Stop" lines (the payment line lists methods the checkout offers; the client confirms which they accept), intro, mission, vision (`missionStatus: "draft"`, a note shows on About), values, focus areas, About text, Privacy Policy; also the Home lines "Our range is kept short so questions are easy to answer" and "Message or call and we will talk it through with you", whose range and curation wording is the owners' to confirm.
+- Draft copy: Home "Why shop with The Pep Stop" lines (the payment line lists methods the checkout offers; the client confirms which they accept), intro, mission, vision (`missionStatus: "draft"`, a note shows on About), values, focus areas, About text, Privacy Policy; also the Home lines "Our range is kept short so questions are easy to answer" and "Message or call and we will talk it through with you", whose range and curation wording is the owners' to confirm; and the whole site's v1.16 emotional copy (hero headline, collection taglines and summaries, story, Why, ordering steps, About, Contact). The copy addresses women by client direction; the client should confirm the audience wording and approve every line before launch.
 - Unpublished articles: `building-a-simple-skincare-routine`, `why-sleep-shows-on-your-skin`, `reading-a-product-label`. Education shows "Articles are coming soon." and Home hides the highlights until one is published.
 - Sample products 1 to 6 (labeled, zero price) until real data is supplied. Shipping fee, payment instructions, payment account details and delivery areas are not stated anywhere yet and need client input.
 - Hidden channels: Messenger (★C3 Facebook URL missing), Viber and WhatsApp (★C4 unconfirmed), email (★C2 missing). Only Call and Text render. Business hours (★C6) hidden.
