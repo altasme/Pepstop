@@ -1,5 +1,6 @@
 import { Seo, organizationJsonLd } from "../lib/seo";
 import { Hero } from "../components/sections/Hero";
+import { Marquee } from "../components/sections/Marquee";
 import { CategoryTiles } from "../components/sections/CategoryTiles";
 import { FeaturedProducts } from "../components/sections/FeaturedProducts";
 import { BrandStory } from "../components/sections/BrandStory";
@@ -13,6 +14,7 @@ export default function Home() {
     <>
       <Seo path="/" jsonLd={organizationJsonLd()} />
       <Hero />
+      <Marquee />
       <CategoryTiles />
       <FeaturedProducts />
       <BrandStory />

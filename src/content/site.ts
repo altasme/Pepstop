@@ -410,6 +410,7 @@ export const SHOP = {
   emptyStoreHint: "Message or call us to ask what is available.",
   clear: "Clear filters",
   sampleBadge: "Sample",
+  viewProduct: "View product",
   sampleNote: "Sample slot. Product details, price, and photo to be supplied by The Pep Stop.",
   from: "From",
   addToCart: "Add to cart",

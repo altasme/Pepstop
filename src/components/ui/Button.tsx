@@ -7,9 +7,9 @@ const base =
   "inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 py-3 text-base font-semibold leading-none transition-colors duration-200 ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2";
 
 const variants: Record<Variant, string> = {
-  primary: "bg-raspberry text-white hover:bg-raspberry-deep",
+  primary: "sheen bg-raspberry text-white hover:bg-raspberry-deep",
   secondary: "border border-raspberry text-raspberry hover:bg-raspberry hover:text-white",
-  onDark: "bg-white text-ink hover:bg-petal",
+  onDark: "sheen bg-white text-ink hover:bg-petal",
   onDarkOutline: "border border-white/60 text-white hover:bg-white hover:text-ink",
 };
 

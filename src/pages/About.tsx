@@ -9,6 +9,9 @@ import { Values } from "../components/sections/Values";
 import { SectionHeading } from "../components/ui/SectionHeading";
 import { SlotImage } from "../components/ui/SlotImage";
 import { Sparkle } from "../components/ui/Sparkle";
+import { RuleItem } from "../components/ui/RuleItem";
+import { Sprig } from "../components/ui/Sprig";
+import { SparkleField } from "../components/ui/SparkleField";
 
 export default function About() {
   const showMissionVision = ORG.mission && ORG.vision; // PH-08: hidden if drafts are rejected
@@ -35,8 +38,9 @@ export default function About() {
       </section>
 
       {showMissionVision && (
-        <section className="bg-petal">
-          <div className="mx-auto grid max-w-page gap-10 px-4 py-16 sm:px-6 md:grid-cols-2 md:gap-16 md:py-24 lg:px-8">
+        <section className="relative overflow-hidden bg-petal">
+          <SparkleField className="hidden md:block" spots={[{ x: "47%", y: "14%", size: 14, delay: 0.3 }, { x: "96%", y: "30%", size: 10, delay: 1.7, fill: "#C30239" }, { x: "50%", y: "82%", size: 11, delay: 2.4, fill: "#C30239" }]} />
+          <div className="relative mx-auto grid max-w-page gap-10 px-4 py-16 sm:px-6 md:grid-cols-2 md:gap-16 md:py-24 lg:px-8">
             <div>
               <Sparkle className="mb-4 h-5 w-5" fill="#C30239" />
               <h2 className="text-sm font-semibold text-raspberry">{ABOUT.missionTitle}</h2>
@@ -53,14 +57,14 @@ export default function About() {
       )}
 
       <section className="mx-auto max-w-page px-4 py-16 sm:px-6 md:py-24 lg:px-8">
-        <div className="grid gap-10 md:grid-cols-3 md:gap-12">
-          {how.map((h) => (
-            <div key={h.title} className="border-t border-raspberry/40 pt-5">
+        <ul className="grid gap-10 md:grid-cols-3 md:gap-12">
+          {how.map((h, i) => (
+            <RuleItem key={h.title} delay={i * 140}>
               <h2 className="font-display text-2xl font-medium text-ink">{h.title}</h2>
               <div className="mt-3 space-y-4 text-ink/80">{h.body.map((p) => <p key={p}>{p}</p>)}</div>
-            </div>
+            </RuleItem>
           ))}
-        </div>
+        </ul>
       </section>
 
       <Values />
@@ -69,13 +73,16 @@ export default function About() {
         <div className="mx-auto max-w-page px-4 py-16 sm:px-6 md:py-20 lg:px-8">
           <SectionHeading title={ABOUT.collectionsTitle} className="text-claret" />
           <ul className="mt-8 grid gap-x-8 sm:grid-cols-2 lg:grid-cols-3">
-            {areas.map((a) => (
-              <li key={a.id} className="border-t border-raspberry/40">
+            {areas.map((a, i) => (
+              <RuleItem key={a.id} delay={i * 80} className="!pt-0">
                 <Link to={`/shop?cat=${a.id}`} className="group flex min-h-14 items-center justify-between gap-4 py-4 font-display text-xl font-medium text-ink hover:text-raspberry">
                   {a.title}<ArrowUpRight className="h-5 w-5 shrink-0 transition-transform duration-200 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5" strokeWidth={1.75} aria-hidden="true" />
                 </Link>
-              </li>
+              </RuleItem>
             ))}
+            <li aria-hidden="true" className="relative hidden h-24 sm:block">
+              <Sprig className="absolute bottom-0 right-6 h-36 w-auto text-raspberry/55" />
+            </li>
           </ul>
         </div>
       </section>

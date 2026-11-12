@@ -1,7 +1,7 @@
 # HANDOVER: The Pep Stop · Phase 1 (Public Website)
 
 **Built by:** Altaventures Business Development Services
-**Handover date:** 2026-11-11 · **Spec version built:** v1.11 (storefront added per client direction; logo and palette applied)
+**Handover date:** 2026-11-11 · **Spec version built:** v1.12 (storefront added per client direction; logo and palette applied)
 **Preview URL:** https://pepstop.vanamaranto1.workers.dev (deployed 2026-11-11, noindex) · **Live URL:** not live: gates open · **Repo:** altasme/pepstop
 
 ## 1. What was delivered
@@ -43,6 +43,11 @@
 - **Pep Match:** the invented sales device. A goal-led "What are you shopping for today?" row plus a "Not sure where to start? Get matched" panel that hands the shopper to a person by one message (SMS and WhatsApp prefilled, Messenger and phone open blank). It promises navigation and a reply, nothing else. Flat placeholders (hairline, diagonal cross) state canvas size, aspect ratio and type. Home: announcement bar, hero, shop by category, featured range, curated statement, how ordering works, education (hidden until an article is published), raspberry contact band.
 - Direction contract: `.impeccable/surfaces/`. Design record: `DESIGN.md`. Product record: `PRODUCT.md`.
 - Slop removed: cream gradients, gold arcs, serif display, eyebrow labels, icon-on-card grids, shadowed floating cards, hover lift. `impeccable detect` reports no findings on `src`.
+
+### Motion and vector system (v1.12)
+- Components: `Sprig` (botanical line art), `SparkleField` and `Sparkle` (logo stars), `Marquee` (collections ticker), `RuleItem` (drawing hairline), `Reveal`, `Parallax`; hook `useReveal`; keyframes and reduced-motion switches at the end of `src/index.css`.
+- Copy-free and decorative: all `aria-hidden`; nothing hides content without JavaScript; `prefers-reduced-motion` shows the final state with no movement.
+- To retune: sprig placement is per section (search `Sprig` and `SparkleField`); timing lives in the `--ease` token and the keyframe durations in `index.css`.
 
 ### Hero image brief
 - Two files from the same shoot: desktop 2400 × 1000 and phone 1200 × 1000. Set their Cloudinary ids on `IMAGE_SLOTS.hero.src` and `IMAGE_SLOTS.heroMobile.src` in `src/content/site.ts`.

@@ -8,6 +8,7 @@ import { ContactBlock } from "../components/sections/ContactBlock";
 import { Card } from "../components/ui/Card";
 import { Disclaimer } from "../components/ui/Disclaimer";
 import { formatDate } from "../lib/format";
+import { Sprig } from "../components/ui/Sprig";
 
 export default function Education() {
   const articles = getPublishedArticles();
@@ -17,7 +18,8 @@ export default function Education() {
       <PageBanner title={EDUCATION.bannerTitle} body={EDUCATION.bannerBody} />
       <section className="mx-auto max-w-page px-4 py-14 sm:px-6 md:py-20 lg:px-8">
         {articles.length === 0 ? (
-          <div className="mx-auto max-w-prose rounded-xl bg-petal p-10 text-center">
+          <div className="relative mx-auto max-w-prose overflow-hidden rounded-[28px] bg-petal p-10 pb-52 text-center">
+            <Sprig className="pointer-events-none absolute -bottom-2 left-1/2 h-48 w-auto -translate-x-1/2 text-raspberry/55" />
             <p className="font-sans text-h3 font-semibold text-ink">{EDUCATION.empty}</p>
             <p className="mt-2 text-ink">{EDUCATION.emptyHint}</p>
           </div>

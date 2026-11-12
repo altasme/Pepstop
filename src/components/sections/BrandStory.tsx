@@ -5,12 +5,16 @@ import { SlotImage } from "../ui/SlotImage";
 import { SectionHeading } from "../ui/SectionHeading";
 import { Sparkle } from "../ui/Sparkle";
 import { Reveal } from "../ui/Reveal";
+import { SparkleField } from "../ui/SparkleField";
+import { Sprig } from "../ui/Sprig";
 
 /** The business, not just the stock: who is behind the shop, what it believes, and a way into the full story. */
 export function BrandStory() {
   return (
-    <section className="bg-petal">
-      <div className="mx-auto grid max-w-page items-center gap-10 px-4 py-16 sm:px-6 md:grid-cols-[0.8fr_1.2fr] md:gap-16 md:py-24 lg:px-8">
+    <section className="relative overflow-hidden bg-petal">
+      <Sprig className="pointer-events-none absolute -right-4 bottom-0 hidden h-[60%] w-auto text-raspberry/40 lg:block" />
+      <SparkleField className="hidden md:block" spots={[{ x: "36%", y: "12%", size: 14, delay: 0.4 }, { x: "92%", y: "20%", size: 10, delay: 1.9, fill: "#C30239" }]} />
+      <div className="relative mx-auto grid max-w-page items-center gap-10 px-4 py-16 sm:px-6 md:grid-cols-[0.8fr_1.2fr] md:gap-16 md:py-24 lg:px-8">
         <Reveal>
           <div className="relative mx-auto w-full max-w-sm md:max-w-none">
             <div aria-hidden="true" className="absolute -bottom-4 -left-4 right-8 top-8 rounded-[28px] bg-rosewater" />

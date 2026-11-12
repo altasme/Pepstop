@@ -5,6 +5,8 @@ import { amountLabel } from "../lib/format";
 import { Button } from "../components/ui/Button";
 import { CartLines } from "../components/ui/CartLines";
 import { SectionHeading } from "../components/ui/SectionHeading";
+import { Sprig } from "../components/ui/Sprig";
+import { SparkleField } from "../components/ui/SparkleField";
 
 export default function Cart() {
   const { lines, subtotal, hasUnpriced } = useCart();
@@ -14,7 +16,9 @@ export default function Cart() {
       <section className="mx-auto max-w-page px-4 pb-20 pt-10 sm:px-6 md:pt-14 lg:px-8">
         <SectionHeading as="h1" title={CART.title} />
         {lines.length === 0 ? (
-          <div className="mt-10 max-w-prose">
+          <div className="relative mt-10 min-h-[22rem] max-w-prose">
+            <Sprig className="pointer-events-none absolute -bottom-6 right-0 hidden h-72 w-auto text-raspberry/50 sm:block" />
+            <SparkleField className="hidden sm:block" spots={[{ x: "70%", y: "6%", size: 12, delay: 0.4 }, { x: "92%", y: "40%", size: 9, delay: 1.8, fill: "#C30239" }]} />
             <p className="text-xl font-semibold text-ink">{CART.empty}</p>
             <p className="mt-2 text-ink/80">{CART.emptyHint}</p>
             <div className="mt-6"><Button to="/shop">{CART.continue}</Button></div>

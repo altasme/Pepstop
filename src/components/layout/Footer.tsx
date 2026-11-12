@@ -3,6 +3,8 @@ import { CONTACT, CONTACT_PAGE, CTA, NAV, ORG, PAYMENT_METHODS, UI } from "../..
 import { getFocusAreas } from "../../content/getContent";
 import { phone } from "../../lib/phone";
 import { Logo } from "../ui/Logo";
+import { Sprig } from "../ui/Sprig";
+import { SparkleField } from "../ui/SparkleField";
 
 declare const __BUILD_YEAR__: string;
 
@@ -14,8 +16,10 @@ export function Footer() {
   const legal = ORG.legalName && ORG.registration ? `${ORG.legalName} · ${ORG.registration}` : null; // PH-06
   const areas = getFocusAreas();
   return (
-    <footer className="on-dark bg-claret pb-28 pt-16 text-white md:pb-10">
-      <div className="mx-auto max-w-page px-4 sm:px-6 lg:px-8">
+    <footer className="on-dark relative overflow-hidden bg-claret pb-28 pt-16 text-white md:pb-10">
+      <Sprig className="pointer-events-none absolute -bottom-10 -right-6 hidden h-[26rem] w-auto text-white/15 lg:block" />
+      <SparkleField className="hidden lg:block" spots={[{ x: "88%", y: "12%", size: 12, delay: 0.6 }, { x: "94%", y: "52%", size: 9, delay: 2 }]} />
+      <div className="relative mx-auto max-w-page px-4 sm:px-6 lg:px-8">
         <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-[1.4fr_1.2fr_1fr_1fr]">
           <div className="sm:col-span-2 lg:col-span-1">
             <Logo onDark />
