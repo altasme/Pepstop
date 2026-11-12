@@ -1,3 +1,4 @@
+import { useRemote } from "../lib/remote";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { EDUCATION } from "../content/site";
@@ -12,6 +13,7 @@ import { Sprig } from "../components/ui/Sprig";
 import { Button } from "../components/ui/Button";
 
 export default function Education() {
+  useRemote();
   const articles = getPublishedArticles();
   return (
     <>

@@ -1,10 +1,11 @@
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { CART, CHECKOUT, PAYMENT_METHODS } from "../content/site";
+import { CART, CHECKOUT, PAYMENT_METHODS, UI } from "../content/site";
 import { Seo } from "../lib/seo";
 import { useCart } from "../lib/cart";
 import { amountLabel } from "../lib/format";
-import { buildOrder, submitOrder, type Customer } from "../lib/orders";
+import { buildOrder, submitOrder, submitOrderRemote, type Customer } from "../lib/orders";
+import { getState } from "../lib/remote";
 import { SectionHeading } from "../components/ui/SectionHeading";
 import { Button } from "../components/ui/Button";
 import { SlotImage } from "../components/ui/SlotImage";
@@ -50,9 +51,11 @@ export default function Checkout() {
   const [c, setC] = useState<Customer>(empty);
   const [consent, setConsent] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
+  const [sending, setSending] = useState(false);
+  const [serverError, setServerError] = useState("");
   const set = (k: keyof Customer) => (v: string) => setC((p) => ({ ...p, [k]: v }));
 
-  const onSubmit = (ev: FormEvent) => {
+  const onSubmit = async (ev: FormEvent) => {
     ev.preventDefault();
     const errs = validate(c, consent);
     setErrors(errs);
@@ -61,7 +64,13 @@ export default function Checkout() {
       document.getElementById(first === "payment" ? "pay-gcash" : first)?.focus();
       return;
     }
-    submitOrder(buildOrder({ ...c, mobile: c.mobile.replace(/\s+/g, " ").trim() }, lines, subtotal, hasUnpriced));
+    const order = buildOrder({ ...c, mobile: c.mobile.replace(/\s+/g, " ").trim() }, lines, subtotal, hasUnpriced);
+    if (getState().live) {
+      setSending(true);
+      setServerError("");
+      try { await submitOrderRemote(order, lines); } catch (e) { setServerError(e instanceof Error && e.message === "rate" ? CHECKOUT.errors.rate : CHECKOUT.errors.server); setSending(false); return; }
+      setSending(false);
+    } else submitOrder(order);
     clear();
     navigate("/checkout/confirmation");
   };
@@ -147,7 +156,8 @@ export default function Checkout() {
               <div className="flex flex-wrap justify-between gap-x-4"><dt>{CART.shipping}</dt><dd className="text-sm">{CART.shippingTbc}</dd></div>
               <div className="flex flex-wrap justify-between gap-x-4 text-lg"><dt className="font-semibold text-ink">{CART.total}</dt><dd className="text-right font-semibold tabular-nums">{amountLabel(subtotal, hasUnpriced)}</dd></div>
             </dl>
-            <Button submit className="mt-5 w-full">{CHECKOUT.place}</Button>
+            {serverError && <p role="alert" className="mt-4 rounded-xl bg-petal p-3 text-sm font-medium text-raspberry-deep">{serverError}</p>}
+            <Button submit disabled={sending} className="mt-5 w-full">{sending ? UI.loading : CHECKOUT.place}</Button>
           </aside>
         </form>
       </section>

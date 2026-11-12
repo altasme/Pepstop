@@ -7,7 +7,7 @@
 web
 
 ## Stack
-Existing codebase: React 18, Vite 6, TypeScript, Tailwind 3, vite-react-ssg (build-time prerender). Deployed as static assets on Cloudflare Workers (`wrangler.jsonc`). Front end only; no backend, database or payment processing.
+Existing codebase: React 18, Vite 6, TypeScript, Tailwind 3, vite-react-ssg (build-time prerender). Deployed as static assets on Cloudflare Workers (`wrangler.jsonc`). Cloudflare Worker with D1 and R2 (v1.20). Admin panel at /admin. No payment processing.
 
 ## Users
 Primary: Philippine adults 30 to 60 who find The Pep Stop on Facebook or Messenger, browse on a phone, compare options, and want to ask a person before ordering. Mixed gender. They convert by message or call, not by paying on the site.
@@ -25,7 +25,7 @@ Checkout is front end only (COMMERCE_MODE "frontend"): the cart and order live i
 - Routes: Home, Shop, Product, Cart, Checkout, Order summary, About, Health & Beauty, Wellness Education (articles), Contact, Privacy, 404.
 - All copy and config in `src/content/site.ts`, products in `src/content/products.ts`, articles in `src/content/articles.ts`, read through `src/content/getContent.ts`.
 - Products are labeled sample slots; the client supplies real records. The builder never writes product descriptions, claims, dosing or usage guidance.
-- Phase 2 (admin, database, COA directory, live payments) is reserved and not built.
+- Admin, database, COA directory and manual-payment orders are built (v1.20). Live payment gateways are not.
 - Spec: CLAUDE.md (v1.4) governs content rules, launch integrity, banned vocabulary and handover.
 
 ## Brand Commitments

@@ -10,6 +10,36 @@ import { Button } from "../components/ui/Button";
 import { Card } from "../components/ui/Card";
 import { CtaButton } from "../components/ui/CtaButton";
 
+function PaymentDetails({ order }: { order: Order }) {
+  const [reference, setReference] = useState("");
+  const [state, setState] = useState<"idle" | "sending" | "sent" | "error" | "need">("idle");
+  const input = "mt-1 min-h-12 w-full rounded-xl border border-edge bg-white px-4 text-base text-ink";
+  return (
+    <Card>
+      <h2 className="font-sans text-h3 font-semibold text-ink">{CONFIRMATION.payTitle}</h2>
+      <p className="mt-2 text-sm text-ink">{CONFIRMATION.payBody}</p>
+      {state === "sent" ? <p role="status" className="mt-4 rounded-xl bg-petal p-3 text-sm font-medium text-ink">{CONFIRMATION.paySent}</p> : (
+        <form className="mt-4 grid gap-3" onSubmit={async (e) => {
+          e.preventDefault();
+          const file = (e.currentTarget.elements.namedItem("proof") as HTMLInputElement).files?.[0];
+          if (!reference.trim() && !file) { setState("need"); return; }
+          setState("sending");
+          const fd = new FormData();
+          fd.set("mobile", order.customer.mobile);
+          fd.set("reference", reference.trim());
+          if (file) fd.set("proof", file);
+          try { const r = await fetch(`/api/public/orders/${encodeURIComponent(order.ref)}/payment`, { method: "POST", body: fd }); setState(r.ok ? "sent" : "error"); } catch { setState("error"); }
+        }}>
+          <label className="text-sm font-semibold text-ink">{CONFIRMATION.payReference}<input className={input} value={reference} onChange={(e) => setReference(e.target.value)} maxLength={120} autoComplete="off" /></label>
+          <label className="text-sm font-semibold text-ink">{CONFIRMATION.payProof}<input name="proof" type="file" accept="image/png,image/jpeg,image/webp,application/pdf" className={input} /></label>
+          {(state === "error" || state === "need") && <p role="alert" className="text-sm font-medium text-raspberry-deep">{state === "need" ? CONFIRMATION.payNeed : CONFIRMATION.payError}</p>}
+          <Button submit disabled={state === "sending"}>{CONFIRMATION.paySubmit}</Button>
+        </form>
+      )}
+    </Card>
+  );
+}
+
 export default function OrderConfirmation() {
   const [order, setOrder] = useState<Order | null | undefined>(undefined);
   const [copied, setCopied] = useState(false);
@@ -84,6 +114,7 @@ export default function OrderConfirmation() {
             {channels.map((c, i) => <CtaButton key={c.kind} channel={c} label={c.label} variant={i === 0 ? "primary" : "secondary"} />)}
           </div>
         </Card>
+        {order.remote && <PaymentDetails order={order} />}
       </section>
     </>
   );

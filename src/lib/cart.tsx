@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { getProductById } from "../content/getContent";
+import { useRemote } from "./remote";
 import type { Product, Variant } from "../content/products";
 
 export type CartLine = { productId: string; variantId: string; qty: number };
@@ -44,6 +45,7 @@ function save(lines: CartLine[]) {
 export function CartProvider({ children }: { children: ReactNode }) {
   const [raw, setRaw] = useState<CartLine[]>([]);
   const [ready, setReady] = useState(false);
+  const remote = useRemote();
 
   useEffect(() => {
     setRaw(load());
@@ -89,7 +91,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       remove: (productId, variantId) => update((prev) => prev.filter((l) => !(l.productId === productId && l.variantId === variantId))),
       clear: () => update(() => []),
     };
-  }, [raw, ready, update]);
+  }, [raw, ready, update, remote.status, remote.products]);
 
   return <CartContext.Provider value={api}>{children}</CartContext.Provider>;
 }

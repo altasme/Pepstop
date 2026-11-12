@@ -1,11 +1,14 @@
+import { useRemote } from "../lib/remote";
 import { CHAT_HELPER, CONTACT, CONTACT_PAGE } from "../content/site";
 import { getChannels, hasChatChannel } from "../lib/cta";
 import { Seo } from "../lib/seo";
 import { phone } from "../lib/phone";
 import { PageBanner } from "../components/sections/PageBanner";
 import { CtaButton } from "../components/ui/CtaButton";
+import { InquiryForm } from "../components/sections/InquiryForm";
 
 export default function Contact() {
+  useRemote();
   const channels = getChannels();
   return (
     <>
@@ -28,6 +31,7 @@ export default function Contact() {
         </dl>
         {/* Phase 2A: INQUIRY_MODE === "form" renders the inquiry form here. Not built in Phase 1. */}
       </section>
+      <InquiryForm />
     </>
   );
 }

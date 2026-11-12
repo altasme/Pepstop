@@ -13,7 +13,7 @@ const walk = (dir) =>
   });
 
 // 1. Dash audit: no em or en dashes in source, scripts or documentation.
-const dashFiles = [...walk(join(root, "src")), ...walk(join(root, "scripts")), ...["HANDOVER.md", "CLAUDE.md", "index.html"].map((f) => join(root, f))].filter(existsSync);
+const dashFiles = [...walk(join(root, "src")), ...walk(join(root, "scripts")), ...walk(join(root, "admin/src")), ...walk(join(root, "worker")), ...walk(join(root, "migrations")), ...["HANDOVER.md", "CLAUDE.md", "index.html"].map((f) => join(root, f))].filter(existsSync);
 for (const f of dashFiles) if (/[\u2013\u2014]/.test(readFileSync(f, "utf8"))) fail(`dash found: ${f.replace(root, "")}`);
 
 // 2. Banned vocabulary sweep over public-site copy (content files).
@@ -25,21 +25,28 @@ for (const f of walk(join(root, "src/content"))) {
   for (const w of banned) if (new RegExp(`\\b${w}(s|ed|ing|ment)?\\b`).test(text)) fail(`banned word "${w}" in ${f.replace(root, "")}`);
 }
 
-// 3. Phase 2 code must not exist in Phase 1.
-for (const d of ["functions", "admin", "catalog", "src/admin", "src/catalog", "src/pages/catalog", "src/pages/admin"]) if (existsSync(join(root, d))) fail(`forbidden directory: ${d}`);
+// 3. Boundary (CLAUDE.md v1.20). The admin panel and Worker API are built, but the public bundle may only
+// reach the network from four known files, and nothing may bring back the retired catalog routes or Pages Functions.
+for (const d of ["functions", "catalog", "src/admin", "src/catalog", "src/pages/catalog", "src/pages/admin"]) if (existsSync(join(root, d))) fail(`forbidden directory: ${d}`);
+const NETWORK_OK = ["src/components/sections/InquiryForm.tsx", "src/lib/remote.ts", "src/lib/orders.ts", "src/pages/Coa.tsx", "src/pages/OrderConfirmation.tsx"];
 for (const f of walk(join(root, "src"))) {
   const t = readFileSync(f, "utf8");
-  if (/\bfetch\(|XMLHttpRequest|D1Database|R2Bucket/.test(t)) fail(`network or binding code in ${f.replace(root, "")}`);
+  const rel = f.replace(root, "");
+  if (/\bfetch\(|XMLHttpRequest/.test(t) && !NETWORK_OK.includes(rel)) fail(`unexpected network call in ${rel}`);
+  if (/D1Database|R2Bucket/.test(t)) fail(`binding code in ${rel}`);
+  if (/["'`]\/admin|\/api\/admin/.test(t)) fail(`public source references the admin panel: ${rel}`);
 }
+// Admin secrets must never be in source.
+for (const f of [...walk(join(root, "src")), ...walk(join(root, "admin/src")), ...walk(join(root, "worker")), ...walk(join(root, "migrations"))]) if (/pepstop@2026/i.test(readFileSync(f, "utf8"))) fail(`temporary admin password found in source: ${f.replace(root, "")}`);
 
 // 4. Built output: no catalog link, no sitemap entry, all routes prerendered.
 const dist = join(root, "dist");
 if (!existsSync(dist)) fail("dist/ missing: run npm run build first");
 else {
-  for (const f of walk(dist).filter((p) => [".html", ".xml", ".txt"].includes(extname(p)))) {
+  for (const f of walk(dist).filter((p) => [".html", ".xml", ".txt"].includes(extname(p)) && !p.startsWith(join(dist, "admin")))) {
     if (/\/catalog|\/admin|\/api\//.test(readFileSync(f, "utf8"))) fail(`catalog/admin/api reference in dist${f.replace(dist, "")}`);
   }
-  for (const r of ["index.html", "about/index.html", "health-beauty/index.html", "education/index.html", "contact/index.html", "privacy/index.html", "404.html", "sitemap.xml", "robots.txt", "_headers"]) {
+  for (const r of ["index.html", "about/index.html", "health-beauty/index.html", "education/index.html", "contact/index.html", "privacy/index.html", "404.html", "sitemap.xml", "robots.txt", "_headers", "shop/_/index.html", "education/_/index.html", "coa/index.html", "admin/index.html"]) {
     if (!existsSync(join(dist, r))) fail(`missing in dist: ${r}`);
   }
   const home = existsSync(join(dist, "index.html")) ? readFileSync(join(dist, "index.html"), "utf8") : "";

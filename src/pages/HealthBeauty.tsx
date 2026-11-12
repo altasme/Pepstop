@@ -1,3 +1,4 @@
+import { useRemote } from "../lib/remote";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { HEALTH_BEAUTY, UI } from "../content/site";
@@ -13,6 +14,7 @@ import { Sparkle } from "../components/ui/Sparkle";
 
 /** Five collections, set as a quiet editorial index: numeral, name, plain summary, one action. */
 export default function HealthBeauty() {
+  useRemote();
   const areas = getFocusAreas();
   return (
     <>

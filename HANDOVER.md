@@ -1,7 +1,7 @@
 # HANDOVER: The Pep Stop · Phase 1 (Public Website)
 
 **Built by:** Altaventures Business Development Services
-**Handover date:** 2026-11-11 · **Spec version built:** v1.19 (storefront added per client direction; logo and palette applied)
+**Handover date:** 2026-11-11 · **Spec version built:** v1.20 (storefront added per client direction; logo and palette applied)
 **Preview URL:** https://pepstop.vanamaranto1.workers.dev (deployed 2026-11-11, noindex) · **Live URL:** not live: gates open · **Repo:** altasme/pepstop
 
 ## 1. What was delivered
@@ -31,11 +31,13 @@
 
 ## 2. Run & deploy
 - Install `npm install` · Dev `npm run dev` · Build `npm run build` · Audit `npm run audit:content` (after build) · Types `npm run typecheck`
-- **Cloudflare Workers with static assets.** Config: `wrangler.jsonc` (worker name `pepstop`, assets `./dist`, `404-page` handling so unknown URLs get `404.html` with status 404, `drop-trailing-slash` so URLs match the canonical and sitemap form). There is no Worker script and no bindings; Phase 2A will add `main` plus D1 and R2 bindings here.
-- Deploy: `npm run deploy` (builds, then `wrangler deploy`). Dry run: `npm run cf:dry`. Local check on the Workers runtime: `npm run cf:preview`.
-- **Fallback deploy:** `npm run deploy:inline` embeds `dist/` in one Worker script (`scripts/deploy-inline.mjs`) and deploys it with the same routes, 404 page, trailing-slash rule and `_headers`. It was used for the first deploy because the static assets upload step was rejected (401) inside the build sandbox, where a proxy rewrites the upload token. From a normal machine use `npm run deploy`; the next static-assets deploy replaces the inline script.
-- Git-connected builds (Workers Builds): build command `npm run build`, deploy command `npx wrangler deploy`. No runtime secrets. Node 20 or later.
-- Headers come from `public/_headers` (supported by Workers static assets). Custom domain: add it under the Worker, Settings, Domains and Routes.
+- **Cloudflare Worker with static assets, D1 and R2.** `wrangler.jsonc`: worker `pepstop`, entry `worker/index.ts`, assets `./dist` (binding `ASSETS`, Worker runs first), D1 `pepstop_db` (binding `DB`, migrations in `migrations/`), R2 `pepstop-files` (binding `FILES`). The Worker serves `/api/public/*`, `/api/admin/*`, `/files/*`, the admin shell at `/admin`, and falls back to the prerendered `/shop/_` and `/education/_` shells for database products and articles.
+- Build: `npm run build` (public site prerender, sitemap, then the admin app into `dist/admin`). Checks: `npm run typecheck`, `npm run audit:content`.
+- Database: `npm run db:migrate` (remote) and `npm run db:migrate:local`. Migrations are version-controlled and the seed only adds the five categories and default settings.
+- Deploy: `npm run deploy` (builds, then `wrangler deploy`). Local run on the Workers runtime: `npm run dev:worker` (put local secrets in `.dev.vars`, which is gitignored).
+- **Fallback deploy:** `npm run deploy:inline` bundles the Worker with `dist/` embedded in one script and deploys it with the same bindings. It was used because the static assets upload step is rejected (401) inside the build sandbox. From a normal machine use `npm run deploy`.
+- **Worker secrets (never committed):** `ADMIN_BOOTSTRAP_PASSWORD` provisions the first administrator (username `admin`) on the first sign-in attempt when the admins table is empty; the account must change it at first login. `ADMIN_RESET_TOKEN` powers the administrator reset screen and is held by the developer team, not the client. Set with `npx wrangler secret put NAME`.
+- Headers come from `public/_headers`. Custom domain: add it under the Worker, Settings, Domains and Routes.
 
 ## 2.5 Design system (v1.5 redesign)
 - Premium, feminine, brand-led beauty store with Glossier and Rare Beauty as craft bar. Raspberry lacquer hero, white sections, petal panels, claret footer, plum ink. Bodoni Moda headings with Hanken Grotesk body and UI. The logo's sparkle is the only motif.
@@ -68,15 +70,15 @@
 - Copy and config: `src/content/site.ts`. Articles: `src/content/articles.ts`. Read through `src/content/getContent.ts`.
 - Dev server shows unpublished article drafts at `/education/:slug` (marked Draft). Production builds never do.
 
-## 4. Phase 2 activation map
-| Constant | Now | Flip to | Turns on | Inputs needed |
-|---|---|---|---|---|
-| INQUIRY_MODE | chat | form | Inquiry form (slot marked in `Contact.tsx`) | 2A built, ★P4, ★P6 |
-| CONTENT_SOURCE | static | store | Admin-edited content (`getContent.ts` throws until built) | content_documents seeded |
-| CATALOGUE_SOURCE | static | db | Products from D1 instead of `products.ts` | ★P1, ★P5 |
-| ADMIN_ENABLED | absent | true | /admin | WorkOS, ★P3 |
-| COA_ENABLED | absent | true | COA directory | ★P2 |
-| COMMERCE_MODE | frontend | live | Server-side orders and payment handling | Orders endpoint, payment provider and proof workflow, shipping rules (new scope) |
+## 4. Activation map (admin build, v1.20)
+| Constant or switch | Now | Notes |
+|---|---|---|
+| INQUIRY_MODE | form | Contact page form posts to `/api/public/inquiries` (honeypot, rate limit, no medical history) |
+| CONTENT_SOURCE | store | Published website text overrides built-in copy field by field (`src/lib/remote.ts`) |
+| CATALOGUE_SOURCE | db | Published products replace the sample slots; with none published, samples stay |
+| ADMIN_ENABLED | on | `/admin` and `/api/admin/*` are live; remove the Worker route or secret to switch off |
+| COA directory | on | `/coa`, published documents only, never labeled verified |
+| COMMERCE_MODE | database orders, manual payment | Orders are saved by the Worker; no payment is collected or verified automatically |
 
 ## 5. Draft and withheld content
 - Draft copy: Home "Why shop with The Pep Stop" lines (the payment line lists methods the checkout offers; the client confirms which they accept), intro, mission, vision (`missionStatus: "draft"`, a note shows on About), values, focus areas, About text, Privacy Policy; also the Home lines "Our range is kept short so questions are easy to answer" and "Message or call and we will talk it through with you", whose range and curation wording is the owners' to confirm; and the whole site's v1.16 emotional copy (hero headline, collection taglines and summaries, story, Why, ordering steps, About, Contact). The copy addresses women by client direction; the client should confirm the audience wording and approve every line before launch.
@@ -105,6 +107,17 @@
 - **Spec conflict, resolved in favor of the client's direction:** CLAUDE.md v1.1 set `COMMERCE_MODE = "none"`, kept products in an unlisted catalog on the client's own domain, and said checkout would be a new spec. The client asked for an ecommerce store that also showcases the business, so v1.2 builds the storefront front end only. The responsibility questions behind the old rules still apply: product listings, prices, claims, and registration details are client content (Appendix B.1), ★G3 should be signed before real products go live, and the Appendix C-15 hosting-account risk note stands. Raise with Chief Alta before launch.
 - **Client copy refresh (v1.18):** all page copy now follows the client's "E-Commerce Website Copy Refresh" document. Three calls to confirm with the client: cash on delivery is hidden (flip `PAYMENT_METHODS` in `site.ts` once supported); the document's eyebrow labels are not rendered; the audit exempts only the exact phrase "diagnosis, or treatment guidance" in the client's product disclaimer (the word "treat" is otherwise banned, spec section 12). The five category taglines and summaries are still the earlier v1.16 text; the client's document asks that taglines stay as they are, so confirm those too.
 - **Client imagery (v1.19):** the five collection images, brand story image and product image were supplied by the client and are wired in. The product and story images show branded gift boxes that look like rendered mockups, and some photographs may be AI-generated; CLAUDE.md §6 and §12.6 allow licensed imagery only, so the client must confirm origin and licence before launch. All six sample products currently share the one product image; replace per product when real photos exist.
+- **Admin panel built against the Phase 1 only rule (v1.20).** CLAUDE.md v1.1 to v1.19 reserved admin, database, COA and orders for Phase 2 and said not to build them. The client's Admin Panel specification asked for them, so v1.20 supersedes those rules. The reasons for the old rules still apply: product listings, prices, claims, documents and registration details are client content (Appendix B.1); ★G3 should be signed before real products go live; and the Appendix C-15 risk stands (see the shared-account note below).
+- **Shared Cloudflare account.** The D1 database and R2 bucket were created in the account that already hosts other client projects. Appendix C-15 recommends a separate account for this catalog. Raise with Chief Alta before launch; moving means recreating the bindings and running the migrations.
+- **Password hashing is PBKDF2-SHA256 (100,000 iterations), not Argon2id or bcrypt.** Neither is available in the Workers runtime and 100,000 is the platform maximum. Passwords are salted, never returned by the API, never in local storage. Sessions are random 256-bit tokens, stored hashed, in HttpOnly Secure SameSite=Strict cookies.
+- **Temporary password.** The specification contains the initial password in plain text. It is stored only as the Worker secret `ADMIN_BOOTSTRAP_PASSWORD`, never in source (the audit fails the build if it appears), and must be changed at first login. Because it travelled in a document and a chat, treat it as exposed and change it immediately.
+- **Categories.** The specification names four categories (Weight & Metabolic Research and others). The client's five categories (Weight & Wellness and others) were already live, and the specification says to preserve existing assignments, so the five are seeded and remain editable. The "Research" wording is not used on the site.
+- **Search visibility.** The specification asks for noindex. The setting defaults to Hidden, which adds `X-Robots-Tag: noindex, nofollow` to public pages and withholds `sitemap.xml`. Admin, API and files are always noindex. This is a request to search engines, not access control; published COAs and product pages open for anyone with the link.
+- **Product information and guidelines** share one table (`product_information`, section `guidelines`). A guideline cannot be published until a person marks it Reviewed. The system generates no dosing, claims or recommendations.
+- **Payments.** Customers can submit a reference number and optional proof; proof files are private (admin only). Nothing is verified automatically; an administrator marks each payment verified or rejected.
+- **Backups.** D1 Time Travel gives point-in-time restore for 30 days. A restore test and scheduled exports to R2 are not set up and are listed under next steps.
+- **Not built:** email or SMS notifications, image resizing, multiple roles, scheduled backups, automated end-to-end tests in CI. The rich-text editor is a lightweight toolbar; output is sanitized to a short allow-list on the server.
+- **Public JS** is now about 113 KB gzipped (budget 120 KB); the admin app is a separate 70 KB bundle that public visitors never load.
 - The shop is publicly linked and indexable. If the client wants it unlisted, add noindex to the shop pages and remove it from nav and sitemap.
 - The cart cannot verify stock or compute shipping; both are confirmed by The Pep Stop after the order is sent.
 - Nav button label: spec says "Message Us". While Messenger is hidden the primary CTA is the phone, so the button reads "Call Us" to stay truthful. It switches to "Message Us" when ★C3 is supplied.

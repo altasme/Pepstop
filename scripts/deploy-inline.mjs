@@ -1,8 +1,9 @@
 // Fallback deploy for environments where the Workers static assets upload API is blocked
-// (for example behind a proxy that rewrites its upload token). It embeds dist/ into a single
-// Worker script that serves the same routes, 404 page, trailing-slash rule and _headers.
-// Normal deploys use `npm run deploy` (wrangler.jsonc, static assets). Run `npm run build` first.
+// (for example behind a proxy that rewrites its upload token). It embeds dist/ into the Worker bundle so a single
+// script serves the static site, the admin shell and the API, with the same D1 and R2 bindings as wrangler.jsonc.
+// Normal deploys use `npm run deploy` (static assets binding). Run `npm run build` first.
 import { mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
+import { execFileSync } from "node:child_process";
 import { extname, join, relative } from "node:path";
 
 const root = new URL("..", import.meta.url).pathname;
@@ -26,7 +27,7 @@ for (const line of readFileSync(join(dist, "_headers"), "utf8").split("\n")) {
   else { cur = { p: line.trim(), h: [] }; rules.push(cur); }
 }
 
-const worker = `
+const adapter = `
 const FILES = ${JSON.stringify(files)};
 const RULES = ${JSON.stringify(rules)};
 const cache = new Map();
@@ -41,18 +42,27 @@ function respond(req, key, status, url) {
   for (const r of RULES_RE) if (r.re.test(r.abs ? url.origin + url.pathname : url.pathname)) for (const [k, v] of r.h) headers.set(k, v);
   return new Response(req.method === "HEAD" ? null : bytes(key), { status, headers });
 }
-export default {
-  async fetch(req) {
-    const url = new URL(req.url);
-    let p = decodeURIComponent(url.pathname);
-    if (p.length > 1 && p.endsWith("/")) { url.pathname = p.slice(0, -1); return Response.redirect(url.toString(), 307); }
-    const candidates = p === "/" ? ["/index.html"] : [p, p + ".html", p + "/index.html"];
-    for (const c of candidates) if (FILES[c] && !c.endsWith("/_headers")) return respond(req, c, 200, url);
-    return respond(req, "/404.html", 404, url);
-  },
-};
+export async function serveStatic(req) {
+  const url = new URL(req.url);
+  let p = decodeURIComponent(url.pathname);
+  if (p.length > 1 && p.endsWith("/")) { url.pathname = p.slice(0, -1); return Response.redirect(url.toString(), 307); }
+  const candidates = p === "/" ? ["/index.html"] : [p, p + ".html", p + "/index.html"];
+  for (const c of candidates) if (FILES[c] && !c.endsWith("/_headers")) return respond(req, c, 200, url);
+  return respond(req, "/404.html", 404, url);
+}
 `;
 mkdirSync(out, { recursive: true });
-writeFileSync(join(out, "worker.js"), worker);
-writeFileSync(join(out, "wrangler.jsonc"), JSON.stringify({ name: "pepstop", main: "./worker.js", compatibility_date: "2026-11-11", observability: { enabled: true } }, null, 2));
-console.log(`inline worker: ${Object.keys(files).length} files, ${(worker.length / 1048576).toFixed(2)} MB source`);
+writeFileSync(join(out, "static.js"), adapter);
+
+execFileSync("npx", ["esbuild", "worker/index.ts", "--bundle", "--format=esm", "--target=es2022", "--minify", `--alias:@static=${join(out, "static.js")}`, `--outfile=${join(out, "worker.js")}`], { cwd: root, stdio: "inherit" });
+
+const base = JSON.parse(readFileSync(join(root, "wrangler.jsonc"), "utf8").replace(/^\s*\/\/.*$/gm, ""));
+writeFileSync(join(out, "wrangler.jsonc"), JSON.stringify({
+  name: base.name,
+  main: "./worker.js",
+  compatibility_date: base.compatibility_date,
+  d1_databases: base.d1_databases.map((d) => ({ binding: d.binding, database_name: d.database_name, database_id: d.database_id })),
+  r2_buckets: base.r2_buckets,
+  observability: base.observability,
+}, null, 2));
+console.log(`inline worker: ${Object.keys(files).length} files, ${(statSync(join(out, "worker.js")).size / 1048576).toFixed(2)} MB bundle`);

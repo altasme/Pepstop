@@ -16,8 +16,8 @@ import Product from "./pages/Product";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import OrderConfirmation from "./pages/OrderConfirmation";
+import CoaDirectory from "./pages/Coa";
 import NotFound from "./pages/NotFound";
-import { getProducts, getPublishedArticles } from "./content/getContent";
 
 export const routes: RouteRecord[] = [
   {
@@ -32,10 +32,11 @@ export const routes: RouteRecord[] = [
       {
         path: "education/:slug",
         Component: Article,
-        getStaticPaths: () => getPublishedArticles().map((a) => `education/${a.slug}`),
+        getStaticPaths: () => ["education/_"], // shell; the Worker serves it for any article slug
       },
       { path: "shop", Component: Shop },
-      { path: "shop/:slug", Component: Product, getStaticPaths: () => getProducts().map((p) => `shop/${p.slug}`) },
+      { path: "shop/:slug", Component: Product, getStaticPaths: () => ["shop/_"] }, // shell; products come from the database
+      { path: "coa", Component: CoaDirectory },
       { path: "cart", Component: Cart },
       { path: "checkout", Component: Checkout },
       { path: "checkout/confirmation", Component: OrderConfirmation },

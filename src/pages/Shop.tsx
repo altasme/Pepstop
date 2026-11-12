@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { SHOP } from "../content/site";
+import { SHOP, UI } from "../content/site";
+import { useRemote } from "../lib/remote";
 import { getCategories, getProducts } from "../content/getContent";
 import { Seo } from "../lib/seo";
 import { PageBanner } from "../components/sections/PageBanner";
@@ -13,6 +14,7 @@ type Sort = keyof typeof SHOP.sorts;
 const minPrice = (p: ReturnType<typeof getProducts>[number]) => Math.min(...p.variants.map((v) => v.pricePhp ?? Infinity));
 
 export default function Shop() {
+  const remote = useRemote();
   const all = getProducts();
   const categories = getCategories();
   const [cat, setCat] = useState("all");
@@ -42,7 +44,9 @@ export default function Shop() {
       <Seo path="/shop" />
       <PageBanner title={SHOP.bannerTitle} body={SHOP.bannerBody} />
       <section className="mx-auto max-w-page px-4 py-10 sm:px-6 md:py-14 lg:px-8">
-        {all.length === 0 ? (
+        {remote.status === "loading" ? (
+          <div aria-busy="true" className="mx-auto max-w-prose p-10 text-center text-mute">{UI.loading}</div>
+        ) : all.length === 0 ? (
           <div className="mx-auto max-w-prose bg-petal p-10 text-center">
             <p className="font-sans text-h3 font-semibold text-ink">{SHOP.emptyStore}</p>
             <p className="mt-2 text-ink">{SHOP.emptyStoreHint}</p>

@@ -5,9 +5,11 @@ import { getFeaturedProducts } from "../../content/getContent";
 import { SectionHeading } from "../ui/SectionHeading";
 import { ProductCard } from "../ui/ProductCard";
 import { Reveal } from "../ui/Reveal";
+import { useRemote } from "../../lib/remote";
 
 /** Renders nothing if the store has no products. */
 export function FeaturedProducts() {
+  useRemote();
   const products = getFeaturedProducts(4);
   if (products.length === 0) return null;
   return (

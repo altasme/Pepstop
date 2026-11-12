@@ -1,3 +1,4 @@
+import { useRemote } from "../lib/remote";
 import { Button } from "../components/ui/Button";
 import { Link } from "react-router-dom";
 import { ArrowUpRight } from "lucide-react";
@@ -15,6 +16,7 @@ import { Sprig } from "../components/ui/Sprig";
 import { SparkleField } from "../components/ui/SparkleField";
 
 export default function About() {
+  useRemote();
   const showMissionVision = ORG.mission && ORG.vision; // PH-08: hidden if drafts are rejected
   const areas = getFocusAreas();
   const how = [

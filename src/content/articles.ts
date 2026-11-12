@@ -9,6 +9,7 @@ export type Article = {
   title: string;
   summary: string;
   body: string;
+  html?: string; // sanitized HTML from the admin panel
   published: boolean;
   updatedAt: string; // YYYY-MM-DD
   focusAreaId?: string; // links the article to a Health & Beauty section

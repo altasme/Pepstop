@@ -15,7 +15,7 @@ function walk(dir) {
 const routes = walk(dist)
   .filter((f) => f.endsWith(".html"))
   .map((f) => "/" + relative(dist, f).replace(/index\.html$/, "").replace(/\.html$/, "").replace(/\/$/, ""))
-  .filter((r) => r !== "/404" && !readFileSync(join(dist, r === "/" ? "index.html" : `${r}/index.html`), "utf8").includes('content="noindex"'))
+  .filter((r) => r !== "/404" && !r.endsWith("/_") && !readFileSync(join(dist, r === "/" ? "index.html" : `${r}/index.html`), "utf8").includes('content="noindex"'))
   .sort();
 
 const lastmod = new Date().toISOString().slice(0, 10);

@@ -5,9 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite-react-ssg build && node scripts/postbuild.mjs",
+    "build": "vite-react-ssg build && node scripts/postbuild.mjs && vite build -c vite.admin.config.ts",
     "preview": "vite preview",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.worker.json && tsc -p tsconfig.admin.json",
+    "db:migrate": "wrangler d1 migrations apply pepstop_db --remote",
+    "db:migrate:local": "wrangler d1 migrations apply pepstop_db --local",
+    "dev:worker": "npm run build && wrangler dev --local",
     "audit:content": "node scripts/audit.mjs",
     "deploy": "npm run build && wrangler deploy",
     "cf:preview": "npm run build && wrangler dev",
@@ -24,6 +27,7 @@
     "vite-react-ssg": "^0.9.2"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261112.1",
     "@types/node": "^26.6.6",
     "@types/react": "^18.3.31",
     "@types/react-dom": "^18.3.7",

@@ -4,6 +4,8 @@ import { Check, ChevronDown, ChevronRight } from "lucide-react";
 import { CTA, PAYMENT_METHODS, SEO, SHOP } from "../content/site";
 import { getCategoryName, getProduct, getProducts } from "../content/getContent";
 import { Seo } from "../lib/seo";
+import { useRemote } from "../lib/remote";
+import { UI } from "../content/site";
 import { useCart } from "../lib/cart";
 import { priceLabel, formatPhp } from "../lib/format";
 import { getChannels } from "../lib/cta";
@@ -15,6 +17,19 @@ import { Disclaimer } from "../components/ui/Disclaimer";
 import { ProductCard } from "../components/ui/ProductCard";
 import { SectionHeading } from "../components/ui/SectionHeading";
 import NotFound from "./NotFound";
+
+/** Admin-published rich text. The Worker sanitizes it against an allow-list before it is stored. */
+function HtmlDetail({ title, html }: { title: string; html: string }) {
+  return (
+    <details className="group border-b border-line">
+      <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 text-base font-semibold text-ink [&::-webkit-details-marker]:hidden">
+        {title}
+        <ChevronDown className="h-5 w-5 shrink-0 transition-transform duration-200 ease-out group-open:rotate-180" strokeWidth={1.75} aria-hidden="true" />
+      </summary>
+      <div className="pb-5 text-ink/80 [&_a]:text-raspberry [&_a]:underline [&_h2]:mt-3 [&_h2]:font-semibold [&_h3]:mt-3 [&_h3]:font-semibold [&_li]:ml-5 [&_ol]:list-decimal [&_p]:mt-2 [&_table]:w-full [&_td]:border [&_td]:border-line [&_td]:p-2 [&_th]:border [&_th]:border-line [&_th]:p-2 [&_ul]:list-disc" dangerouslySetInnerHTML={{ __html: html }} />
+    </details>
+  );
+}
 
 function Detail({ title, children }: { title: string; children: string | string[] }) {
   const items = (Array.isArray(children) ? children : [children]).filter(Boolean);
@@ -33,12 +48,14 @@ function Detail({ title, children }: { title: string; children: string | string[
 
 export default function Product() {
   const { slug = "" } = useParams();
+  const remote = useRemote();
   const product = getProduct(slug);
   const cart = useCart();
   const [variantId, setVariantId] = useState<string>("");
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
 
+  if (remote.status === "loading") return <section aria-busy="true" className="mx-auto max-w-page px-4 py-24 text-center text-mute">{UI.loading}</section>;
   if (!product) return <NotFound />;
 
   const unavailable = product.status === "unavailable" || product.availability === "unavailable";
@@ -127,13 +144,22 @@ export default function Product() {
             </div>
 
             <div className="mt-8 border-t border-line">
-              {product.fullDescription && <Detail title={SHOP.detailsTitle}>{product.fullDescription}</Detail>}
+              {(product.overview || product.fullDescription) && <Detail title={SHOP.detailsTitle}>{product.overview || product.fullDescription}</Detail>}
               <Detail title={SHOP.specsTitle}>{product.specifications}</Detail>
               <Detail title={SHOP.optionsTitle}>{product.variants.map((v) => v.label)}</Detail>
               <Detail title={SHOP.packagingTitle}>{product.packaging}</Detail>
               <Detail title={SHOP.storageTitle}>{product.storage}</Detail>
               <Detail title={SHOP.documentsTitle}>{[]}</Detail>
-              <Detail title={SHOP.coaTitle}>{[]}</Detail>
+              {product.composition && <Detail title={SHOP.compositionTitle}>{product.composition}</Detail>}
+              {product.notes && <Detail title={SHOP.notesTitle}>{product.notes}</Detail>}
+              {product.info?.filter((i) => i.html.trim()).map((i) => <HtmlDetail key={i.section} title={i.section === "guidelines" ? "Product guidelines" : i.section[0].toUpperCase() + i.section.slice(1)} html={i.html} />)}
+              {product.coas && product.coas.length > 0 ? (
+                <details className="group border-b border-line">
+                  <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 text-base font-semibold text-ink [&::-webkit-details-marker]:hidden">{SHOP.coaTitle}<ChevronDown className="h-5 w-5 shrink-0 transition-transform duration-200 ease-out group-open:rotate-180" strokeWidth={1.75} aria-hidden="true" /></summary>
+                  <ul className="space-y-2 pb-5 text-ink/80">{product.coas.map((c) => <li key={c.id}>{c.title} ({SHOP.batchLabel}: {c.batch}) <a className="font-semibold text-raspberry underline" href={`/files/coa/${c.id}`} target="_blank" rel="noreferrer">{SHOP.coaOpen}</a></li>)}</ul>
+                  <p className="pb-5 text-sm text-mute">{SHOP.coaNote}</p>
+                </details>
+              ) : <Detail title={SHOP.coaTitle}>{[]}</Detail>}
             </div>
             <Disclaimer text={SHOP.productDisclaimer} className="mt-6" />
           </div>

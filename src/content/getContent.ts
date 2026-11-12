@@ -9,7 +9,8 @@ import {
   UI, VALUES, INQUIRY_MODE, SHOP, CART, CHECKOUT, CONFIRMATION, PAYMENT_METHODS, TRUST,
 } from "./site";
 import { ARTICLES, type Article } from "./articles";
-import { PRODUCTS, PRODUCT_CATEGORIES, type Product } from "./products";
+import { PRODUCT_CATEGORIES, type Product } from "./products";
+import { getState, type RemoteArticle } from "../lib/remote";
 
 function assertStatic() {
   if (CONTENT_SOURCE !== "static") {
@@ -28,7 +29,8 @@ export function getSite() {
 
 export function getFocusAreas() {
   assertStatic();
-  return [...FOCUS_AREAS].sort((a, b) => a.order - b.order);
+  const imgs = getState().categoryImages;
+  return [...FOCUS_AREAS].map((a) => ({ ...a, image: imgs[a.id] ?? a.image })).sort((a, b) => a.order - b.order);
 }
 
 const byNewest = (a: Article, b: Article) => b.updatedAt.localeCompare(a.updatedAt);
@@ -36,8 +38,13 @@ const byNewest = (a: Article, b: Article) => b.updatedAt.localeCompare(a.updated
 /** Published articles, newest first. */
 export function getPublishedArticles(): Article[] {
   assertStatic();
+  const remote = getState().articles;
+  if (remote) return remote.map(toArticle);
   return ARTICLES.filter((a) => a.published).sort(byNewest);
 }
+
+/** Admin-published articles carry sanitized HTML in `html`; built-in drafts use plain `body`. */
+const toArticle = (r: RemoteArticle): Article => ({ slug: r.slug, title: r.title, summary: r.summary, body: "", html: r.content_html, published: true, updatedAt: r.updated_at.slice(0, 10) });
 
 /**
  * Article by slug. Unpublished articles resolve only in the dev server so drafts can be
@@ -45,6 +52,9 @@ export function getPublishedArticles(): Article[] {
  */
 export function getArticle(slug: string): Article | undefined {
   assertStatic();
+  const remote = getState().articles?.find((a) => a.slug === slug);
+  if (remote) return toArticle(remote);
+  if (getState().articles) return undefined;
   return ARTICLES.find((a) => a.slug === slug && (a.published || import.meta.env.DEV));
 }
 
@@ -52,12 +62,11 @@ export function getArticlesForFocusArea(focusAreaId: string): Article[] {
   return getPublishedArticles().filter((a) => a.focusAreaId === focusAreaId);
 }
 
-/* ---- Products (storefront) ---- */
+/* ---- Products (storefront). Read from the remote store: database products when published, else sample slots. ---- */
 
-/** Products visible in the shop: published or unavailable, never draft or archived. */
+/** Products visible in the shop: published or unavailable, never draft or archived. Empty while the catalog loads. */
 export function getProducts(): Product[] {
-  assertStatic();
-  return PRODUCTS.filter((p) => p.status === "published" || p.status === "unavailable").sort((a, b) => a.order - b.order);
+  return getState().products.filter((p) => p.status === "published" || p.status === "unavailable").sort((a, b) => a.order - b.order);
 }
 
 export function getProduct(slug: string): Product | undefined {
@@ -68,8 +77,13 @@ export function getProductById(id: string): Product | undefined {
   return getProducts().find((p) => p.id === id);
 }
 
-export const getCategories = () => [...PRODUCT_CATEGORIES].sort((a, b) => a.sort - b.sort);
+export const getCategories = () => [...getState().categories].sort((a, b) => a.sort - b.sort);
 
-export const getCategoryName = (id: string) => PRODUCT_CATEGORIES.find((c) => c.id === id)?.name ?? "";
+export const getCategoryName = (id: string) => getState().categories.find((c) => c.id === id)?.name ?? PRODUCT_CATEGORIES.find((c) => c.id === id)?.name ?? "";
 
-export const getFeaturedProducts = (n = 3) => getProducts().slice(0, n);
+export function getFeaturedProducts(n = 3) {
+  const { featuredSlugs } = getState();
+  const all = getProducts();
+  const picked = featuredSlugs.map((s) => all.find((p) => p.slug === s)).filter((p): p is Product => !!p);
+  return (picked.length ? picked : all).slice(0, n);
+}

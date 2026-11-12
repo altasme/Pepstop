@@ -33,6 +33,12 @@ export type Product = {
   status: "draft" | "published" | "unavailable" | "archived";
   order: number;
   isSample?: boolean;
+  /** Published by the admin panel. */
+  info?: { section: string; html: string }[];
+  coas?: { id: string; batch: string; title: string }[];
+  overview?: string;
+  composition?: string;
+  notes?: string;
 };
 
 export const PRODUCT_CATEGORIES: ProductCategory[] = [

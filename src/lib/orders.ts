@@ -20,6 +20,8 @@ export type Order = {
   lines: { name: string; variant: string; qty: number; unitPrice: number; lineTotal: number; isSample: boolean; unpriced: boolean }[];
   subtotal: number;
   hasUnpriced: boolean;
+  /** True when the order was saved by the server and can receive payment details. */
+  remote?: boolean;
 };
 
 const KEY = "pepstop:lastOrder";
@@ -37,6 +39,18 @@ export function buildOrder(customer: Customer, lines: ResolvedLine[], subtotal: 
     hasUnpriced,
     lines: lines.map((l) => ({ name: l.product.name, variant: l.variant.label, qty: l.qty, unitPrice: l.unitPrice, lineTotal: l.lineTotal, isSample: !!l.product.isSample, unpriced: l.unpriced })),
   };
+}
+
+/** Sends the order to the Worker. Returns the saved order (with the server reference) or throws a short message. */
+export async function submitOrderRemote(order: Order, lines: ResolvedLine[]): Promise<Order> {
+  const res = await fetch("/api/public/orders", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ customer: order.customer, items: lines.map((l) => ({ productId: l.productId, variantId: l.variantId, qty: l.qty })) }),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error === "too_many_requests" ? "rate" : data.error ?? "failed");
+  return submitOrder({ ...order, ref: data.ref, remote: true });
 }
 
 /** Front-end stub. Returns the order unchanged; the backend call goes here in Phase 2A. */

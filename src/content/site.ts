@@ -414,6 +414,18 @@ export const CONTACT_PAGE = {
   phoneLabel: "Call Us",
   emailLabel: "Email Us",
   facebookLabel: "Find Us on Facebook",
+  formTitle: "Send Us a Message",
+  formBody: "Prefer to write? Leave your details and a question, and our team will get back to you.",
+  formName: "Your Name",
+  formPhone: "Mobile Number",
+  formEmail: "Email Address (Optional)",
+  formSubject: "Subject",
+  formMessage: "Your Message",
+  formHint: "Please do not include medical history or sensitive health information.",
+  formSend: "Send Message",
+  formSending: "Sending...",
+  formSent: "Thank you. We received your message and will reply soon.",
+  formError: "We could not send your message. Please check the details or contact us directly.",
 };
 
 export const SHOP = {
@@ -455,6 +467,11 @@ export const SHOP = {
   storageTitle: "Storage Information",
   documentsTitle: "Supporting Documents",
   coaTitle: "Certificate of Analysis",
+  compositionTitle: "Listed Contents",
+  notesTitle: "Additional Notes",
+  coaOpen: "Open document",
+  coaNote: "A certificate of analysis is a supplier document. It is not proof of product approval, safety, effectiveness, or authorization for sale.",
+  batchLabel: "Batch or lot",
   regLabel: "Reg. No.",
   notProvided: "Information to be provided by The Pep Stop.",
   back: "All Products",
@@ -540,6 +557,8 @@ export const CHECKOUT = {
     payment: "Choose a payment method.",
     consent: "Please confirm to continue.",
     summary: "Please fix the highlighted fields.",
+    server: "We could not send your order. Please check your connection and try again, or contact us directly.",
+    rate: "You have sent several orders in a short time. Please wait a little, or contact us directly.",
   },
 };
 
@@ -562,6 +581,29 @@ export const CONFIRMATION = {
   none: "No Recent Order Found.",
   noneHint: "We couldn't find an order summary in this browser. You can return to the shop and start again.",
   messageIntro: "Hi The Pep Stop, I would like to place this order.",
+  payTitle: "Already sent your payment?",
+  payBody: "Share your payment reference number or a screenshot so our team can match it to your order. We verify every payment manually, so your order is not confirmed until we reply.",
+  payReference: "Payment reference number",
+  payProof: "Payment screenshot (optional, image or PDF up to 5 MB)",
+  paySubmit: "Submit payment details",
+  paySent: "Thank you. We received your payment details and will verify them with your order.",
+  payError: "We could not send that. Please check the details and try again, or message us instead.",
+  payNeed: "Enter a reference number or choose a file.",
+};
+
+export const COA = {
+  title: "Certificates of Analysis",
+  body: "Search published certificates of analysis by product name or batch or lot number. Open a document to view or download the PDF.",
+  searchLabel: "Search by product or batch number",
+  searchPlaceholder: "Product name or batch number",
+  results: (n: number) => `${n} ${n === 1 ? "document" : "documents"}`,
+  empty: "No published documents match your search.",
+  emptyAll: "No certificates have been published yet.",
+  product: "Product",
+  batch: "Batch or lot",
+  open: "Open PDF",
+  note: "A certificate of analysis is a supplier document. It is not proof of product approval, safety, effectiveness, or authorization for sale, and it does not replace advice from a qualified healthcare professional.",
+  link: "Certificates of Analysis",
 };
 
 export const NOT_FOUND = {
@@ -590,6 +632,7 @@ export const UI = {
   footerCompanyTitle: "About The Pep Stop",
   footerBrand: "The Pep Stop is your destination for wellness, beauty, and informed self-care. Explore our collection, discover helpful information, and connect with our team whenever you need assistance.",
   rights: "All rights reserved.",
+  socials: [] as { label: string; href: string }[],
   loading: "Preparing your selection...",
   error: "Something went wrong. Please try again.",
   footerHelpTitle: "Help",
@@ -714,6 +757,7 @@ export const SEO = {
     "/cart": { title: "Your Cart | The Pep Stop", description: "Review the items in your cart." },
     "/checkout": { title: "Checkout | The Pep Stop", description: "Enter your delivery details to place your order." },
     "/checkout/confirmation": { title: "Order Summary | The Pep Stop", description: "Send your order summary to The Pep Stop." },
+    "/coa": { title: "Certificates of Analysis | The Pep Stop", description: "Search published certificates of analysis by product name or batch number." },
     "/privacy": {
       title: "Privacy Policy | The Pep Stop",
       description: "How The Pep Stop handles personal information under the Data Privacy Act of 2012.",

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { CONTACT, CONTACT_PAGE, CTA, NAV, ORG, PAYMENT_METHODS, UI } from "../../content/site";
+import { COA, CONTACT, CONTACT_PAGE, CTA, NAV, ORG, PAYMENT_METHODS, UI } from "../../content/site";
 import { getFocusAreas } from "../../content/getContent";
 import { phone } from "../../lib/phone";
 import { Logo } from "../ui/Logo";
@@ -41,7 +41,9 @@ export function Footer() {
                 <li key={n.to}><Link to={n.to} className={link}>{n.label}</Link></li>
               ))}
               <li><Link to="/contact" className={link}>Contact</Link></li>
+              <li><Link to="/coa" className={link}>{COA.link}</Link></li>
               <li><Link to="/privacy" className={link}>{UI.privacyLink}</Link></li>
+              {UI.socials.map((s) => <li key={s.label}><a href={s.href} className={link} target="_blank" rel="noopener noreferrer">{s.label}</a></li>)}
             </ul>
           </div>
           <div>
