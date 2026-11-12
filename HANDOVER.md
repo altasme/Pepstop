@@ -1,7 +1,7 @@
 # HANDOVER: The Pep Stop · Phase 1 (Public Website)
 
 **Built by:** Altaventures Business Development Services
-**Handover date:** 2026-11-11 · **Spec version built:** v1.10 (storefront added per client direction; logo and palette applied)
+**Handover date:** 2026-11-11 · **Spec version built:** v1.11 (storefront added per client direction; logo and palette applied)
 **Preview URL:** https://pepstop.vanamaranto1.workers.dev (deployed 2026-11-11, noindex) · **Live URL:** not live: gates open · **Repo:** altasme/pepstop
 
 ## 1. What was delivered
@@ -18,7 +18,8 @@
 
 | ID | Where | Canvas | Ratio | Type |
 |---|---|---|---|---|
-| PH-01 | Home hero | 1200 × 1500 px | 4:5 portrait | JPG or WebP |
+| PH-01 | Home hero, desktop, full bleed (subject right 40 percent, clean light area left 55 percent) | 2400 × 1000 px | 12:5 landscape | JPG or WebP |
+| PH-01 | Home hero, phone crop (subject centered, 15 percent margin) | 1200 × 1000 px | 6:5 landscape | JPG or WebP |
 | PH-02 | Focus tiles (Home, Health & Beauty), 3 images | 1200 × 900 px | 4:3 landscape | JPG or WebP |
 | PH-10 | Brand story image (Home "Behind the shop" and About): a real photo of the shop, team or packing table | 1200 × 1500 px | 4:5 portrait | JPG or WebP |
 | PH-09 | Product images (shop cards, product page, cart), one per product | 1000 × 1000 px | 1:1 square | JPG or WebP |
@@ -42,6 +43,11 @@
 - **Pep Match:** the invented sales device. A goal-led "What are you shopping for today?" row plus a "Not sure where to start? Get matched" panel that hands the shopper to a person by one message (SMS and WhatsApp prefilled, Messenger and phone open blank). It promises navigation and a reply, nothing else. Flat placeholders (hairline, diagonal cross) state canvas size, aspect ratio and type. Home: announcement bar, hero, shop by category, featured range, curated statement, how ordering works, education (hidden until an article is published), raspberry contact band.
 - Direction contract: `.impeccable/surfaces/`. Design record: `DESIGN.md`. Product record: `PRODUCT.md`.
 - Slop removed: cream gradients, gold arcs, serif display, eyebrow labels, icon-on-card grids, shadowed floating cards, hover lift. `impeccable detect` reports no findings on `src`.
+
+### Hero image brief
+- Two files from the same shoot: desktop 2400 × 1000 and phone 1200 × 1000. Set their Cloudinary ids on `IMAGE_SLOTS.hero.src` and `IMAGE_SLOTS.heroMobile.src` in `src/content/site.ts`.
+- Left 55 percent of the desktop image must be a clean, light, low-contrast area (blush to white) so claret text passes AA. Keep the subject's head and key product inside the right 40 percent and the middle 75 percent of the height.
+- Real photography only (spec §6, §12.6). If any AI-assisted editing is used, it must be limited to extending background, cropping and colour matching; never change the subject, the product, its label text, or imply results.
 
 ## 3. Where to edit content
 - Copy and config: `src/content/site.ts`. Articles: `src/content/articles.ts`. Read through `src/content/getContent.ts`.

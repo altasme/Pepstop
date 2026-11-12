@@ -14,14 +14,19 @@ type Props = {
   compact?: boolean;
   badge?: string;
   thumb?: boolean;
+  /** Fill the parent (full-bleed): absolute cover, square corners. */
+  fill?: boolean;
+  square?: boolean;
+  /** CSS object-position when cropping, for example "75% center". */
+  objectPosition?: string;
 };
 
 /** Renders the licensed asset when its Cloudinary id is set, otherwise the registered placeholder. */
-export function SlotImage({ slot, src, alt, label, sizes = "100vw", priority = false, className = "", compact, badge, thumb }: Props) {
+export function SlotImage({ slot, src, alt, label, sizes = "100vw", priority = false, className = "", compact, badge, thumb, fill = false, square = false, objectPosition }: Props) {
   const s = IMAGE_SLOTS[slot];
   const id = src ?? s.src;
   const url = id ? cloudinaryUrl(id, s.width) : null;
-  if (!id || !url) return <Placeholder slot={slot} label={label} className={className} compact={compact} badge={badge} thumb={thumb} />;
+  if (!id || !url) return <Placeholder slot={slot} label={label} className={className} compact={compact} badge={badge} thumb={thumb} fill={fill} square={square} />;
   return (
     <img
       src={url}
@@ -33,8 +38,8 @@ export function SlotImage({ slot, src, alt, label, sizes = "100vw", priority = f
       loading={priority ? "eager" : "lazy"}
       decoding="async"
       fetchPriority={priority ? "high" : "auto"}
-      className={`h-auto w-full rounded-[20px] object-cover ${className}`}
-      style={{ aspectRatio: `${s.width} / ${s.height}` }}
+      className={`${fill ? "absolute inset-0 h-full w-full rounded-none" : `h-auto w-full ${square ? "rounded-none" : "rounded-[20px]"}`} object-cover ${className}`}
+      style={{ ...(fill ? {} : { aspectRatio: `${s.width} / ${s.height}` }), ...(objectPosition ? { objectPosition } : {}) }}
     />
   );
 }
