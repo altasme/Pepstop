@@ -40,9 +40,9 @@ export function CategoryTiles() {
         <div id="match" className="relative mt-14 scroll-mt-40 grid gap-8 overflow-hidden rounded-[28px] bg-petal p-6 sm:p-10 md:grid-cols-[1.1fr_0.9fr] md:items-center md:gap-12">
           <SparkleField className="hidden md:block" spots={[{ x: "52%", y: "16%", size: 14, delay: 0.2 }, { x: "58%", y: "78%", size: 10, delay: 1.6, fill: "#C30239" }, { x: "96%", y: "10%", size: 9, delay: 2.6 }]} />
           <div className="relative">
-            <p className="flex items-center gap-2 text-sm font-semibold text-raspberry"><Sparkle className="h-4 w-4" fill="#C30239" />{HOME.matchName}</p>
-            <h3 className="mt-3 max-w-[20ch] font-display text-h2 font-medium text-raspberry-deep">{HOME.matchTitle}</h3>
-            <p className="mt-4 max-w-prose text-ink/80">{HOME.matchBody}</p>
+            <Sparkle className="mb-4 h-5 w-5" fill="#C30239" />
+            <h3 className="max-w-[20ch] font-display text-h2 font-medium text-raspberry-deep">{HOME.matchTitle}</h3>
+            <p className="mt-4 max-w-prose text-ink/80"><span className="font-semibold text-raspberry-deep">{HOME.matchName}</span> {HOME.matchBody}</p>
           </div>
           <div className="relative">
             <p className="mb-3 text-sm text-mute">{hasChatChannel() ? CHAT_HELPER.withChat : CHAT_HELPER.phoneOnly}</p>

@@ -22,8 +22,8 @@ export function BrandStory() {
           </div>
         </Reveal>
         <div>
-          <p className="flex items-center gap-2 text-sm font-semibold text-raspberry"><Sparkle className="h-4 w-4" fill="#C30239" />{HOME.storyTitle}</p>
-          <SectionHeading title={HOME.storyHeading} className="mt-3 max-w-[22ch] text-claret" />
+          <Sparkle className="mb-4 h-5 w-5" fill="#C30239" />
+          <SectionHeading title={HOME.storyHeading} className="max-w-[22ch] text-claret" />
           <div className="mt-5 max-w-prose space-y-4 text-lg text-ink/80">
             {ORG.intro.map((p) => <p key={p}>{p}</p>)}
           </div>

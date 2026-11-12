@@ -110,7 +110,7 @@
 | Rendering | Build-time prerender of every route (`vite-react-ssg` or equivalent). Facebook and Messenger link previews do not run JavaScript |
 | Styling | Tailwind CSS, tokens in config (§6) |
 | Backend | **None in Phase 1** |
-| Fonts | Self-hosted via `@fontsource`: Cormorant Garamond 500/600 (headings), DM Sans 400/500/600 (body) |
+| Fonts | Self-hosted via `@fontsource`: Bodoni Moda 500/600 (headings), Hanken Grotesk 400 to 700 (body and UI), latin subset (v1.5 and v1.6; supersedes the original Cormorant Garamond and DM Sans) |
 | Icons | `lucide-react`, one stroke weight |
 | Media | Cloudinary (`f_auto,q_auto`, responsive `srcset`) |
 | Hosting | Cloudflare Workers static assets (`wrangler.jsonc`), Git-connected, static `dist/` |

@@ -43,13 +43,13 @@ export default function About() {
           <div className="relative mx-auto grid max-w-page gap-10 px-4 py-16 sm:px-6 md:grid-cols-2 md:gap-16 md:py-24 lg:px-8">
             <div>
               <Sparkle className="mb-4 h-5 w-5" fill="#C30239" />
-              <h2 className="text-sm font-semibold text-raspberry">{ABOUT.missionTitle}</h2>
-              <p className="mt-3 font-display text-2xl font-medium leading-snug text-claret md:text-3xl">{ORG.mission}</p>
+              <h2 className="font-display text-h2 font-medium text-claret">{ABOUT.missionTitle}</h2>
+              <p className="mt-4 max-w-[34ch] text-xl leading-relaxed text-ink/80">{ORG.mission}</p>
             </div>
             <div>
               <Sparkle className="mb-4 h-5 w-5" fill="#C30239" />
-              <h2 className="text-sm font-semibold text-raspberry">{ABOUT.visionTitle}</h2>
-              <p className="mt-3 font-display text-2xl font-medium leading-snug text-claret md:text-3xl">{ORG.vision}</p>
+              <h2 className="font-display text-h2 font-medium text-claret">{ABOUT.visionTitle}</h2>
+              <p className="mt-4 max-w-[34ch] text-xl leading-relaxed text-ink/80">{ORG.vision}</p>
             </div>
             {ORG.missionStatus === "draft" && <p className="text-sm text-mute md:col-span-2">{ABOUT.draftNote}</p>}
           </div>
