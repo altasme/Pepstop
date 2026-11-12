@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-12T00:41:32Z",
+  "generatedAt": "2026-11-12T12:00:00Z",
   "title": "Design System: The Pep Stop",
   "extensions": {
     "colorMeta": {
@@ -138,12 +138,42 @@
           "#ffffff",
           "#ffffff"
         ]
+      },
+      "rosewater": {
+        "role": "neutral",
+        "displayName": "Rosewater",
+        "canonical": "#F8CDD9",
+        "tonalRamp": [
+          "#31181f",
+          "#5f2f3c",
+          "#8d4a5d",
+          "#F8CDD9",
+          "#faa8bd",
+          "#fbbccb",
+          "#fcd6df",
+          "#fdebf0"
+        ]
+      },
+      "edge": {
+        "role": "neutral",
+        "displayName": "Form Edge",
+        "canonical": "#8F7A86",
+        "tonalRamp": [
+          "#1d1a1c",
+          "#3a3338",
+          "#574c52",
+          "#8F7A86",
+          "#a8979f",
+          "#c1b5ba",
+          "#dad3d6",
+          "#efecee"
+        ]
       }
     },
     "typographyMeta": {
       "display": {
         "displayName": "Display",
-        "purpose": "Home hero headline, Bodoni 500 white on raspberry."
+        "purpose": "Home hero headline, Bodoni 500 claret on petal, clamp 2.5rem to 4.25rem."
       },
       "headline-1": {
         "displayName": "Page Title",
@@ -174,7 +204,18 @@
         "purpose": "Buttons, nav, badges, product meta."
       }
     },
-    "shadows": [],
+    "shadows": [
+      {
+        "name": "lift",
+        "value": "0 2px 4px rgba(43,18,32,.05), 0 16px 32px -16px rgba(43,18,32,.22)",
+        "purpose": "Hero Get matched card only; it floats over the image plate."
+      },
+      {
+        "name": "sticky-bar",
+        "value": "0 -8px 24px -16px rgba(26,18,23,.3)",
+        "purpose": "Phone sticky message bar, upward, marks it as floating."
+      }
+    ],
     "motion": [
       {
         "name": "ease-out",
@@ -195,6 +236,11 @@
         "name": "tile-zoom",
         "value": "500ms scale 1.03",
         "purpose": "Image on product and category tile hover."
+      },
+      {
+        "name": "match-hover",
+        "value": "200ms translateY(-2px)",
+        "purpose": "Hero Get matched card hover."
       }
     ],
     "breakpoints": [
@@ -233,17 +279,17 @@
       "name": "On-dark Button",
       "kind": "button",
       "refersTo": "button-on-dark",
-      "description": "White pill, and a white outline variant, for raspberry and claret grounds.",
+      "description": "White pill, and a white outline variant, for claret grounds.",
       "html": "<div class=\"ds-ondark\"><button class=\"ds-btn-ondark\">Shop the range</button> <button class=\"ds-btn-ondark-o\">Call us</button></div>",
-      "css": ".ds-ondark{display:flex;gap:12px;padding:24px;background:#C30239}.ds-btn-ondark{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 24px;border-radius:9999px;font:600 16px/1 'Hanken Grotesk',system-ui,sans-serif;cursor:pointer;transition:background-color .2s cubic-bezier(.22,1,.36,1),color .2s cubic-bezier(.22,1,.36,1);background:#fff;color:#2B1220;border:0}.ds-btn-ondark:hover{background:#FFEEF2}.ds-btn-ondark-o{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 24px;border-radius:9999px;font:600 16px/1 'Hanken Grotesk',system-ui,sans-serif;cursor:pointer;transition:background-color .2s cubic-bezier(.22,1,.36,1),color .2s cubic-bezier(.22,1,.36,1);background:transparent;color:#fff;border:1px solid rgba(255,255,255,.6)}.ds-btn-ondark-o:hover{background:#fff;color:#2B1220}.ds-btn-ondark:focus-visible,.ds-btn-ondark-o:focus-visible{outline:2px solid #ECB86C;outline-offset:2px}"
+      "css": ".ds-ondark{display:flex;gap:12px;padding:24px;background:#5A0118}.ds-btn-ondark{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 24px;border-radius:9999px;font:600 16px/1 'Hanken Grotesk',system-ui,sans-serif;cursor:pointer;transition:background-color .2s cubic-bezier(.22,1,.36,1),color .2s cubic-bezier(.22,1,.36,1);background:#fff;color:#2B1220;border:0}.ds-btn-ondark:hover{background:#FFEEF2}.ds-btn-ondark-o{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 24px;border-radius:9999px;font:600 16px/1 'Hanken Grotesk',system-ui,sans-serif;cursor:pointer;transition:background-color .2s cubic-bezier(.22,1,.36,1),color .2s cubic-bezier(.22,1,.36,1);background:transparent;color:#fff;border:1px solid rgba(255,255,255,.6)}.ds-btn-ondark-o:hover{background:#fff;color:#2B1220}.ds-btn-ondark:focus-visible,.ds-btn-ondark-o:focus-visible{outline:2px solid #ECB86C;outline-offset:2px}"
     },
     {
       "name": "Hero Field",
       "kind": "custom",
       "refersTo": "hero",
-      "description": "The one raspberry drench: sparkle, white Bodoni headline, lead, two actions, image in a gold hairline frame.",
-      "html": "<section class=\"ds-hero\"><div><svg class=\"ds-sp\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 0c.7 6.2 5.8 11.3 12 12-6.2.7-11.3 5.8-12 12-.7-6.2-5.8-11.3-12-12C6.2 11.3 11.3 6.2 12 0Z\"/></svg><h1>Your shop for beauty, picked with care.</h1><p>Orders are confirmed by a real person.</p></div><div class=\"ds-frame\"><div class=\"ds-img\"></div></div></section>",
-      "css": ".ds-hero{display:grid;grid-template-columns:1.15fr .85fr;gap:32px;align-items:center;padding:40px 24px;background:#C30239;color:#fff;font-family:'Hanken Grotesk',system-ui,sans-serif}.ds-hero h1{margin:16px 0 0;font:500 44px/1.02 'Bodoni Moda',Georgia,serif;letter-spacing:-.02em}.ds-hero p{margin:16px 0 0;font-size:18px;opacity:.9}.ds-sp{width:28px;height:28px;fill:#ECB86C}.ds-frame{padding:8px;border-radius:28px;box-shadow:none;outline:1px solid rgba(236,184,108,.8)}.ds-img{aspect-ratio:4/5;border-radius:20px;background:#FFEEF2}"
+      "description": "Petal field: raspberry sparkle, claret Bodoni headline, lead, one raspberry action and one outline, image in a gold ring over a rosewater plate, Get matched card.",
+      "html": "<section class=\"ds-hero\"><div><svg class=\"ds-sp\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 0c.7 6.2 5.8 11.3 12 12-6.2.7-11.3 5.8-12 12-.7-6.2-5.8-11.3-12-12C6.2 11.3 11.3 6.2 12 0Z\"/></svg><h1>Your shop for beauty, picked with care.</h1><p>Orders are confirmed by a real person.</p><a class=\"ds-hbtn\">Shop the range</a></div><div class=\"ds-wrap\"><div class=\"ds-plate\"></div><div class=\"ds-frame\"><div class=\"ds-img\"></div></div><a class=\"ds-match\"><span>Not sure where to start?</span><b>Get matched</b></a></div></section>",
+      "css": ".ds-hero{display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center;padding:40px 24px 56px;background:#FFEEF2;color:#2B1220;font-family:'Hanken Grotesk',system-ui,sans-serif}.ds-hero h1{margin:16px 0 0;font:500 44px/1.02 'Bodoni Moda',Georgia,serif;letter-spacing:-.02em;color:#5A0118}.ds-hero p{margin:16px 0 0;font-size:18px;opacity:.8}.ds-sp{width:24px;height:24px;fill:#C30239}.ds-hbtn{display:inline-flex;align-items:center;min-height:48px;margin-top:24px;padding:12px 24px;border-radius:9999px;background:#C30239;color:#fff;font-weight:600;cursor:pointer}.ds-hbtn:hover{background:#7A0220}.ds-wrap{position:relative;padding-bottom:24px}.ds-plate{position:absolute;top:24px;left:32px;right:-16px;bottom:-8px;border-radius:32px;background:#F8CDD9}.ds-frame{position:relative;padding:8px;border-radius:32px;outline:1px solid #ECB86C}.ds-img{aspect-ratio:4/5;border-radius:20px;background:#fff}.ds-match{position:absolute;left:16px;bottom:0;display:flex;gap:12px;align-items:center;padding:10px 16px 10px 20px;border-radius:9999px;background:#fff;font-size:14px;box-shadow:0 2px 4px rgba(43,18,32,.05),0 16px 32px -16px rgba(43,18,32,.22);cursor:pointer}.ds-match b{color:#C30239;font-weight:600}"
     },
     {
       "name": "Petal Panel",
@@ -273,9 +319,9 @@
       "name": "Text Field",
       "kind": "input",
       "refersTo": "input",
-      "description": "White field with petal hairline; raspberry border on error.",
+      "description": "White field with Form Edge border; raspberry border on error.",
       "html": "<input class=\"ds-input\" placeholder=\"Full name\">",
-      "css": ".ds-input{box-sizing:border-box;width:260px;min-height:48px;padding:12px 16px;border:1px solid #F2D9E1;border-radius:12px;background:#fff;color:#2B1220;font:400 16px 'Hanken Grotesk',system-ui,sans-serif;caret-color:#C30239}.ds-input:focus-visible{outline:2px solid #2B1220;outline-offset:3px}"
+      "css": ".ds-input{box-sizing:border-box;width:260px;min-height:48px;padding:12px 16px;border:1px solid #8F7A86;border-radius:12px;background:#fff;color:#2B1220;font:400 16px 'Hanken Grotesk',system-ui,sans-serif;caret-color:#C30239}.ds-input:focus-visible{outline:2px solid #2B1220;outline-offset:3px}"
     },
     {
       "name": "Nav Link",
@@ -289,9 +335,9 @@
       "name": "Announcement Bar",
       "kind": "custom",
       "refersTo": "announcement-bar",
-      "description": "Slim raspberry strip with two gold sparkles.",
+      "description": "Slim claret strip with two gold sparkles.",
       "html": "<p class=\"ds-bar\"><svg class=\"ds-sp\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 0c.7 6.2 5.8 11.3 12 12-6.2.7-11.3 5.8-12 12-.7-6.2-5.8-11.3-12-12C6.2 11.3 11.3 6.2 12 0Z\"/></svg>Orders are confirmed personally by message or call.<svg class=\"ds-sp\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 0c.7 6.2 5.8 11.3 12 12-6.2.7-11.3 5.8-12 12-.7-6.2-5.8-11.3-12-12C6.2 11.3 11.3 6.2 12 0Z\"/></svg></p>",
-      "css": ".ds-bar{display:flex;align-items:center;justify-content:center;gap:8px;margin:0;padding:8px 16px;background:#C30239;color:#fff;font:500 14px 'Hanken Grotesk',system-ui,sans-serif}.ds-sp{width:12px;height:12px;fill:#ECB86C;flex:none}"
+      "css": ".ds-bar{display:flex;align-items:center;justify-content:center;gap:8px;margin:0;padding:8px 16px;background:#5A0118;color:#fff;font:500 14px 'Hanken Grotesk',system-ui,sans-serif}.ds-sp{width:12px;height:12px;fill:#ECB86C;flex:none}"
     },
     {
       "name": "Footer",
@@ -304,30 +350,35 @@
   ],
   "narrative": {
     "northStar": "The Raspberry Counter",
-    "overview": "**Creative North Star: \"The Raspberry Counter\"**\n\nThe shop takes its world from the supplied logo: raspberry lacquer, pink, gold and a four-point sparkle. A white page carries plum ink and petal panels. One full-width raspberry field opens the home page and one claret field closes every page. Between them the range is the picture and a person is one tap away. It is a premium, feminine, brand-led store, and it deliberately refuses the older beauty-site tropes: cream grounds, gold arcs, gradient washes, eyebrow labels, and icon-on-card feature grids.\n\nVoice is high-contrast and warm. Bodoni Moda gives headings a fashion-counter polish; Hanken Grotesk keeps body, buttons and product data plain and legible on a phone. Surfaces are flat, separated by hairlines and the petal tint. Imagery is soft, with 20px corners. Gold appears only as a hairline frame and as sparkle on raspberry or claret, never as text on white.\n\nHonesty about missing material is part of the look. Image slots awaiting real photography render as flat petal boxes with a faint raspberry diagonal cross, a raspberry tag with the registry ID, and a caption stating canvas size, aspect ratio and type.",
+    "overview": "**Creative North Star: \"The Raspberry Counter\"**\n\nThe shop takes its world from the supplied logo: raspberry, pink, gold and a four-point sparkle, played softly. A white page carries plum ink and petal panels. The home page opens on a petal field under a claret announcement bar, and one claret field closes every page. Raspberry is held back for action. Between the bars the range is the picture and a person is one tap away. It is a premium, feminine, brand-led store, and it deliberately refuses the older beauty-site tropes: cream grounds, gold arcs, gradient washes, eyebrow labels, and icon-on-card feature grids.\n\nVoice is high-contrast and warm. Bodoni Moda gives headings a fashion-counter polish; Hanken Grotesk keeps body, buttons and product data plain and legible on a phone. Surfaces are flat, separated by hairlines and the petal tint. Imagery is soft, with 20px corners. Gold appears only as a hairline and as sparkle, never as text on a light ground.\n\nHonesty about missing material is part of the look. Image slots awaiting real photography render as flat petal boxes with a faint raspberry diagonal cross, a raspberry tag with the registry ID, and a caption stating canvas size, aspect ratio and type.",
     "keyCharacteristics": [
-      "White ground, plum ink, petal panels, one raspberry hero, claret footer.",
+      "White ground, plum ink, petal panels and a petal hero, claret bar and footer, raspberry for action only.",
       "Bodoni Moda 500 headings over Hanken Grotesk body, sentence case.",
       "The four-point sparkle is the single motif.",
       "Pill controls, 20px imagery and cards, 12px fields.",
-      "Flat surfaces and hairlines; depth by tint, not shadow.",
+      "Flat surfaces and hairlines; depth by tint and the rosewater plate. The only shadows are the hero match card and the phone bar.",
       "One authored motion: sections rise into place once.",
       "Placeholders are flat, labeled and unmistakably placeholders."
     ],
     "rules": [
       {
-        "name": "The One Drench Rule",
-        "body": "Raspberry floods a surface once per page: the home hero field. Other raspberry is a control, a thin bar, or a mark, never a second full section.",
+        "name": "The Action-Only Raspberry Rule",
+        "body": "Raspberry marks what can be pressed or priced: buttons, links, prices, numerals, the sparkle. It never floods a section; the only full-width saturated fields are claret (announcement bar, footer, mobile menu). The home hero is petal.",
         "section": "colors"
       },
       {
-        "name": "The Gold-On-Deep Rule",
-        "body": "Gold exists only against raspberry or claret, as hairline, sparkle or active link. On white it fails contrast and is not used.",
+        "name": "The Gold-Hairline Rule",
+        "body": "Gold is a hairline (the hero image ring, one rule), sparkle on claret, or the active mobile link on claret. It is never text or icon on white or petal.",
+        "section": "colors"
+      },
+      {
+        "name": "The Rosewater Plate Rule",
+        "body": "Rosewater appears once, as the plate under the hero image. It frames a picture and carries nothing.",
         "section": "colors"
       },
       {
         "name": "The Deep-Heading Rule",
-        "body": "Headings on light grounds are Deep Raspberry or Ink; bright raspberry stays with actions, prices and numerals.",
+        "body": "Headings on light grounds are Claret (home hero), Deep Raspberry (banners and panels) or Ink (default sections); bright raspberry stays with actions, prices and numerals.",
         "section": "colors"
       },
       {
@@ -347,14 +398,15 @@
       },
       {
         "name": "The Flat-By-Default Rule",
-        "body": "Surfaces carry no shadow at rest or on hover. Cards are never nested.",
+        "body": "Surfaces carry no shadow. Only an element that floats over another (the hero match card, the phone sticky bar) may. Cards are never nested.",
         "section": "elevation"
       }
     ],
     "dos": [
-      "**Do** keep the ground white and let the range and the raspberry hero carry the color.",
-      "**Do** drench raspberry once per page, in the hero, and keep other raspberry to controls, prices, numerals and the announcement bar.",
-      "**Do** set headings in Bodoni Moda 500, sentence case, in Deep Raspberry or Ink on light grounds and white on raspberry or claret.",
+      "**Do** keep the ground white and let the range and the petal hero carry the color.",
+      "**Do** keep raspberry to action: buttons, links, prices, numerals and the sparkle. Saturated full-width fields are claret.",
+      "**Do** use rosewater only as the plate under the hero image.",
+      "**Do** set headings in Bodoni Moda 500, sentence case, in Claret, Deep Raspberry or Ink on light grounds and white on claret.",
       "**Do** use the four-point sparkle as the only ornament, decorative and `aria-hidden`.",
       "**Do** round imagery and cards at 20px, fields at 12px, controls as pills.",
       "**Do** give every control 48px height (44px for nav links) and a visible focus ring (ink, gold on dark).",
@@ -363,10 +415,11 @@
       "**Do** keep message, call and cart reachable in the header, the hero and the sticky phone bar."
     ],
     "donts": [
-      "**Don't** use gold or rose as text or icon color on white.",
+      "**Don't** use gold or rose as text or icon color on white or petal.",
+      "**Don't** flood a section with raspberry or use rosewater as a section ground.",
       "**Don't** add cream grounds, gradient washes, gold arcs, or eyebrow labels above headings.",
       "**Don't** build icon-on-card feature grids.",
-      "**Don't** nest cards or add drop shadows.",
+      "**Don't** nest cards or add drop shadows to anything that does not float.",
       "**Don't** use Bodoni for buttons, nav, forms or product data.",
       "**Don't** invent photography, testimonials, ratings or claims to fill a slot.",
       "**Don't** use hype words such as miracle, breakthrough or guaranteed in any copy."

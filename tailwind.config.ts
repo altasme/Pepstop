@@ -9,6 +9,7 @@ export default {
         claret: "#5A0118",
         raspberry: { DEFAULT: "#C30239", deep: "#7A0220" },
         petal: "#FFEEF2",
+        rosewater: "#F8CDD9",
         mute: "#6F5B66",
         line: "#F2D9E1",
         edge: "#8F7A86",
@@ -19,7 +20,7 @@ export default {
         display: ['"Bodoni Moda"', "Georgia", "serif"],
       },
       fontSize: {
-        display: ["clamp(2.5rem, 1.3rem + 5vw, 5rem)", { lineHeight: "1.02", letterSpacing: "-0.02em" }],
+        display: ["clamp(2.5rem, 1.4rem + 3.6vw, 4.25rem)", { lineHeight: "1.02", letterSpacing: "-0.02em" }],
         h1: ["clamp(2.25rem, 1.4rem + 3.6vw, 4rem)", { lineHeight: "1.06", letterSpacing: "-0.02em" }],
         h2: ["clamp(1.75rem, 1.25rem + 2.2vw, 3rem)", { lineHeight: "1.1", letterSpacing: "-0.015em" }],
         h3: ["clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem)", { lineHeight: "1.2", letterSpacing: "-0.02em" }],

@@ -36,7 +36,7 @@ export function CategoryTiles() {
           ))}
         </ul>
 
-        <div className="mt-14 grid gap-8 rounded-[28px] bg-petal p-6 sm:p-10 md:grid-cols-[1.1fr_0.9fr] md:items-center md:gap-12">
+        <div id="match" className="mt-14 scroll-mt-40 grid gap-8 rounded-[28px] bg-petal p-6 sm:p-10 md:grid-cols-[1.1fr_0.9fr] md:items-center md:gap-12">
           <div>
             <p className="flex items-center gap-2 text-sm font-semibold text-raspberry"><Sparkle className="h-4 w-4" fill="#C30239" />{HOME.matchName}</p>
             <h3 className="mt-3 max-w-[20ch] font-display text-h2 font-medium text-raspberry-deep">{HOME.matchTitle}</h3>

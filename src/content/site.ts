@@ -197,6 +197,8 @@ export const HOME = {
   heroTitle: "Your destination for wellness, beauty, and informed self-care.",
   heroSupport: "Five focused collections, clear product details, and a real person to match you with the right one.",
   heroShop: { label: "Shop the collections", to: "/shop" },
+  heroMatch: { lead: "Not sure where to start?", link: "Get matched" },
+  heroCollectionsLabel: "Our collections",
   categoriesTitle: "What are you shopping for today?",
   categoryLink: "Shop now",
   matchName: "Pep Match",
