@@ -39,7 +39,7 @@ export function Header() {
                     to={item.to}
                     end={item.to === "/"}
                     className={({ isActive }) =>
-                      `inline-flex min-h-11 items-center px-3 text-base font-medium transition-colors hover:text-raspberry ${isActive ? "text-raspberry underline decoration-2 underline-offset-[10px]" : "text-ink"}`
+                      `inline-flex min-h-11 items-center whitespace-nowrap px-2 text-base font-medium transition-colors xl:px-3 hover:text-raspberry ${isActive ? "text-raspberry underline decoration-2 underline-offset-[10px]" : "text-ink"}`
                     }
                   >
                     {item.label}
@@ -54,7 +54,7 @@ export function Header() {
               href={primaryCta.href}
               {...(primaryCta.kind === "messenger" ? { target: "_blank", rel: "noopener noreferrer" } : {})}
               onClick={() => trackCta(primaryCta.kind, pathname)}
-              className="hidden min-h-11 items-center rounded-full bg-raspberry px-5 text-base font-semibold text-white transition-colors hover:bg-raspberry-deep sm:inline-flex"
+              className="hidden min-h-11 items-center whitespace-nowrap rounded-full bg-raspberry px-5 text-base font-semibold text-white transition-colors hover:bg-raspberry-deep sm:inline-flex"
             >
               {primaryCta.navLabel}
             </a>

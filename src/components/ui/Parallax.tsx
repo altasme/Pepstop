@@ -1,11 +1,11 @@
 import { useEffect, useRef, type ReactNode } from "react";
 
-/** Slow vertical drift for a full-bleed photograph. Desktop only, off under reduced motion. */
+/** Slow vertical drift for a full-bleed photograph. Desktop (1024 and up) only, off under reduced motion. */
 export function Parallax({ children, className = "" }: { children: ReactNode; className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const el = ref.current;
-    if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches || window.matchMedia("(max-width: 767px)").matches) return;
+    if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches || window.matchMedia("(max-width: 1023px)").matches) return;
     let raf = 0;
     const tick = () => {
       raf = 0;
@@ -21,5 +21,5 @@ export function Parallax({ children, className = "" }: { children: ReactNode; cl
       if (raf) cancelAnimationFrame(raf);
     };
   }, []);
-  return <div ref={ref} className={`h-full w-full will-change-transform ${className}`}>{children}</div>;
+  return <div ref={ref} className={`h-full w-full origin-top will-change-transform ${className}`}>{children}</div>;
 }

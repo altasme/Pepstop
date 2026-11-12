@@ -22,27 +22,27 @@ export function Hero() {
   const areas = getFocusAreas();
   return (
     <section className="relative overflow-hidden bg-petal">
-      {/* Phone: image first, full width */}
-      <div className="md:hidden">
+      {/* Phone and tablet: image first, full width */}
+      <div className="lg:hidden">
         <SlotImage slot="heroMobile" priority square sizes="100vw" />
       </div>
-      {/* Desktop: image fills the section and drifts */}
-      <div className="absolute inset-0 hidden overflow-hidden md:block">
+      {/* Desktop (1024 and up): image fills the section and drifts */}
+      <div className="absolute inset-0 hidden overflow-hidden lg:block">
         <Parallax>
-          <SlotImage slot="hero" priority fill objectPosition="75% center" sizes="100vw" />
+          <SlotImage slot="hero" priority fill objectPosition="75% 6%" sizes="100vw" />
         </Parallax>
       </div>
 
-      <div className="relative mx-auto flex max-w-page items-center px-4 sm:px-6 md:min-h-[34rem] lg:min-h-[38rem] lg:px-8 xl:min-h-[42rem]">
+      <div className="relative mx-auto flex max-w-page items-center px-4 sm:px-6 lg:min-h-[38rem] lg:px-8 xl:min-h-[42rem]">
         <SparkleField
-          className="hidden md:block"
+          className="hidden lg:block"
           spots={[
             { x: "46%", y: "18%", size: 14, delay: 0.4, fill: "#C30239" },
             { x: "52%", y: "62%", size: 10, delay: 1.6 },
             { x: "40%", y: "80%", size: 12, delay: 2.4, fill: "#C30239" },
           ]}
         />
-        <div className="w-full py-10 md:max-w-[34rem] md:py-16 lg:max-w-[38rem]">
+        <div className="w-full py-10 sm:py-12 lg:max-w-[38rem] lg:py-16">
           <Sparkle className="hero-in mb-5 h-6 w-6" fill="#C30239" />
           <h1 className="hero-in font-display text-display font-medium text-claret" style={d(0.1)}>{HOME.heroTitle}</h1>
           <p className="hero-in mt-6 max-w-[36ch] text-lg text-ink/80 sm:text-xl" style={d(0.35)}>{HOME.heroSupport}</p>

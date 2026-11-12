@@ -25,7 +25,7 @@ export function Logo({ onDark = false, compact = false }: { onDark?: boolean; co
           />
         </span>
       )}
-      <span className="flex flex-col gap-1.5">
+      <span className="flex flex-col gap-1.5 whitespace-nowrap">
         <span className={`font-display text-xl font-semibold leading-none tracking-[0.01em] sm:text-2xl ${onDark ? "text-white" : "text-raspberry-deep"}`}>{ORG.name}</span>
         <span className={`text-xs font-medium leading-none tracking-[0.04em] ${onDark ? "text-white/75" : "text-mute"}`}>{ORG.descriptor}</span>
       </span>
