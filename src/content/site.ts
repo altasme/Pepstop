@@ -122,7 +122,7 @@ export const IMAGE_SLOTS = {
     height: 1000,
     format: "JPG or WebP",
     src: "/images/hero-desktop.webp",
-    alt: "A smiling woman holding cotton pads to her cheek against a soft pink background",
+    alt: "Five women laughing together in soft neutral tops against a light studio wall",
     direction: "Subject in the right 40 percent, a clean light area across the left 55 percent for the headline. Soft blush tones, natural light. No clinical imagery.",
   },
   heroMobile: {
@@ -133,7 +133,7 @@ export const IMAGE_SLOTS = {
     height: 1000,
     format: "JPG or WebP",
     src: "/images/hero-mobile.webp",
-    alt: "A smiling woman holding cotton pads to her cheek against a soft pink background",
+    alt: "Five women laughing together in soft neutral tops against a light studio wall",
     direction: "Same photograph recomposed with the subject centered and 15 percent margin all round.",
   },
   focus: {

@@ -161,7 +161,7 @@ The shop takes its world from the supplied logo: raspberry, pink, gold, a four-p
 
 Voice is high-contrast and warm. Bodoni Moda gives headings a fashion-counter polish; Hanken Grotesk keeps body, buttons and product data plain and legible on a phone. Surfaces are flat, separated by hairlines and the petal tint. Imagery is soft, with 20px corners. Gold appears as a hairline and as sparkle, never as text.
 
-A quiet motion and vector layer sits on top: sparkles twinkle, a line-drawn sprig draws and sways, hairlines draw across, headings rise out of a mask, the hero stages in and its photograph drifts. All of it is decorative, aria-hidden, leaves content visible without JavaScript, and switches off under prefers-reduced-motion (see Components, Motion system).
+A quiet motion and vector layer sits on top: sparkles twinkle, a line-drawn sprig draws and sways, hairlines draw across, headings rise out of a mask, the hero stages in. All of it is decorative, aria-hidden, leaves content visible without JavaScript, and switches off under prefers-reduced-motion (see Components, Motion system).
 
 Honesty about missing material is part of the look. Image slots awaiting real photography render as flat petal boxes with a faint raspberry diagonal cross, a raspberry tag with the registry ID, and a caption stating canvas size, aspect ratio and type.
 
@@ -259,7 +259,7 @@ Pills (9999px) for buttons, badges, tags, principle chips, the cart control and 
 - **Focus:** 2px outline offset 2px (ink, gold inside `.on-dark`). Transition 200ms ease-out. Disabled drops to 40% opacity.
 
 ### Hero
-Full-bleed and art-directed. A petal field carries one wide photograph (desktop slot, 2400 by 1000) or a separate square recomposed crop above the text (phone slot, 1200 by 1000), with no scrim. The text column holds a raspberry sparkle, the claret Bodoni display headline, an 18 to 20px lead at 80% ink capped at 36ch, and two actions: one raspberry primary (Shop the collections, with sheen) and one raspberry outline (message or call). Below sits a text link, Get matched, with a raspberry 600 underlined label and arrow, leading to the Pep Match panel. On phones a gold hairline and the five collection links follow. Three sparkles twinkle over the light area from md. The entrance staging, photograph parallax and sparkle twinkle are in Motion system. Raspberry here is action only.
+Full-bleed and art-directed. From 1280px the section holds one wide photograph at its own 12:5 ratio (no zoom, no crop) with the headline on the clean wall at left and the group at right; below 1280px the 6:5 photograph sits above the text (cropped to 16:9 on large phones and 2:1 on tablets), with no scrim and no text over faces. The text column holds a raspberry sparkle, the claret Bodoni display headline, an 18 to 20px lead at 80% ink capped at 36ch, and two actions: one raspberry primary (Shop the collections, with sheen) and one raspberry outline (message or call). Below sits a text link, Get matched, with a raspberry 600 underlined label and arrow, leading to the Pep Match panel. On phones a gold hairline and the five collection links follow. Three sparkles twinkle over the light area from md. The entrance staging, photograph parallax and sparkle twinkle are in Motion system. Raspberry here is action only.
 
 ### Collections ticker
 A claret band under the hero: the five collection names in Bodoni 500 white, separated by gold sparkles, scrolling slowly. It is `aria-hidden` and duplicates links that live in the header and footer. Hover pauses it. Under reduced motion it stops and wraps as a centered static list (the duplicate set is hidden).
@@ -295,7 +295,7 @@ Claret strip, white 14px 500 centered text flanked by two small gold sparkles, a
 Claret ground, white text with 75 to 80% white for secondary copy, white hairline at 15%. Logo lockup on dark (badge on a white ring, white wordmark), three columns from md, a payment options row of outlined pills, then the disclaimer and legal row. A large sprig in white at 15% and two sparkles sit at the right from lg.
 
 ### Motion system
-Everything here is decoration. It is `aria-hidden` or attached to content that is already complete, content is fully visible and in place without JavaScript, and every item switches off under `prefers-reduced-motion: reduce` (animations removed, final state shown, ticker and parallax stopped, sheen hidden, transitions cut to 0.01ms). The mechanism is one hook: server HTML and anything on screen at hydration stay visible; only elements below the fold go hidden, then shown once when they enter view.
+Everything here is decoration. It is `aria-hidden` or attached to content that is already complete, content is fully visible and in place without JavaScript, and every item switches off under `prefers-reduced-motion: reduce` (animations removed, final state shown, ticker stopped, sheen hidden, transitions cut to 0.01ms). The mechanism is one hook: server HTML and anything on screen at hydration stay visible; only elements below the fold go hidden, then shown once when they enter view.
 
 Tokens: one easing, `--ease` and Tailwind `ease-out`, cubic-bezier(0.22, 1, 0.36, 1). Durations: state changes 200ms; arrow nudges 200ms; tile zoom 500 to 700ms; View chip 500ms; reveal rise 900ms; hero entrance 1100ms (children staggered by 0.1, 0.35, 0.55, 0.75, 0.9s); heading mask 1000ms; hairline draw 1300ms; leaf unfurl 1300ms; sprig draw 2400ms; button sheen 900ms; sway 9s alternate; twinkle 5s; ticker 48s linear.
 
@@ -304,7 +304,7 @@ Tokens: one easing, `--ease` and Tailwind `ease-out`, cubic-bezier(0.22, 1, 0.36
 - **Hairline draw** (`RuleItem`): a raspberry line scales from 0 to 1 on X across a static 20% hairline.
 - **Sprig** (`Sprig`): stem and leaf outlines draw by stroke-dashoffset, leaves unfurl from scale 0 staggered 0.14s apiece, then the whole sprig sways plus or minus 1.4 degrees about its base.
 - **Sparkle twinkle** (`SparkleField`, hairline separators): opacity 0.35 to 1, scale 0.7 to 1, a 45 degree turn; placed in empty space only, never over text.
-- **Hero**: staged entrance from CSS alone (plays before hydration), photograph drifts at 12% of scroll to a 900px cap with a 1.1 scale, desktop only.
+- **Hero**: staged entrance from CSS alone (plays before hydration), no photograph movement, so the group is never zoomed or cropped.
 - **Button sheen**: on primary and on-dark buttons a 40% wide white 28% skewed band crosses on hover.
 - **Ticker**: see Collections ticker.
 

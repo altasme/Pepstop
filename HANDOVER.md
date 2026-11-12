@@ -1,7 +1,7 @@
 # HANDOVER: The Pep Stop · Phase 1 (Public Website)
 
 **Built by:** Altaventures Business Development Services
-**Handover date:** 2026-11-11 · **Spec version built:** v1.14 (storefront added per client direction; logo and palette applied)
+**Handover date:** 2026-11-11 · **Spec version built:** v1.15 (storefront added per client direction; logo and palette applied)
 **Preview URL:** https://pepstop.vanamaranto1.workers.dev (deployed 2026-11-11, noindex) · **Live URL:** not live: gates open · **Repo:** altasme/pepstop
 
 ## 1. What was delivered
@@ -52,12 +52,12 @@
 ### Image sizes for every screen (hero)
 | File | Used at | Ratio | Recommended size | Status |
 |---|---|---|---|---|
-| Hero, desktop | 1024 px and up | 12:5 | 3200 × 1333 (minimum 2400 × 1000) | Supplied at 1942 × 809; fine on standard screens, soft on retina and 4K |
-| Hero, phone and tablet | under 1024 px | 6:5 | 1800 × 1500 (minimum 1200 × 1000) | Supplied at 1374 × 1145 with the subject on the right; shipped as a tighter 1080 × 900 crop (source kept in `design/hero-mobile-source.webp`). Ideal final: centred, 1800 × 1500 |
+| Hero, desktop | 1280 px and up | 12:5 | 3200 × 1333 (minimum 2400 × 1000) | Supplied at 1944 × 809: sharp on standard screens, soft on retina and 4K |
+| Hero, phone and tablet | under 1280 px | 6:5 | 1800 × 1500 (minimum 1200 × 1000) | Supplied at 1374 × 1145; shown at 6:5 on phones, 16:9 on large phones, 2:1 on tablets |
 | Optional: social share | link previews | 1.91:1 | 1200 × 630 | Currently the logo on ivory |
-- Safe zone: keep the whole subject inside the right 45 percent of the width and the top 85 percent of the height; leave at least 8 percent headroom above the head. Screens wider than 2400 px crop the top and bottom.
+- Safe zone for the 6:5 file: keep every face between 25 and 55 percent of the height so the wider tablet crops keep all faces. Safe zone for the 12:5 file: subjects in the right 53 percent, headroom at least 20 percent, left 45 percent clean and light.
 - Export WebP, quality 80 to 85, about 250 KB for desktop and 150 KB for phone, sRGB.
-- Origin and licence of the supplied photograph must be confirmed by the client before launch.
+- Origin and licence of the supplied photographs must be confirmed by the client before launch (spec §6 and §12.6: licensed imagery, no AI-generated imagery).
 
 ### Hero image brief
 - Two files from the same shoot: desktop 2400 × 1000 and phone 1200 × 1000. Set their Cloudinary ids on `IMAGE_SLOTS.hero.src` and `IMAGE_SLOTS.heroMobile.src` in `src/content/site.ts`.
