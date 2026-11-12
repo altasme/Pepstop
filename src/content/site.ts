@@ -155,8 +155,8 @@ export const IMAGE_SLOTS = {
     width: 1200,
     height: 1500,
     format: "JPG or WebP",
-    src: null,
-    alt: "",
+    src: "/images/story.webp",
+    alt: "Gift boxes printed with The Pep Stop logo stacked on a table, one open to show pink tissue",
     direction: "A real photograph of the shop, the team, or the packing table, supplied by the client. Real people and a real place; no stock models posing as staff.",
   },
   product: {
@@ -166,8 +166,8 @@ export const IMAGE_SLOTS = {
     width: 1000,
     height: 1000,
     format: "JPG or WebP",
-    src: null,
-    alt: "",
+    src: "/images/product.webp",
+    alt: "The Pep Stop gift box in raspberry pink with gold ribbon detail",
     direction: "Clean product photo on ivory or blush, supplied by the client. One image per product, plus optional extras.",
   },
   logo: {
@@ -298,7 +298,7 @@ export const FOCUS_AREAS: FocusArea[] = [
     summary:
       "Every woman's relationship with her body is personal, and so is the way she looks after it. This collection is for the goals you set for yourself, at a pace that feels right. We keep the details clear, we never pressure, and we always suggest speaking with a licensed physician about your own health.",
     order: 1,
-    image: null,
+    image: "/images/collection-weight-wellness.webp",
   },
   {
     id: "next-generation-wellness",
@@ -307,7 +307,7 @@ export const FOCUS_AREAS: FocusArea[] = [
     summary:
       "Wellness keeps evolving, and it is natural to be curious. Here, newer ideas are introduced in plain language and without hype, so you can ask informed questions and decide what belongs in your life. A licensed professional is the right person to guide the choices that are personal to you.",
     order: 2,
-    image: null,
+    image: "/images/collection-next-generation-wellness.webp",
   },
   {
     id: "skin-beauty",
@@ -316,7 +316,7 @@ export const FOCUS_AREAS: FocusArea[] = [
     summary:
       "Beauty is a daily ritual before it is anything else: a quiet moment that belongs to you. Here you will find skincare and beauty essentials chosen to feel as good as they look, with every detail laid out so a simple routine stays simple.",
     order: 3,
-    image: null,
+    image: "/images/collection-skin-beauty.webp",
   },
   {
     id: "vitality-cellular-health",
@@ -325,7 +325,7 @@ export const FOCUS_AREAS: FocusArea[] = [
     summary:
       "Looking after yourself is a long-term act of care. This collection is for women who like to understand what they are choosing and why. We lay out every detail, we make no promises about results, and we are always here to answer your questions before you order.",
     order: 4,
-    image: null,
+    image: "/images/collection-vitality-cellular-health.webp",
   },
   {
     id: "energy-cellular-wellness",
@@ -334,7 +334,7 @@ export const FOCUS_AREAS: FocusArea[] = [
     summary:
       "Some seasons of life ask more of you than others. This collection is for the days that need a little extra care, with every detail set out plainly and a real person confirming your order. For any concern about your health, please consult a licensed physician.",
     order: 5,
-    image: null,
+    image: "/images/collection-energy-cellular-wellness.webp",
   },
 ];
 
