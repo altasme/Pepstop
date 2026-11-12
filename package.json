@@ -15,6 +15,7 @@
     "deploy:inline": "npm run build && node scripts/deploy-inline.mjs && wrangler deploy --config .worker-inline/wrangler.jsonc"
   },
   "dependencies": {
+    "@fontsource/bodoni-moda": "^5.3.0",
     "@fontsource/hanken-grotesk": "^5.3.0",
     "lucide-react": "^1.71.0",
     "react": "^18.3.1",

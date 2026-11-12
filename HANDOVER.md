@@ -1,7 +1,7 @@
 # HANDOVER: The Pep Stop · Phase 1 (Public Website)
 
 **Built by:** Altaventures Business Development Services
-**Handover date:** 2026-11-11 · **Spec version built:** v1.5 (storefront added per client direction; logo and palette applied)
+**Handover date:** 2026-11-11 · **Spec version built:** v1.7 (storefront added per client direction; logo and palette applied)
 **Preview URL:** https://pepstop.vanamaranto1.workers.dev (deployed 2026-11-11, noindex) · **Live URL:** not live: gates open · **Repo:** altasme/pepstop
 
 ## 1. What was delivered
@@ -36,7 +36,9 @@
 - Headers come from `public/_headers` (supported by Workers static assets). Custom domain: add it under the Worker, Settings, Domains and Routes.
 
 ## 2.5 Design system (v1.5 redesign)
-- Standard premium beauty store, Glossier and Rare Beauty as craft bar. White ground, ink text, raspberry for action, petal panels, hairlines. Hanken Grotesk only. Flat placeholders (hairline, diagonal cross) state canvas size, aspect ratio and type. Home: announcement bar, hero, shop by category, featured range, curated statement, how ordering works, education (hidden until an article is published), raspberry contact band.
+- Premium, feminine, brand-led beauty store with Glossier and Rare Beauty as craft bar. Raspberry lacquer hero, white sections, petal panels, claret footer, plum ink. Bodoni Moda headings with Hanken Grotesk body and UI. The logo's sparkle is the only motif.
+- **Categories (client-set):** Weight & Wellness, Next-Generation Wellness, Skin & Beauty, Vitality & Cellular Health, Energy & Cellular Wellness. Defined in `FOCUS_AREAS` (site.ts) and `PRODUCT_CATEGORIES` (products.ts); they drive Home tiles, Shop filters and the Health & Beauty page.
+- **Pep Match:** the invented sales device. A goal-led "What are you shopping for today?" row plus a "Not sure where to start? Get matched" panel that hands the shopper to a person by one message (SMS and WhatsApp prefilled, Messenger and phone open blank). It promises navigation and a reply, nothing else. Flat placeholders (hairline, diagonal cross) state canvas size, aspect ratio and type. Home: announcement bar, hero, shop by category, featured range, curated statement, how ordering works, education (hidden until an article is published), raspberry contact band.
 - Direction contract: `.impeccable/surfaces/`. Design record: `DESIGN.md`. Product record: `PRODUCT.md`.
 - Slop removed: cream gradients, gold arcs, serif display, eyebrow labels, icon-on-card grids, shadowed floating cards, hover lift. `impeccable detect` reports no findings on `src`.
 
@@ -77,6 +79,7 @@
 - Cloudinary: cloud name not set · Repo: altasme/pepstop
 
 ## 9. Known limitations / conflicts noted
+- **Category names are health-adjacent.** "Weight", "Cellular Health" and "Cellular Wellness" read as health claims in some advertising and platform policies (Meta restricts health-related product signals, and Philippine FDA rules apply to claims about specific products). The names are the client's choice and are used as labels only. Builder-written copy under them is general and promises no results. Any product copy, results language, before-and-after material or testimonials the client adds is client content under Appendix B.1 and should be reviewed by the client's own counsel before publishing, and before any paid advertising.
 - **Spec conflict, resolved in favor of the client's direction:** CLAUDE.md v1.1 set `COMMERCE_MODE = "none"`, kept products in an unlisted catalog on the client's own domain, and said checkout would be a new spec. The client asked for an ecommerce store that also showcases the business, so v1.2 builds the storefront front end only. The responsibility questions behind the old rules still apply: product listings, prices, claims, and registration details are client content (Appendix B.1), ★G3 should be signed before real products go live, and the Appendix C-15 hosting-account risk note stands. Raise with Chief Alta before launch.
 - The shop is publicly linked and indexable. If the client wants it unlisted, add noindex to the shop pages and remove it from nav and sitemap.
 - The cart cannot verify stock or compute shipping; both are confirmed by The Pep Stop after the order is sent.

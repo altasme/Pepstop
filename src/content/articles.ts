@@ -19,7 +19,7 @@ export const ARTICLES: Article[] = [
     slug: "building-a-simple-skincare-routine",
     title: "Building a simple skincare routine",
     summary: "A short, general guide to starting with a few steps you can keep up every day.",
-    focusAreaId: "beauty-skincare",
+    focusAreaId: "skin-beauty",
     published: false,
     updatedAt: "2026-11-11",
     body: `A skincare routine does not need to be long to be useful. Many people begin with three steps and add more only if they want to.
@@ -44,7 +44,7 @@ Every person's skin is different. If you have a concern about your skin, a licen
     slug: "why-sleep-shows-on-your-skin",
     title: "Why sleep shows on your skin",
     summary: "A look at how everyday habits, sleep included, are often linked with how skin looks and feels.",
-    focusAreaId: "health-wellness",
+    focusAreaId: "skin-beauty",
     published: false,
     updatedAt: "2026-11-11",
     body: `Many people notice that after a few short nights, their skin looks tired. It is a common observation, and a good reason to think of sleep as part of everyday self-care.
@@ -69,7 +69,7 @@ If you often have trouble sleeping, or are worried about your health, please spe
     slug: "reading-a-product-label",
     title: "Reading a product label",
     summary: "What to look for on a beauty or wellness product label before you buy.",
-    focusAreaId: "beauty-skincare",
+    focusAreaId: "skin-beauty",
     published: false,
     updatedAt: "2026-11-11",
     body: `A product label is the quickest way to learn what you are buying. A few minutes with it can help you ask better questions.

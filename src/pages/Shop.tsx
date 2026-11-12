@@ -34,7 +34,7 @@ export default function Shop() {
   }, [all, cat, q, sort]);
 
   const chip = (active: boolean) =>
-    `inline-flex min-h-11 shrink-0 items-center rounded-full border px-4 text-sm font-semibold transition-colors ${active ? "border-ink bg-ink text-white" : "border-line text-ink hover:border-ink"}`;
+    `inline-flex min-h-11 shrink-0 items-center rounded-full border px-4 text-sm font-semibold transition-colors ${active ? "border-raspberry bg-raspberry text-white" : "border-line text-ink hover:border-raspberry"}`;
   const field = "min-h-12 w-full rounded-full border border-line bg-white px-5 text-base text-ink placeholder:text-mute";
 
   return (

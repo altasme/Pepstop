@@ -35,7 +35,7 @@ Checkout is front end only (COMMERCE_MODE "frontend"): the cart and order live i
 - No fabricated proof, no health claims in builder-written copy, no AI-generated imagery, licensed imagery only. Image slots render registered placeholders stating canvas size, aspect ratio and type until real photography is supplied.
 - Phone 0991 018 9669 is the always-on channel; Messenger, Viber, WhatsApp and email appear only when confirmed.
 
-- Standing preference (chosen by the user, 2026-11-11): the category standard played straight, a clean premium beauty store, with Glossier and Rare Beauty as the craft bar (soft, friendly, mobile-first, strong product tiles). Not a themed or novelty world.
+- Standing preference (chosen by the user, 2026-11-11, refined 2026-11-12): the category standard played straight, a clean premium beauty store, with Glossier and Rare Beauty as the craft bar (soft, friendly, mobile-first, strong product tiles). On 2026-11-12 the user asked for it to look more premium, more feminine and more in line with the branding: the logo's raspberry lacquer, hot pink, gold and sparkle lead. Not a themed or novelty world.
 
 ## Evidence on Hand
 Logo files. Draft intro, mission, vision and three unpublished general articles. No photography, testimonials, customer counts, awards or real product data; none may be invented.

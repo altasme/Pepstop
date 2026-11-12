@@ -193,17 +193,22 @@ export const MEDIA = {
 /* ------------------------------------------------------------------ */
 
 export const HOME = {
-  announcement: "Order by message or phone. Every order is confirmed by a person.",
+  announcement: "Order online. A real person confirms every order.",
   heroTitle: "Your destination for wellness, beauty, and informed self-care.",
-  heroSupport: "The Pep Stop is a health and beauty brand built on clear information and attentive service.",
-  heroShop: { label: "Shop the range", to: "/shop" },
-  categoriesTitle: "Shop by category",
-  categoryLink: "View range",
-  featuredTitle: "The range",
+  heroSupport: "Five focused collections, clear product details, and a real person to match you with the right one.",
+  heroShop: { label: "Shop the collections", to: "/shop" },
+  categoriesTitle: "What are you shopping for today?",
+  categoryLink: "Shop now",
+  matchName: "Pep Match",
+  matchTitle: "Not sure where to start? Get matched.",
+  matchBody: "Tell us what you are shopping for and we will point you to the right collection, then confirm availability, shipping, and payment with you personally. It takes one message.",
+  matchCta: "Get matched",
+  matchMessage: "Hi The Pep Stop, I would like help choosing a collection.",
+  featuredTitle: "Shop the range",
   featuredAll: "Shop all products",
-  curatedTitle: "Fewer products. Easier questions.",
+  curatedTitle: "Ask first. Order easily.",
   curatedBody:
-    "Our range is kept short so questions are easy to answer. Message or call and we will talk it through with you.",
+    "Every product page sets out the details, and every question gets a plain answer before you buy. Message or call, choose what suits you, and we take care of the rest.",
   curatedLink: { label: "About The Pep Stop", to: "/about" },
   howTitle: "How ordering works",
   howSteps: [
@@ -226,31 +231,52 @@ export const TRUST = [
   { id: "care", title: "Attentive service", body: "Every message and call gets a considered, courteous reply." },
 ];
 
-export type FocusArea = { id: string; title: string; summary: string; order: number; image: string | null };
+export type FocusArea = { id: string; title: string; tagline: string; summary: string; order: number; image: string | null };
 
 export const FOCUS_AREAS: FocusArea[] = [
   {
-    id: "beauty-skincare",
-    title: "Beauty & Skincare",
+    id: "weight-wellness",
+    title: "Weight & Wellness",
+    tagline: "Balanced routines, explained plainly.",
     summary:
-      "Everyday skincare habits, ingredient basics, and how to read a product label. A simple routine is easier to keep than a complicated one, and we explain the basics in plain language.",
+      "Browse our weight and wellness range. Each product page lists the details, and we are glad to talk through what fits your routine. This is general information, not medical advice, so please speak with a licensed physician about your own health goals.",
     order: 1,
     image: null,
   },
   {
-    id: "health-wellness",
-    title: "Health & Wellness",
+    id: "next-generation-wellness",
+    title: "Next-Generation Wellness",
+    tagline: "New ideas in wellness, in plain language.",
     summary:
-      "Simple habits around sleep, hydration, and movement may help you feel more like yourself. We share general ideas, not medical advice, and encourage you to speak with a licensed physician about your own health.",
+      "Interest in newer wellness ideas keeps growing. We explain what each product is in general terms, so you can ask informed questions and talk with a licensed professional about what suits you.",
     order: 2,
     image: null,
   },
   {
-    id: "emerging-wellness-innovations",
-    title: "Emerging Wellness Innovations",
+    id: "skin-beauty",
+    title: "Skin & Beauty",
+    tagline: "Skincare and beauty for your daily routine.",
     summary:
-      "Interest in new wellness ideas is growing. We explain what they are in general terms, so you can ask informed questions and talk with a licensed professional about what suits you.",
+      "Skincare and beauty essentials for everyday routines. A simple routine is easier to keep than a complicated one, and we explain the basics in plain language.",
     order: 3,
+    image: null,
+  },
+  {
+    id: "vitality-cellular-health",
+    title: "Vitality & Cellular Health",
+    tagline: "Everyday vitality, with the details laid out.",
+    summary:
+      "Products for people who follow vitality and cellular health topics. We keep the product details clear and complete, and we do not make promises about results. Ask us anything before you order.",
+    order: 4,
+    image: null,
+  },
+  {
+    id: "energy-cellular-wellness",
+    title: "Energy & Cellular Wellness",
+    tagline: "Daily energy routines, with the details laid out.",
+    summary:
+      "Products for daily energy and cellular wellness routines. Every page sets out the details plainly, and a person confirms your order. For concerns about your health, consult a licensed physician.",
+    order: 5,
     image: null,
   },
 ];
@@ -284,8 +310,8 @@ export const VALUES = [
 
 export const HEALTH_BEAUTY = {
   bannerEyebrow: "Health & Beauty",
-  bannerTitle: "Beauty and wellness, approached with care.",
-  bannerBody: "Three areas of focus, each explained in general terms and in plain language.",
+  bannerTitle: "Five collections, one clear approach.",
+  bannerBody: "Each collection is explained in general terms and plain language, with the product details laid out.",
   relatedLabel: "Related reading",
   disclaimerLead: "General information only.",
 };
@@ -336,7 +362,7 @@ export const CONTACT_PAGE = {
 export const SHOP = {
   bannerEyebrow: "Shop",
   bannerTitle: "Shop The Pep Stop",
-  bannerBody: "Browse our products, read the details, and order when you are ready. Questions are always welcome.",
+  bannerBody: "Shop five collections. Read the details, add to your cart, and a person confirms your order.",
   searchLabel: "Search products",
   searchPlaceholder: "Search by name",
   categoryLabel: "Category",
@@ -574,7 +600,7 @@ export const SEO = {
     },
     "/health-beauty": {
       title: "Beauty & Wellness | The Pep Stop",
-      description: "Beauty and skincare, health and wellness, and emerging wellness ideas, explained in general terms and plain language.",
+      description: "Weight and wellness, next-generation wellness, skin and beauty, vitality and cellular health, and energy and cellular wellness, explained in plain language.",
     },
     "/education": {
       title: "Wellness Education | The Pep Stop",

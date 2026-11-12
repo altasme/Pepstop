@@ -9,9 +9,9 @@ export function HowItWorks() {
         <SectionHeading title={HOME.howTitle} />
         <ol className="mt-10 grid gap-8 md:grid-cols-3 md:gap-10">
           {HOME.howSteps.map((s, i) => (
-            <li key={s.title} className="border-t border-ink pt-5">
-              <span className="text-sm font-semibold text-raspberry">{i + 1}</span>
-              <h3 className="mt-2 text-h3 font-semibold text-ink">{s.title}</h3>
+            <li key={s.title} className="border-t border-raspberry/40 pt-5">
+              <span className="font-display text-5xl font-medium leading-none text-raspberry">{i + 1}</span>
+              <h3 className="mt-3 text-h3 font-semibold text-ink">{s.title}</h3>
               <p className="mt-2 max-w-[36ch] text-ink/80">{s.body}</p>
             </li>
           ))}

@@ -11,7 +11,7 @@ const link = "inline-flex min-h-11 items-center text-white/80 hover:text-white h
 export function Footer() {
   const legal = ORG.legalName && ORG.registration ? `${ORG.legalName} · ${ORG.registration}` : null; // PH-06
   return (
-    <footer className="on-dark bg-ink pb-28 pt-16 text-white md:pb-10">
+    <footer className="on-dark bg-claret pb-28 pt-16 text-white md:pb-10">
       <div className="mx-auto max-w-page px-4 sm:px-6 lg:px-8">
         <div className="grid gap-12 md:grid-cols-[1.2fr_1.2fr_1fr]">
           <div>

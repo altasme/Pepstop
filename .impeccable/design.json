@@ -1,22 +1,37 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-11T06:28:05.634981Z",
+  "generatedAt": "2026-11-12T00:41:32Z",
   "title": "Design System: The Pep Stop",
   "extensions": {
     "colorMeta": {
       "ink": {
         "role": "neutral",
         "displayName": "Plum Ink",
-        "canonical": "#1A1217",
+        "canonical": "#2B1220",
         "tonalRamp": [
-          "#0c080a",
-          "#120d10",
-          "#171014",
-          "#1A1217",
-          "#534d51",
-          "#8c888b",
-          "#c6c4c5",
-          "#e8e7e8"
+          "#0b0408",
+          "#160910",
+          "#200e18",
+          "#2B1220",
+          "#55414d",
+          "#8a7d84",
+          "#bfb8bc",
+          "#e6e3e4"
+        ]
+      },
+      "claret": {
+        "role": "secondary",
+        "displayName": "Claret",
+        "canonical": "#5A0118",
+        "tonalRamp": [
+          "#160006",
+          "#2d000c",
+          "#440112",
+          "#5A0118",
+          "#7b3446",
+          "#a47380",
+          "#ceb3ba",
+          "#ebe1e3"
         ]
       },
       "raspberry": {
@@ -24,14 +39,14 @@
         "displayName": "Logo Raspberry",
         "canonical": "#C30239",
         "tonalRamp": [
-          "#58011a",
-          "#880128",
-          "#ac0232",
+          "#31000e",
+          "#62011c",
+          "#92022b",
           "#C30239",
-          "#d2416a",
-          "#e1809c",
-          "#f0c0ce",
-          "#f9e6eb"
+          "#cf3561",
+          "#de7492",
+          "#edb3c4",
+          "#f8e1e7"
         ]
       },
       "raspberry-deep": {
@@ -39,59 +54,59 @@
         "displayName": "Deep Raspberry",
         "canonical": "#7A0220",
         "tonalRamp": [
-          "#37010e",
-          "#550116",
-          "#6b021c",
+          "#1e0008",
+          "#3d0110",
+          "#5c0218",
           "#7A0220",
-          "#9b4158",
-          "#bc8090",
-          "#dec0c7",
-          "#f2e6e9"
+          "#95354d",
+          "#b67484",
+          "#d7b3bc",
+          "#efe1e4"
         ]
       },
       "petal": {
         "role": "neutral",
         "displayName": "Petal Tint",
-        "canonical": "#FDEFF2",
+        "canonical": "#FFEEF2",
         "tonalRamp": [
-          "#726c6d",
-          "#b1a7a9",
-          "#dfd2d5",
-          "#FDEFF2",
-          "#fef3f5",
-          "#fef7f8",
-          "#fefbfc",
-          "#fffdfe"
+          "#403c3c",
+          "#807779",
+          "#bfb2b6",
+          "#FFEEF2",
+          "#fff1f5",
+          "#fff6f8",
+          "#fffafb",
+          "#fffdfd"
         ]
       },
       "mute": {
         "role": "neutral",
-        "displayName": "Muted Mauve Grey",
-        "canonical": "#675A61",
+        "displayName": "Muted Plum Grey",
+        "canonical": "#6F5B66",
         "tonalRamp": [
-          "#2e282c",
-          "#483f44",
-          "#5b4f55",
-          "#675A61",
-          "#8d8388",
-          "#b3acb0",
-          "#d9d6d8",
-          "#f0eeef"
+          "#1c171a",
+          "#382e33",
+          "#53444c",
+          "#6F5B66",
+          "#8c7c85",
+          "#b0a5ab",
+          "#d4ced1",
+          "#eeebed"
         ]
       },
       "line": {
         "role": "neutral",
         "displayName": "Hairline Petal",
-        "canonical": "#EBDDE2",
+        "canonical": "#F2D9E1",
         "tonalRamp": [
-          "#6a6366",
-          "#a49b9e",
-          "#cfc2c7",
-          "#EBDDE2",
-          "#f0e6e9",
-          "#f5eef0",
-          "#faf6f8",
-          "#fdfcfc"
+          "#3c3638",
+          "#796c70",
+          "#b6a3a9",
+          "#F2D9E1",
+          "#f5e1e7",
+          "#f8eaee",
+          "#fbf4f6",
+          "#fdfafb"
         ]
       },
       "gold": {
@@ -99,14 +114,14 @@
         "displayName": "Logo Gold",
         "canonical": "#ECB86C",
         "tonalRamp": [
-          "#6a5331",
-          "#a5814c",
-          "#d0a25f",
+          "#3b2e1b",
+          "#765c36",
+          "#b18a51",
           "#ECB86C",
-          "#f1ca91",
-          "#f6dcb6",
-          "#faedda",
-          "#fdf8f0"
+          "#f0c689",
+          "#f5d8ae",
+          "#f9ead3",
+          "#fdf6ed"
         ]
       },
       "white": {
@@ -114,9 +129,9 @@
         "displayName": "Page White",
         "canonical": "#FFFFFF",
         "tonalRamp": [
-          "#737373",
-          "#b2b2b2",
-          "#e0e0e0",
+          "#404040",
+          "#808080",
+          "#bfbfbf",
           "#FFFFFF",
           "#ffffff",
           "#ffffff",
@@ -128,11 +143,11 @@
     "typographyMeta": {
       "display": {
         "displayName": "Display",
-        "purpose": "Home hero headline only."
+        "purpose": "Home hero headline, Bodoni 500 white on raspberry."
       },
       "headline-1": {
         "displayName": "Page Title",
-        "purpose": "One H1 per inner page."
+        "purpose": "One H1 per inner page, Deep Raspberry on petal."
       },
       "headline-2": {
         "displayName": "Section Heading",
@@ -140,11 +155,19 @@
       },
       "title": {
         "displayName": "Title",
-        "purpose": "Card and subsection headings."
+        "purpose": "Category names, value titles, article cards, Bodoni 500."
+      },
+      "wordmark": {
+        "displayName": "Wordmark",
+        "purpose": "The live logo lockup name, Bodoni 600."
       },
       "body": {
         "displayName": "Body",
-        "purpose": "Running text, 16px minimum."
+        "purpose": "Running text, 16px minimum, Hanken Grotesk."
+      },
+      "lead": {
+        "displayName": "Lead",
+        "purpose": "Intro text under headings, 18 to 20px at 80% ink."
       },
       "label": {
         "displayName": "Label",
@@ -171,7 +194,7 @@
       {
         "name": "tile-zoom",
         "value": "500ms scale 1.03",
-        "purpose": "Product image on card hover."
+        "purpose": "Image on product and category tile hover."
       }
     ],
     "breakpoints": [
@@ -194,41 +217,57 @@
       "name": "Primary Button",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "Raspberry pill for the one main action per view.",
+      "description": "Raspberry pill for the main action.",
       "html": "<button class=\"ds-btn-primary\">Shop the range</button>",
-      "css": ".ds-btn-primary{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 24px;border-radius:9999px;font:600 16px/1 'Hanken Grotesk',system-ui,sans-serif;background:#C30239;color:#fff;cursor:pointer;transition:background-color .2s cubic-bezier(.22,1,.36,1),color .2s cubic-bezier(.22,1,.36,1)}.ds-btn-primary:hover{background:#7A0220;color:#fff}.ds-btn-primary:focus-visible{outline:2px solid var(--ink,#1A1217);outline-offset:2px}"
+      "css": ".ds-btn-primary{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 24px;border-radius:9999px;font:600 16px/1 'Hanken Grotesk',system-ui,sans-serif;cursor:pointer;transition:background-color .2s cubic-bezier(.22,1,.36,1),color .2s cubic-bezier(.22,1,.36,1);background:#C30239;color:#fff;border:0}.ds-btn-primary:hover{background:#7A0220}.ds-btn-primary:focus-visible{outline:2px solid #2B1220;outline-offset:2px}"
     },
     {
       "name": "Secondary Button",
       "kind": "button",
       "refersTo": "button-secondary",
-      "description": "Ink outline pill that fills on hover.",
+      "description": "Raspberry outline pill that fills on hover.",
       "html": "<button class=\"ds-btn-secondary\">Message to order</button>",
-      "css": ".ds-btn-secondary{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 24px;border-radius:9999px;font:600 16px/1 'Hanken Grotesk',system-ui,sans-serif;background:transparent;color:#1A1217;border:1px solid #1A1217;cursor:pointer;transition:background-color .2s cubic-bezier(.22,1,.36,1),color .2s cubic-bezier(.22,1,.36,1)}.ds-btn-secondary:hover{background:#1A1217;color:#fff}.ds-btn-secondary:focus-visible{outline:2px solid var(--ink,#1A1217);outline-offset:2px}"
+      "css": ".ds-btn-secondary{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 24px;border-radius:9999px;font:600 16px/1 'Hanken Grotesk',system-ui,sans-serif;cursor:pointer;transition:background-color .2s cubic-bezier(.22,1,.36,1),color .2s cubic-bezier(.22,1,.36,1);background:transparent;color:#C30239;border:1px solid #C30239}.ds-btn-secondary:hover{background:#C30239;color:#fff}.ds-btn-secondary:focus-visible{outline:2px solid #2B1220;outline-offset:2px}"
     },
     {
       "name": "On-dark Button",
       "kind": "button",
       "refersTo": "button-on-dark",
-      "description": "White pill used on ink or raspberry-deep panels.",
-      "html": "<button class=\"ds-btn-ondark\">Call us</button>",
-      "css": "body{background:#1A1217}.ds-btn-ondark{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 24px;border-radius:9999px;font:600 16px/1 'Hanken Grotesk',system-ui,sans-serif;background:#fff;color:#1A1217;cursor:pointer;transition:background-color .2s cubic-bezier(.22,1,.36,1),color .2s cubic-bezier(.22,1,.36,1)}.ds-btn-ondark:hover{background:#FDEFF2;color:#1A1217}.ds-btn-ondark:focus-visible{outline:2px solid var(--ink,#1A1217);outline-offset:2px}"
+      "description": "White pill, and a white outline variant, for raspberry and claret grounds.",
+      "html": "<div class=\"ds-ondark\"><button class=\"ds-btn-ondark\">Shop the range</button> <button class=\"ds-btn-ondark-o\">Call us</button></div>",
+      "css": ".ds-ondark{display:flex;gap:12px;padding:24px;background:#C30239}.ds-btn-ondark{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 24px;border-radius:9999px;font:600 16px/1 'Hanken Grotesk',system-ui,sans-serif;cursor:pointer;transition:background-color .2s cubic-bezier(.22,1,.36,1),color .2s cubic-bezier(.22,1,.36,1);background:#fff;color:#2B1220;border:0}.ds-btn-ondark:hover{background:#FFEEF2}.ds-btn-ondark-o{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 24px;border-radius:9999px;font:600 16px/1 'Hanken Grotesk',system-ui,sans-serif;cursor:pointer;transition:background-color .2s cubic-bezier(.22,1,.36,1),color .2s cubic-bezier(.22,1,.36,1);background:transparent;color:#fff;border:1px solid rgba(255,255,255,.6)}.ds-btn-ondark-o:hover{background:#fff;color:#2B1220}.ds-btn-ondark:focus-visible,.ds-btn-ondark-o:focus-visible{outline:2px solid #ECB86C;outline-offset:2px}"
+    },
+    {
+      "name": "Hero Field",
+      "kind": "custom",
+      "refersTo": "hero",
+      "description": "The one raspberry drench: sparkle, white Bodoni headline, lead, two actions, image in a gold hairline frame.",
+      "html": "<section class=\"ds-hero\"><div><svg class=\"ds-sp\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 0c.7 6.2 5.8 11.3 12 12-6.2.7-11.3 5.8-12 12-.7-6.2-5.8-11.3-12-12C6.2 11.3 11.3 6.2 12 0Z\"/></svg><h1>Your shop for beauty, picked with care.</h1><p>Orders are confirmed by a real person.</p></div><div class=\"ds-frame\"><div class=\"ds-img\"></div></div></section>",
+      "css": ".ds-hero{display:grid;grid-template-columns:1.15fr .85fr;gap:32px;align-items:center;padding:40px 24px;background:#C30239;color:#fff;font-family:'Hanken Grotesk',system-ui,sans-serif}.ds-hero h1{margin:16px 0 0;font:500 44px/1.02 'Bodoni Moda',Georgia,serif;letter-spacing:-.02em}.ds-hero p{margin:16px 0 0;font-size:18px;opacity:.9}.ds-sp{width:28px;height:28px;fill:#ECB86C}.ds-frame{padding:8px;border-radius:28px;box-shadow:none;outline:1px solid rgba(236,184,108,.8)}.ds-img{aspect-ratio:4/5;border-radius:20px;background:#FFEEF2}"
+    },
+    {
+      "name": "Petal Panel",
+      "kind": "custom",
+      "refersTo": "petal-panel",
+      "description": "Petal band with raspberry sparkle, Deep Raspberry Bodoni heading and 80% ink body.",
+      "html": "<section class=\"ds-petal\"><svg class=\"ds-sp\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 0c.7 6.2 5.8 11.3 12 12-6.2.7-11.3 5.8-12 12-.7-6.2-5.8-11.3-12-12C6.2 11.3 11.3 6.2 12 0Z\"/></svg><h2>Curated, then confirmed.</h2><p>A short range, chosen with care.</p></section>",
+      "css": ".ds-petal{padding:40px 24px;background:#FFEEF2;font-family:'Hanken Grotesk',system-ui,sans-serif;color:#2B1220}.ds-sp{width:24px;height:24px;fill:#C30239}.ds-petal h2{margin:16px 0 0;max-width:14ch;font:500 36px/1.1 'Bodoni Moda',Georgia,serif;color:#7A0220;letter-spacing:-.015em}.ds-petal p{margin:16px 0 0;font-size:18px;opacity:.8}"
     },
     {
       "name": "Product Card",
       "kind": "card",
-      "refersTo": "product-card",
-      "description": "Borderless tile: 12px image, plain meta below, underline on title hover.",
-      "html": "<a class=\"ds-pcard\"><div class=\"ds-pimg\"><span class=\"ds-pbadge\">Sample</span></div><p class=\"ds-pcat\">Category</p><h3 class=\"ds-ptitle\">Product name</h3><p class=\"ds-pmeta\"><b>PHP 000</b><span>Ask for availability</span></p></a>",
-      "css": ".ds-pcard{display:block;width:240px;font-family:'Hanken Grotesk',system-ui,sans-serif;color:#1A1217;text-decoration:none}.ds-pimg{position:relative;aspect-ratio:4/5;border-radius:12px;background:#FDEFF2}.ds-pbadge{position:absolute;top:12px;right:12px;background:#fff;border-radius:9999px;padding:4px 10px;font-size:12px;font-weight:600}.ds-pcat{margin:12px 0 0;font-size:14px;color:#675A61}.ds-ptitle{margin:2px 0 0;font-size:18px;font-weight:600;line-height:1.3}.ds-pcard:hover .ds-ptitle{text-decoration:underline}.ds-pmeta{display:flex;justify-content:space-between;margin:8px 0 0;font-size:14px}.ds-pmeta span{color:#675A61}"
+      "refersTo": "card",
+      "description": "Borderless tile: 20px image, plain meta, raspberry price, underline on title hover.",
+      "html": "<a class=\"ds-pcard\"><div class=\"ds-pimg\"></div><p class=\"ds-pcat\">Category</p><h3 class=\"ds-ptitle\">Product name</h3><p class=\"ds-pmeta\"><b>PHP 000</b><span>Ask for availability</span></p></a>",
+      "css": ".ds-pcard{display:block;width:240px;font-family:'Hanken Grotesk',system-ui,sans-serif;color:#2B1220;text-decoration:none}.ds-pimg{aspect-ratio:4/5;border-radius:20px;background:#FFEEF2}.ds-pcat{margin:12px 0 0;font-size:14px;color:#6F5B66}.ds-ptitle{margin:2px 0 0;font-size:18px;font-weight:600;line-height:1.3}.ds-pcard:hover .ds-ptitle{text-decoration:underline}.ds-pmeta{display:flex;justify-content:space-between;margin:8px 0 0;font-size:14px}.ds-pmeta b{color:#C30239;font-weight:600}.ds-pmeta span{color:#6F5B66}"
     },
     {
       "name": "Placeholder Slot",
       "kind": "custom",
       "refersTo": "placeholder",
-      "description": "Flat petal box with a faint raspberry diagonal cross, ink tag, and a white spec panel stating size, ratio and type.",
-      "html": "<div class=\"ds-ph\"><span class=\"ds-phtag\">PH-01 · Placeholder</span><div class=\"ds-phinfo\"><p>Hero image</p><small>1200 × 1500 px</small></div></div>",
-      "css": ".ds-ph{position:relative;display:flex;flex-direction:column;justify-content:flex-end;width:280px;aspect-ratio:4/5;padding:12px;border-radius:12px;background:linear-gradient(to bottom right,transparent calc(50% - .5px),rgba(195,2,57,.2) 50%,transparent calc(50% + .5px)),linear-gradient(to bottom left,transparent calc(50% - .5px),rgba(195,2,57,.2) 50%,transparent calc(50% + .5px)),#FDEFF2;font-family:'Hanken Grotesk',system-ui,sans-serif;color:#1A1217}.ds-phtag{position:absolute;top:12px;left:12px;background:#1A1217;color:#fff;border-radius:9999px;padding:4px 10px;font-size:12px;font-weight:600}.ds-phinfo{background:#fff;border-radius:8px;padding:10px}.ds-phinfo p{margin:0;font-weight:600}.ds-phinfo small{color:#675A61}"
+      "description": "Flat petal box with faint raspberry cross, raspberry tag and a spec caption.",
+      "html": "<div class=\"ds-ph\"><span class=\"ds-phtag\">PH-01 · Placeholder</span><div><p>Hero image</p><small>1200 × 1500 px · 4:5 · portrait</small></div></div>",
+      "css": ".ds-ph{position:relative;display:flex;flex-direction:column;justify-content:space-between;width:280px;aspect-ratio:4/5;padding:16px;box-sizing:border-box;border-radius:20px;background:linear-gradient(to bottom right,transparent calc(50% - .5px),rgba(195,2,57,.2) 50%,transparent calc(50% + .5px)),linear-gradient(to bottom left,transparent calc(50% - .5px),rgba(195,2,57,.2) 50%,transparent calc(50% + .5px)),#FFEEF2;font-family:'Hanken Grotesk',system-ui,sans-serif;color:#2B1220}.ds-phtag{width:fit-content;background:#C30239;color:#fff;border-radius:9999px;padding:4px 10px;font-size:12px;font-weight:600}.ds-ph p{margin:0;font-weight:600}.ds-ph small{color:#6F5B66}"
     },
     {
       "name": "Text Field",
@@ -236,7 +275,7 @@
       "refersTo": "input",
       "description": "White field with petal hairline; raspberry border on error.",
       "html": "<input class=\"ds-input\" placeholder=\"Full name\">",
-      "css": ".ds-input{box-sizing:border-box;width:260px;min-height:48px;padding:12px 16px;border:1px solid #EBDDE2;border-radius:12px;background:#fff;color:#1A1217;font:400 16px 'Hanken Grotesk',system-ui,sans-serif;caret-color:#C30239}.ds-input:focus-visible{outline:2px solid #1A1217;outline-offset:3px}"
+      "css": ".ds-input{box-sizing:border-box;width:260px;min-height:48px;padding:12px 16px;border:1px solid #F2D9E1;border-radius:12px;background:#fff;color:#2B1220;font:400 16px 'Hanken Grotesk',system-ui,sans-serif;caret-color:#C30239}.ds-input:focus-visible{outline:2px solid #2B1220;outline-offset:3px}"
     },
     {
       "name": "Nav Link",
@@ -244,47 +283,66 @@
       "refersTo": "nav-link",
       "description": "Ink text, raspberry on hover and active with a 2px underline.",
       "html": "<nav class=\"ds-nav\"><a>Shop</a><a class=\"ds-active\">About</a></nav>",
-      "css": ".ds-nav{display:flex;gap:4px;font-family:'Hanken Grotesk',system-ui,sans-serif}.ds-nav a{display:inline-flex;align-items:center;min-height:44px;padding:0 12px;font-size:15px;font-weight:500;color:#1A1217;cursor:pointer}.ds-nav a:hover{color:#C30239}.ds-nav a.ds-active{color:#C30239;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:10px}"
+      "css": ".ds-nav{display:flex;gap:4px;font-family:'Hanken Grotesk',system-ui,sans-serif}.ds-nav a{display:inline-flex;align-items:center;min-height:44px;padding:0 12px;font-size:15px;font-weight:500;color:#2B1220;cursor:pointer}.ds-nav a:hover{color:#C30239}.ds-nav a.ds-active{color:#C30239;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:10px}"
     },
     {
       "name": "Announcement Bar",
       "kind": "custom",
       "refersTo": "announcement-bar",
-      "description": "Slim ink strip above the header.",
-      "html": "<p class=\"ds-bar\">Orders are confirmed personally by message or call.</p>",
-      "css": ".ds-bar{margin:0;padding:8px 16px;background:#1A1217;color:#fff;text-align:center;font:500 13px 'Hanken Grotesk',system-ui,sans-serif}"
+      "description": "Slim raspberry strip with two gold sparkles.",
+      "html": "<p class=\"ds-bar\"><svg class=\"ds-sp\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 0c.7 6.2 5.8 11.3 12 12-6.2.7-11.3 5.8-12 12-.7-6.2-5.8-11.3-12-12C6.2 11.3 11.3 6.2 12 0Z\"/></svg>Orders are confirmed personally by message or call.<svg class=\"ds-sp\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 0c.7 6.2 5.8 11.3 12 12-6.2.7-11.3 5.8-12 12-.7-6.2-5.8-11.3-12-12C6.2 11.3 11.3 6.2 12 0Z\"/></svg></p>",
+      "css": ".ds-bar{display:flex;align-items:center;justify-content:center;gap:8px;margin:0;padding:8px 16px;background:#C30239;color:#fff;font:500 14px 'Hanken Grotesk',system-ui,sans-serif}.ds-sp{width:12px;height:12px;fill:#ECB86C;flex:none}"
+    },
+    {
+      "name": "Footer",
+      "kind": "custom",
+      "refersTo": "footer",
+      "description": "Claret ground, white text, white 15% hairline.",
+      "html": "<footer class=\"ds-foot\"><b>The Pep Stop</b><p>Health &amp; Beauty</p><hr><small>Content on this website is general information.</small></footer>",
+      "css": ".ds-foot{padding:32px 24px;background:#5A0118;color:#fff;font-family:'Hanken Grotesk',system-ui,sans-serif}.ds-foot b{font:600 24px/1 'Bodoni Moda',Georgia,serif}.ds-foot p{margin:12px 0;color:rgba(255,255,255,.8)}.ds-foot hr{border:0;border-top:1px solid rgba(255,255,255,.15)}.ds-foot small{color:rgba(255,255,255,.75)}"
     }
   ],
   "narrative": {
-    "northStar": "The Plain-Spoken Shop",
-    "overview": "A white page, one plum-black ink, and a single raspberry taken from the supplied logo. The range is the picture; everything else stays out of its way. The system is the category standard played straight: soft, friendly, mobile-first, with strong product tiles as the craft bar. It is not a themed or novelty world, and it does not borrow the older beauty-site look the first build used (cream ground, serif display, gold arcs, gradient washes, icon-on-card feature grids).\n\nDensity is calm and generous. Headlines are set large and left, tight and tracked, in sentence case. Surfaces are flat and separated by hairlines or a pale petal tint. Raspberry is reserved for action, so that the order button is always the loudest thing on the screen. A person is always one tap away: the message or call control sits in the header, in the hero, and in a sticky bar on phones.\n\nHonesty about missing material is part of the look. Image slots that await real photography render as flat petal boxes with a faint diagonal cross, an ink tag, and a white panel stating canvas size, aspect ratio and type.",
+    "northStar": "The Raspberry Counter",
+    "overview": "**Creative North Star: \"The Raspberry Counter\"**\n\nThe shop takes its world from the supplied logo: raspberry lacquer, pink, gold and a four-point sparkle. A white page carries plum ink and petal panels. One full-width raspberry field opens the home page and one claret field closes every page. Between them the range is the picture and a person is one tap away. It is a premium, feminine, brand-led store, and it deliberately refuses the older beauty-site tropes: cream grounds, gold arcs, gradient washes, eyebrow labels, and icon-on-card feature grids.\n\nVoice is high-contrast and warm. Bodoni Moda gives headings a fashion-counter polish; Hanken Grotesk keeps body, buttons and product data plain and legible on a phone. Surfaces are flat, separated by hairlines and the petal tint. Imagery is soft, with 20px corners. Gold appears only as a hairline frame and as sparkle on raspberry or claret, never as text on white.\n\nHonesty about missing material is part of the look. Image slots awaiting real photography render as flat petal boxes with a faint raspberry diagonal cross, a raspberry tag with the registry ID, and a caption stating canvas size, aspect ratio and type.",
     "keyCharacteristics": [
-      "White ground, ink text, raspberry for action only.",
-      "One grotesk family, 600 weight display, tight negative tracking, sentence case.",
-      "Flat surfaces, hairline rules, no shadows in use.",
-      "Pill controls, 12px imagery and containers.",
+      "White ground, plum ink, petal panels, one raspberry hero, claret footer.",
+      "Bodoni Moda 500 headings over Hanken Grotesk body, sentence case.",
+      "The four-point sparkle is the single motif.",
+      "Pill controls, 20px imagery and cards, 12px fields.",
+      "Flat surfaces and hairlines; depth by tint, not shadow.",
       "One authored motion: sections rise into place once.",
       "Placeholders are flat, labeled and unmistakably placeholders."
     ],
     "rules": [
       {
-        "name": "The Action-Only Raspberry Rule",
-        "body": "Raspberry marks what you can do (order, add, go) or what went wrong (error). It is not used for decoration, backgrounds of sections, or heading color.",
+        "name": "The One Drench Rule",
+        "body": "Raspberry floods a surface once per page: the home hero field. Other raspberry is a control, a thin bar, or a mark, never a second full section.",
         "section": "colors"
       },
       {
-        "name": "The Gold-On-Dark Rule",
-        "body": "Gold exists only against ink. On white it fails contrast and is not used.",
+        "name": "The Gold-On-Deep Rule",
+        "body": "Gold exists only against raspberry or claret, as hairline, sparkle or active link. On white it fails contrast and is not used.",
+        "section": "colors"
+      },
+      {
+        "name": "The Deep-Heading Rule",
+        "body": "Headings on light grounds are Deep Raspberry or Ink; bright raspberry stays with actions, prices and numerals.",
         "section": "colors"
       },
       {
         "name": "The Heading Carries Itself Rule",
-        "body": "No small label sits above a heading. The heading alone opens a section.",
+        "body": "No small label sits above a heading. The sparkle may precede it; text may not.",
         "section": "typography"
       },
       {
         "name": "The Sentence Case Rule",
-        "body": "Display and headings are sentence case. The only uppercase in the build is the tracked wordmark in the logo lockup.",
+        "body": "Display and headings are sentence case. The build has no uppercase text and no tracked caps.",
+        "section": "typography"
+      },
+      {
+        "name": "The Two-Voice Rule",
+        "body": "Bodoni is for headings, category and value names, and the wordmark. Buttons, nav, forms and product data are always Hanken.",
         "section": "typography"
       },
       {
@@ -294,19 +352,22 @@
       }
     ],
     "dos": [
-      "**Do** keep the ground white and let the product image be the color.",
-      "**Do** use raspberry for the single main action per view and for errors only.",
-      "**Do** keep one family, 600 display with negative tracking, sentence case.",
-      "**Do** give every control 48px height (44px for nav links) and a visible ink focus ring.",
+      "**Do** keep the ground white and let the range and the raspberry hero carry the color.",
+      "**Do** drench raspberry once per page, in the hero, and keep other raspberry to controls, prices, numerals and the announcement bar.",
+      "**Do** set headings in Bodoni Moda 500, sentence case, in Deep Raspberry or Ink on light grounds and white on raspberry or claret.",
+      "**Do** use the four-point sparkle as the only ornament, decorative and `aria-hidden`.",
+      "**Do** round imagery and cards at 20px, fields at 12px, controls as pills.",
+      "**Do** give every control 48px height (44px for nav links) and a visible focus ring (ink, gold on dark).",
       "**Do** render missing imagery as a registered placeholder stating size, ratio and type.",
-      "**Do** separate with hairlines and the petal tint instead of shadows.",
-      "**Do** keep the phone number, message, and cart reachable in the header and the sticky phone bar."
+      "**Do** separate with hairlines and ground changes instead of shadows.",
+      "**Do** keep message, call and cart reachable in the header, the hero and the sticky phone bar."
     ],
     "donts": [
       "**Don't** use gold or rose as text or icon color on white.",
-      "**Don't** add serif display faces, gradient washes, gold arc ornaments, or cream grounds.",
-      "**Don't** build icon-on-card feature grids or put a small label above a heading.",
+      "**Don't** add cream grounds, gradient washes, gold arcs, or eyebrow labels above headings.",
+      "**Don't** build icon-on-card feature grids.",
       "**Don't** nest cards or add drop shadows.",
+      "**Don't** use Bodoni for buttons, nav, forms or product data.",
       "**Don't** invent photography, testimonials, ratings or claims to fill a slot.",
       "**Don't** use hype words such as miracle, breakthrough or guaranteed in any copy."
     ]

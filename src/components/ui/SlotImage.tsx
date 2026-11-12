@@ -32,7 +32,7 @@ export function SlotImage({ slot, src, alt, label, sizes = "100vw", priority = f
       loading={priority ? "eager" : "lazy"}
       decoding="async"
       fetchPriority={priority ? "high" : "auto"}
-      className={`h-auto w-full object-cover ${className}`}
+      className={`h-auto w-full rounded-[20px] object-cover ${className}`}
       style={{ aspectRatio: `${s.width} / ${s.height}` }}
     />
   );

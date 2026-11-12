@@ -9,8 +9,8 @@ export function Values() {
         <SectionHeading title={ABOUT.valuesTitle} />
         <ul className="mt-10 grid gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
           {VALUES.map((v) => (
-            <li key={v.id} className="border-t border-ink pt-5">
-              <h3 className="text-xl font-semibold text-ink">{v.title}</h3>
+            <li key={v.id} className="border-t border-raspberry/40 pt-5">
+              <h3 className="font-display text-2xl font-medium text-raspberry-deep">{v.title}</h3>
               <p className="mt-2 text-ink/80">{v.body}</p>
             </li>
           ))}

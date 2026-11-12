@@ -59,7 +59,7 @@ export default function Product() {
           </div>
           <div>
             <p className="text-sm text-mute">{getCategoryName(product.categoryId)}</p>
-            <h1 className="mt-1 text-h1 font-semibold text-ink">{product.name}</h1>
+            <h1 className="mt-1 font-display text-h1 font-medium text-raspberry-deep">{product.name}</h1>
             {product.shortDescription && <p className="mt-3 text-lg text-ink/80">{product.shortDescription}</p>}
             {product.regNumber && <p className="mt-2 text-sm text-mute">{SHOP.regLabel} {product.regNumber}</p>}
             <p className="mt-5 text-2xl font-semibold text-ink">{selected && product.showPrice && selected.pricePhp !== null ? formatPhp(selected.pricePhp) : priceLabel(product)}</p>
@@ -76,7 +76,7 @@ export default function Product() {
                       disabled={!v.available}
                       aria-pressed={selectedId === v.id}
                       onClick={() => { setVariantId(v.id); setAdded(false); }}
-                      className={`inline-flex min-h-11 items-center rounded-full border px-5 text-sm font-semibold disabled:opacity-40 ${selectedId === v.id ? "border-ink bg-ink text-white" : "border-line text-ink hover:border-ink"}`}
+                      className={`inline-flex min-h-11 items-center rounded-full border px-5 text-sm font-semibold disabled:opacity-40 ${selectedId === v.id ? "border-raspberry bg-raspberry text-white" : "border-line text-ink hover:border-raspberry"}`}
                     >
                       {v.label}
                     </button>

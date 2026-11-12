@@ -1,3 +1,5 @@
+@import "@fontsource/bodoni-moda/latin-500.css";
+@import "@fontsource/bodoni-moda/latin-600.css";
 @import "@fontsource/hanken-grotesk/latin-400.css";
 @import "@fontsource/hanken-grotesk/latin-500.css";
 @import "@fontsource/hanken-grotesk/latin-600.css";
@@ -8,12 +10,13 @@
 @tailwind utilities;
 
 :root {
-  --ink: #1a1217;
+  --ink: #2b1220;
+  --claret: #5a0118;
   --raspberry: #c30239;
   --raspberry-deep: #7a0220;
-  --petal: #fdeff2;
-  --mute: #675a61;
-  --line: #ebdde2;
+  --petal: #ffeef2;
+  --mute: #6f5b66;
+  --line: #f2d9e1;
   --gold: #ecb86c;
 }
 

@@ -57,7 +57,7 @@ export function MobileNav({ open, onClose }: { open: boolean; onClose: () => voi
       role="dialog"
       aria-modal="true"
       aria-label={UI.menuTitle}
-      className="on-dark fixed inset-0 z-50 flex flex-col overflow-y-auto bg-ink px-4 pb-8 pt-3 text-white sm:px-6 lg:hidden"
+      className="on-dark fixed inset-0 z-50 flex flex-col overflow-y-auto bg-claret px-4 pb-8 pt-3 text-white sm:px-6 lg:hidden"
     >
       <div className="flex items-center justify-between">
         <Logo onDark />

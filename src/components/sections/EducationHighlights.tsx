@@ -20,9 +20,9 @@ export function EducationHighlights() {
         </div>
         <ul className="mt-8 grid gap-8 md:grid-cols-3">
           {articles.map((a) => (
-            <li key={a.slug} className="border-t border-ink pt-5">
+            <li key={a.slug} className="border-t border-raspberry/40 pt-5">
               <Reveal>
-                <h3 className="text-h3 font-semibold text-ink">{a.title}</h3>
+                <h3 className="font-display text-2xl font-medium text-ink">{a.title}</h3>
                 <p className="mt-2 text-ink/80">{a.summary}</p>
                 <Link to={`/education/${a.slug}`} className="mt-3 inline-flex min-h-11 items-center gap-2 font-semibold text-raspberry underline">{EDUCATION.readMore}</Link>
               </Reveal>

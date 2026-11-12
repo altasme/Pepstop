@@ -36,9 +36,11 @@ export type Product = {
 };
 
 export const PRODUCT_CATEGORIES: ProductCategory[] = [
-  { id: "beauty-skincare", name: "Beauty & Skincare", slug: "beauty-skincare", sort: 1 },
-  { id: "health-wellness", name: "Health & Wellness", slug: "health-wellness", sort: 2 },
-  { id: "emerging-wellness-innovations", name: "Emerging Wellness Innovations", slug: "emerging-wellness-innovations", sort: 3 },
+  { id: "weight-wellness", name: "Weight & Wellness", slug: "weight-wellness", sort: 1 },
+  { id: "next-generation-wellness", name: "Next-Generation Wellness", slug: "next-generation-wellness", sort: 2 },
+  { id: "skin-beauty", name: "Skin & Beauty", slug: "skin-beauty", sort: 3 },
+  { id: "vitality-cellular-health", name: "Vitality & Cellular Health", slug: "vitality-cellular-health", sort: 4 },
+  { id: "energy-cellular-wellness", name: "Energy & Cellular Wellness", slug: "energy-cellular-wellness", sort: 5 },
 ];
 
 const sample = (n: number, categoryId: string): Product => ({
@@ -67,10 +69,10 @@ const sample = (n: number, categoryId: string): Product => ({
 });
 
 export const PRODUCTS: Product[] = [
-  sample(1, "beauty-skincare"),
-  sample(2, "beauty-skincare"),
-  sample(3, "health-wellness"),
-  sample(4, "health-wellness"),
-  sample(5, "emerging-wellness-innovations"),
-  sample(6, "emerging-wellness-innovations"),
+  sample(1, "weight-wellness"),
+  sample(2, "next-generation-wellness"),
+  sample(3, "skin-beauty"),
+  sample(4, "vitality-cellular-health"),
+  sample(5, "energy-cellular-wellness"),
+  sample(6, "skin-beauty"),
 ];

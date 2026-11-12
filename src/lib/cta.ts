@@ -28,3 +28,12 @@ export function getChannels(): Channel[] {
 }
 
 export const hasChatChannel = () => getChannels().some((c) => ["messenger", "viber", "whatsapp"].includes(c.kind));
+
+/** Channels with a prefilled message where the app supports it (SMS body, WhatsApp text). Others open blank. */
+export function getChannelsWithMessage(text: string): Channel[] {
+  return getChannels().map((c) => {
+    if (c.kind === "sms") return { ...c, href: `${CTA.sms.href}?&body=${encodeURIComponent(text)}` };
+    if (c.kind === "whatsapp" && CTA.whatsapp) return { ...c, href: `${CTA.whatsapp.href.split("?")[0]}?text=${encodeURIComponent(text)}` };
+    return c;
+  });
+}
