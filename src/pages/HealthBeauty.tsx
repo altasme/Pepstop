@@ -40,7 +40,7 @@ export default function HealthBeauty() {
                         ))}
                       </div>
                     </div>
-                    <SlotImage slot="focus" src={a.image} alt="" sizes="(min-width: 1024px) 20rem, 16rem" compact className="hidden md:block" />
+                    <SlotImage slot="focus" src={a.image} alt="" sizes="(min-width: 1024px) 20rem, 16rem" compact className="md:block" />
                   </div>
                 </Reveal>
               </li>
