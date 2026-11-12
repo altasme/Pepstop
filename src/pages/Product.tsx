@@ -69,6 +69,7 @@ export default function Product() {
             <p className="text-sm text-mute">{getCategoryName(product.categoryId)}</p>
             <h1 className="mt-1 font-display text-h1 font-medium text-raspberry-deep">{product.name}</h1>
             {product.shortDescription && <p className="mt-3 text-lg text-ink/80">{product.shortDescription}</p>}
+            <p className="mt-3 text-sm text-mute">{SHOP.productIntro}</p>
             {product.regNumber && <p className="mt-2 text-sm text-mute">{SHOP.regLabel} {product.regNumber}</p>}
             <p className="mt-5 text-2xl font-semibold text-ink">{selected && product.showPrice && selected.pricePhp !== null ? formatPhp(selected.pricePhp) : priceLabel(product)}</p>
             <p className="mt-1 text-sm text-mute">{SHOP.availability[unavailable ? "unavailable" : product.availability]}</p>
@@ -104,7 +105,7 @@ export default function Product() {
             <div aria-live="polite" className="mt-3 min-h-6">
               {added && (
                 <p className="inline-flex items-center gap-2 text-sm font-semibold text-ink">
-                  <Check className="h-4 w-4 text-raspberry" strokeWidth={2} aria-hidden="true" />{SHOP.added}.{" "}
+                  <Check className="h-4 w-4 text-raspberry" strokeWidth={2} aria-hidden="true" />{SHOP.added}{" "}
                   <Link to="/cart" className="underline">{SHOP.viewCart}</Link>
                 </p>
               )}
@@ -120,11 +121,19 @@ export default function Product() {
               <span className="font-semibold text-ink">{SHOP.payWith}:</span> {PAYMENT_METHODS.filter((m) => m.enabled).map((m) => m.label).join(", ")}.
             </p>
 
+            <div className="mt-6 rounded-2xl bg-petal p-5">
+              <h2 className="font-sans text-base font-semibold text-ink">{SHOP.inquiryTitle}</h2>
+              <p className="mt-1 text-sm text-ink/80">{SHOP.inquiryBody}</p>
+            </div>
+
             <div className="mt-8 border-t border-line">
               {product.fullDescription && <Detail title={SHOP.detailsTitle}>{product.fullDescription}</Detail>}
               <Detail title={SHOP.specsTitle}>{product.specifications}</Detail>
+              <Detail title={SHOP.optionsTitle}>{product.variants.map((v) => v.label)}</Detail>
               <Detail title={SHOP.packagingTitle}>{product.packaging}</Detail>
               <Detail title={SHOP.storageTitle}>{product.storage}</Detail>
+              <Detail title={SHOP.documentsTitle}>{[]}</Detail>
+              <Detail title={SHOP.coaTitle}>{[]}</Detail>
             </div>
             <Disclaimer text={SHOP.productDisclaimer} className="mt-6" />
           </div>

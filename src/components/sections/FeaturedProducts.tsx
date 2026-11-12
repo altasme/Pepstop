@@ -14,7 +14,10 @@ export function FeaturedProducts() {
     <section className="bg-white">
       <div className="mx-auto max-w-page px-4 pb-14 sm:px-6 md:pb-20 lg:px-8">
         <div className="flex flex-wrap items-end justify-between gap-4">
-          <SectionHeading title={HOME.featuredTitle} />
+          <div>
+            <SectionHeading title={HOME.featuredTitle} />
+            <p className="mt-4 max-w-prose text-lg text-ink/80">{HOME.featuredBody}</p>
+          </div>
           <Link to="/shop" className="inline-flex min-h-11 items-center gap-2 font-semibold text-ink underline hover:text-raspberry">
             {HOME.featuredAll}<ArrowRight className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
           </Link>

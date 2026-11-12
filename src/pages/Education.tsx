@@ -9,6 +9,7 @@ import { Card } from "../components/ui/Card";
 import { Disclaimer } from "../components/ui/Disclaimer";
 import { formatDate } from "../lib/format";
 import { Sprig } from "../components/ui/Sprig";
+import { Button } from "../components/ui/Button";
 
 export default function Education() {
   const articles = getPublishedArticles();
@@ -22,6 +23,7 @@ export default function Education() {
             <Sprig className="pointer-events-none absolute -bottom-2 left-1/2 h-48 w-auto -translate-x-1/2 text-raspberry/55" />
             <p className="font-sans text-h3 font-semibold text-ink">{EDUCATION.empty}</p>
             <p className="mt-2 text-ink">{EDUCATION.emptyHint}</p>
+            <div className="mt-5"><Button to="/contact" variant="secondary">{EDUCATION.emptyCta}</Button></div>
           </div>
         ) : (
           <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

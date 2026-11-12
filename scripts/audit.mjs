@@ -19,7 +19,9 @@ for (const f of dashFiles) if (/[\u2013\u2014]/.test(readFileSync(f, "utf8"))) f
 // 2. Banned vocabulary sweep over public-site copy (content files).
 const banned = ["cure", "treat", "prevent", "heal", "weight loss", "slimming", "clinically proven", "miracle", "guaranteed", "pharmaceutical grade"];
 for (const f of walk(join(root, "src/content"))) {
-  const text = readFileSync(f, "utf8").toLowerCase();
+  // Justified exception (HANDOVER section 9): the client-supplied product disclaimer says the information is not
+  // "diagnosis, or treatment guidance". It is a disclaimer, not a claim, so only that exact phrase is exempt.
+  const text = readFileSync(f, "utf8").toLowerCase().split("diagnosis, or treatment guidance").join("");
   for (const w of banned) if (new RegExp(`\\b${w}(s|ed|ing|ment)?\\b`).test(text)) fail(`banned word "${w}" in ${f.replace(root, "")}`);
 }
 

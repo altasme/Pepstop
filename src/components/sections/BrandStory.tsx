@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
-import { HOME, ORG } from "../../content/site";
+import { HOME } from "../../content/site";
 import { SlotImage } from "../ui/SlotImage";
 import { SectionHeading } from "../ui/SectionHeading";
 import { Sparkle } from "../ui/Sparkle";
@@ -25,11 +25,14 @@ export function BrandStory() {
           <Sparkle className="mb-4 h-5 w-5" fill="#C30239" />
           <SectionHeading title={HOME.storyHeading} className="max-w-[22ch] text-claret" />
           <div className="mt-5 max-w-prose space-y-4 text-lg text-ink/80">
-            {ORG.intro.map((p) => <p key={p}>{p}</p>)}
+            {HOME.storyBody.map((p) => <p key={p}>{p}</p>)}
           </div>
-          <ul className="mt-6 flex flex-wrap gap-2">
+          <ul className="mt-6 grid gap-3 sm:grid-cols-3">
             {HOME.storyPillars.map((p) => (
-              <li key={p} className="rounded-full border border-raspberry/40 bg-white px-4 py-1.5 text-sm font-medium text-raspberry-deep">{p}</li>
+              <li key={p.title} className="rounded-2xl border border-raspberry/30 bg-white p-4">
+                <p className="font-semibold text-raspberry-deep">{p.title}</p>
+                <p className="mt-1 text-sm text-ink/80">{p.body}</p>
+              </li>
             ))}
           </ul>
           <Link to={HOME.storyLink.to} className="mt-7 inline-flex min-h-11 items-center gap-2 font-semibold text-ink underline hover:text-raspberry">

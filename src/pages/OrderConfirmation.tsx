@@ -37,7 +37,13 @@ export default function OrderConfirmation() {
   };
   // Chat channels that can carry the order text. Messenger and Viber open blank, so the text is copied first.
   const channels = getChannels().map((c) =>
-    c.kind === "sms" ? { ...c, href: smsHrefWithBody(text) } : c.kind === "whatsapp" ? { ...c, href: whatsappHrefWithBody(text) } : c,
+    c.kind === "sms"
+      ? { ...c, href: smsHrefWithBody(text), label: CONFIRMATION.sendSms }
+      : c.kind === "whatsapp"
+        ? { ...c, href: whatsappHrefWithBody(text), label: CONFIRMATION.sendWhatsapp }
+        : c.kind === "messenger"
+          ? { ...c, label: CONFIRMATION.sendMessenger }
+          : c,
   );
 
   return (

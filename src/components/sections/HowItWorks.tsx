@@ -9,6 +9,7 @@ export function HowItWorks() {
     <section className="bg-white">
       <div className="mx-auto max-w-page px-4 py-16 sm:px-6 md:py-24 lg:px-8">
         <SectionHeading title={HOME.howTitle} />
+        <p className="mt-4 max-w-prose text-lg text-ink/80">{HOME.howIntro}</p>
         <ol className="mt-10 grid gap-8 md:grid-cols-3 md:gap-10">
           {HOME.howSteps.map((s, i) => (
             <RuleItem key={s.title} delay={i * 220}>
@@ -21,6 +22,7 @@ export function HowItWorks() {
             </RuleItem>
           ))}
         </ol>
+        <p className="mt-10 max-w-prose text-sm text-ink/80">{HOME.howNote}</p>
       </div>
     </section>
   );

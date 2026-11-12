@@ -1,3 +1,4 @@
+import { Button } from "../components/ui/Button";
 import { Link } from "react-router-dom";
 import { ArrowUpRight } from "lucide-react";
 import { ABOUT, ORG } from "../content/site";
@@ -84,6 +85,7 @@ export default function About() {
               <Sprig className="absolute bottom-0 right-6 h-36 w-auto text-raspberry/55" />
             </li>
           </ul>
+          <div className="mt-8"><Button to="/shop">{ABOUT.closingCta}</Button></div>
         </div>
       </section>
 

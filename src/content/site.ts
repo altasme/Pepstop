@@ -11,18 +11,19 @@
 export const ORG = {
   name: "The Pep Stop",
   descriptor: "Health & Beauty",
-  tagline: "Beauty, wellness, and self-care, beautifully considered.",
+  tagline: "Your destination for wellness, beauty, and informed self-care.",
   legalName: null as null | string, // ★G1
   registration: null as null | string, // ★G1
   logo: "/images/logo-320.webp" as null | string, // ★G2 closed 2026-11-11. Local path or Cloudinary id. null = PH-03 wordmark
   intro: [
-    "The Pep Stop is a health and beauty brand for women who like to know what they are choosing, and why. We believe self-care should feel considered, calm, and a little luxurious.",
-    "Whether you are shaping a skincare ritual, exploring wellness, or simply have a question, you are never left to work it out alone. Message or call, and a real person will look after you.",
+    "The Pep Stop is a health, wellness, and beauty-focused business built around the idea that customers deserve clear information, convenient access, and attentive service.",
+    "We bring together a selection of wellness-related products and resources in one place, helping customers explore their interests and find the information they need.",
+    "Our goal is to create a shopping experience that feels approachable, organized, and personal.",
   ],
   mission:
-    "To help women choose beauty and wellness with confidence, through clear, honest information and service that feels personal, calm, and attentive.",
+    "To make exploring health, beauty, and wellness products a more informed and convenient experience through clear product information and attentive customer service.",
   vision:
-    "A world where looking after yourself feels beautiful, informed, and entirely your own.",
+    "To become a trusted destination for customers seeking a thoughtful approach to beauty, wellness, and product education.",
   missionStatus: "draft" as "draft" | "approved", // ★C1
 };
 
@@ -77,11 +78,11 @@ export const CHAT_HELPER = {
 
 export const NAV = [
   { label: "Home", to: "/" },
-  { label: "Shop", to: "/shop" },
-  { label: "About", to: "/about" },
+  { label: "Explore Collection", to: "/shop" },
+  { label: "About Us", to: "/about" },
   { label: "Health & Beauty", to: "/health-beauty" },
-  { label: "Wellness Education", to: "/education" },
-  { label: "Contact", to: "/contact" },
+  { label: "Wellness Journal", to: "/education" },
+  { label: "Contact Us", to: "/contact" },
 ];
 
 /** Routes where the mobile sticky CTA bar is hidden (§9.8). */
@@ -215,51 +216,76 @@ export const MEDIA = {
 /* ------------------------------------------------------------------ */
 
 export const HOME = {
-  announcement: "Order online. A real person looks after every detail.",
-  heroTitle: "Self-care, beautifully considered.",
-  heroSupport: "Premium beauty and wellness for women, curated with care, and a real person to help you choose.",
-  heroShop: { label: "Discover the collections", to: "/shop" },
+  announcement: "Discover a more thoughtful approach to wellness. We're here to help.",
+  heroTitle: "Your Wellness Journey, Beautifully Considered.",
+  heroSupport:
+    "Explore a thoughtfully presented selection of health, beauty, and wellness products. Discover product information, review available options, and get the guidance you need to make informed decisions.",
+  heroShop: { label: "Explore Our Collection", to: "/shop" },
+  heroTalk: "Talk to Our Team",
+  heroNote: "Wellness begins with understanding. We're here to make every detail clearer.",
   heroMatch: { lead: "Not sure where to start?", link: "Get matched" },
   heroCollectionsLabel: "Our collections",
-  categoriesTitle: "Find your ritual",
-  categoryLink: "Discover",
+  categoriesTitle: "Explore Our Collections",
+  categoriesBody:
+    "Discover a range of products and wellness-related offerings, organized to make exploring easier. Find what interests you, learn more about each item, and reach out whenever you need additional information.",
+  categoryLink: "Explore Collection",
   matchName: "Pep Match",
   matchTitle: "Not sure where to start? Get matched.",
   matchBody: "is our personal touch. Tell us a little about what you are looking for and we will point you to the right collection, then look after availability, delivery, and payment with you directly. One message is all it takes.",
   matchCta: "Get matched",
   matchMessage: "Hi The Pep Stop, I would like help choosing a collection.",
-  featuredTitle: "The edit",
-  featuredAll: "Shop everything",
-  storyHeading: "Beauty is personal. So is the way we serve you.",
-  storyPillars: ["Considered choices", "Honest information", "Personal service"],
-  storyLink: { label: "Meet The Pep Stop", to: "/about" },
-  whyTitle: "Shopping, the way it should feel",
-  whyIntro: "Beautiful things deserve a beautiful experience. Ours is unhurried, personal, and clear, from the first question to the day your order arrives.",
+  featuredTitle: "Featured Selections",
+  featuredBody:
+    "Take a closer look at selected products from The Pep Stop. Browse available options and explore the information provided for each item.",
+  featuredAll: "View All Products",
+  storyHeading: "More Than a Collection. A More Thoughtful Experience.",
+  storyBody: [
+    "At The Pep Stop, we believe that choosing wellness products should begin with clear information and thoughtful consideration.",
+    "We're building a destination where customers can explore, ask questions, and understand the details behind the products they are interested in.",
+    "From product information to customer assistance, we want every interaction to feel straightforward, personal, and well-informed.",
+  ],
+  storyPillars: [
+    { title: "Thoughtful Selection", body: "A carefully organized collection with product details presented clearly." },
+    { title: "Clear Information", body: "Straightforward product information, specifications, and available documentation." },
+    { title: "Personal Assistance", body: "A real person ready to help with product inquiries and order-related questions." },
+  ],
+  storyLink: { label: "Get to Know Us", to: "/about" },
+  whyTitle: "A Better Way to Explore Wellness",
+  whyIntro:
+    "Good customer experiences start with good information. We make it easier to explore our collection and get assistance whenever you need it.",
   whyItems: [
-    { title: "Ask before you buy", body: "Message or call about anything, and receive a plain, thoughtful answer." },
-    { title: "Looked after by a person", body: "Every order is confirmed with you personally, from availability to delivery." },
-    { title: "Every detail, laid out", body: "Product pages set out specifications, packaging, and storage, so nothing is left to guess." },
-    { title: "Pay the way you prefer", body: "GCash, Maya, bank transfer, or cash on delivery, arranged when your order is confirmed." },
+    { title: "Information at Your Fingertips", body: "Explore product details, available options, specifications, and supporting documentation in one convenient place." },
+    { title: "Assistance When You Need It", body: "Have a question? Reach out to our team for help navigating product information and availability." },
+    { title: "Clear and Straightforward", body: "We aim to present product information in a simple, organized, and easy-to-understand format." },
+    { title: "Convenient Payment Options", body: "GCash, Maya, and bank transfer options are available. Payment arrangements are confirmed with you during order confirmation." },
   ],
-  howTitle: "Effortless, from start to finish",
+  howTitle: "Simple, Convenient, and Personal",
+  howIntro: "From browsing to order confirmation, we keep the process straightforward.",
   howSteps: [
-    { title: "Choose", body: "Fill your cart with what feels right, and tell us where to send it." },
-    { title: "Send", body: "Your order summary opens, ready to send by text, call, or message. Nothing is charged on this website." },
-    { title: "Confirm", body: "We confirm availability, delivery, and payment with you personally, and take care of the rest." },
+    { title: "Explore", body: "Browse the collection and review the available product information and options." },
+    { title: "Submit Your Order", body: "Add your selected items to your cart and provide your contact and delivery details." },
+    { title: "Confirm With Our Team", body: "We'll review your submitted order and coordinate availability, delivery arrangements, and payment instructions with you." },
   ],
+  howNote:
+    "Submitting an order summary does not constitute payment or final order acceptance. Your order is confirmed once The Pep Stop has reviewed and acknowledged it.",
   approachTitle: "How we work",
-  educationTitle: "Gentle reading for the curious",
-  educationAll: "See all articles",
-  contactTitle: "Let us make it personal.",
-  contactBody: "Tell us what you are looking for, and a real person will help you find it. Message or call, whichever feels easiest.",
+  educationTitle: "Knowledge Is Part of Wellness",
+  educationBody:
+    "Being informed is an important part of making thoughtful choices. Explore helpful articles and general educational resources covering beauty, skincare, and wellness.",
+  educationAll: "Explore Wellness Resources",
+  contactTitle: "Have Questions? We're Here to Help.",
+  contactBody:
+    "Whether you need help understanding product information, checking availability, or following up on an order, our team is ready to assist.",
+  contactPrimary: { label: "Contact The Pep Stop", to: "/contact" },
+  contactSecondary: { label: "Browse Products", to: "/shop" },
 };
 
 /** Business strip on Home and Shop. Statements describe how we work; no delivery times or guarantees are promised. */
 export const TRUST = [
-  { id: "ask", title: "Ask before you buy", body: "Message or call us about any product. We answer plainly." },
-  { id: "info", title: "Clear product information", body: "Variants, packaging, and storage are listed on every product page." },
-  { id: "order", title: "Order your way", body: "Check out online, then confirm your order with us by message." },
-  { id: "care", title: "Attentive service", body: "Every message and call gets a considered, courteous reply." },
+  { id: "info", title: "Clear Product Information", body: "Explore available specifications, product options, and supporting documentation." },
+  { id: "assist", title: "Personal Assistance", body: "Our team is available to help with general product inquiries and order questions." },
+  { id: "order", title: "Straightforward Ordering", body: "Submit your order details and coordinate final confirmation directly with our team." },
+  { id: "pay", title: "Convenient Payment Options", body: "GCash, Maya, and bank transfer are available, subject to confirmation." },
 ];
 
 export type FocusArea = { id: string; title: string; tagline: string; summary: string; order: number; image: string | null };
@@ -313,26 +339,10 @@ export const FOCUS_AREAS: FocusArea[] = [
 ];
 
 export const VALUES = [
-  {
-    id: "informed-choices",
-    title: "Informed Choices",
-    body: "Clear, general information, so every choice is yours and made with confidence.",
-  },
-  {
-    id: "honest-information",
-    title: "Honest Information",
-    body: "We say what we know, we say when we do not, and we never overpromise.",
-  },
-  {
-    id: "attentive-service",
-    title: "Attentive Service",
-    body: "Every message and call receives a considered, courteous reply.",
-  },
-  {
-    id: "responsible-self-care",
-    title: "Responsible Self-Care",
-    body: "Small, steady habits, and the advice of licensed professionals when you need it.",
-  },
+  { id: "informed-choices", title: "Informed Choices", body: "We believe customers should have access to clear product information and relevant documentation before making decisions." },
+  { id: "transparency", title: "Transparency", body: "We aim to present available product details honestly and avoid claims that cannot be supported." },
+  { id: "customer-care", title: "Customer Care", body: "We value personal assistance and strive to make every customer interaction helpful and respectful." },
+  { id: "responsible-wellness", title: "Responsible Wellness", body: "We encourage thoughtful decisions and recognize the importance of qualified professional guidance when health-related questions arise." },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -341,157 +351,186 @@ export const VALUES = [
 
 export const HEALTH_BEAUTY = {
   bannerEyebrow: "Health & Beauty",
-  bannerTitle: "Five collections, each one considered.",
-  bannerBody: "Every collection is explained in warm, plain language, with each product detail laid out for you.",
+  bannerTitle: "Discover What Matters to Your Wellness Journey.",
+  bannerBody:
+    "Explore our curated collections covering different areas of health, beauty, and wellness. Each collection offers an organized way to discover relevant products and access the information available for each one. Take your time, explore the details, and contact our team if you need assistance.",
   relatedLabel: "Related reading",
-  shopCollection: "Shop this collection",
+  shopCollection: "Explore Collection",
   disclaimerLead: "General information only.",
+  closingTitle: "Need Help Finding What You're Looking For?",
+  closingBody:
+    "Our team can help you navigate the collection and locate available product information. Send us a message and we'll be happy to assist.",
+  closingCta: "Talk to Our Team",
 };
 
 export const EDUCATION = {
-  bannerEyebrow: "Wellness Education",
-  bannerTitle: "Wellness Education",
-  bannerBody: "Calm, plain-language reading on beauty, skincare, and everyday wellness, for whenever you have a quiet moment.",
-  empty: "Articles are coming soon.",
-  emptyHint: "In the meantime, you are welcome to message or call us with your questions.",
-  readMore: "Read article",
-  back: "All articles",
+  bannerEyebrow: "Wellness Journal",
+  bannerTitle: "A Little More Knowledge Goes a Long Way.",
+  bannerBody:
+    "Explore easy-to-understand educational resources covering beauty, skincare, and general wellness. Our goal is to make useful information easier to explore, helping you ask better questions and make more informed decisions.",
+  journalTitle: "The Wellness Journal",
+  journalBody: "Thoughtful reads, useful information, and topics worth exploring.",
+  empty: "Something Worth Reading Is Coming Soon.",
+  emptyHint:
+    "We're preparing more educational resources for you. In the meantime, feel free to contact our team with your general product questions.",
+  emptyCta: "Contact Us",
+  readMore: "Read Article",
+  back: "Wellness Journal",
   updated: "Last updated",
 };
 
 export const ABOUT = {
   bannerEyebrow: "About us",
-  bannerTitle: "Beauty, with a personal touch.",
-  bannerBody: "A health and beauty brand for women who value clear information, calm service, and the pleasure of being looked after.",
+  bannerTitle: "Your Destination for Wellness, Beauty, and Informed Self-Care.",
+  bannerBody: "A health, wellness, and beauty-focused business built on clear information, convenient access, and attentive service.",
   introTitle: "Our story",
-  missionTitle: "Our mission",
-  visionTitle: "Our vision",
+  missionTitle: "Our Mission",
+  visionTitle: "Our Vision",
   draftNote: "Draft copy, pending review by The Pep Stop.",
-  valuesTitle: "What we stand for",
+  valuesTitle: "What We Stand For",
   storyImageNote: "Our shop and our people",
-  collectionsTitle: "Explore our collections",
+  collectionsTitle: "Explore Our Collections",
   philosophyTitle: "Our philosophy",
   philosophy: [
-    "Self-care is at its most beautiful when it is understood. We put clear, general information first, so the choices you make are entirely your own, and made with confidence.",
-    "We keep our language warm and our claims modest. If we do not know something, we will tell you, and if a question is about your health, we will gently encourage you to speak with a licensed physician.",
+    "Informed choices begin with clear information. We put product details and available documentation first, so the decisions you make are entirely your own.",
+    "We aim to present available product details honestly and avoid claims that cannot be supported. If a question is about your health, we encourage you to speak with a qualified healthcare professional.",
   ],
   educationTitle: "Our commitment to customer education",
   education:
-    "We write short, general articles on beauty and everyday wellness, and we are always glad to answer your questions by message or phone. Our hope is that you leave every conversation feeling a little more informed, and a little more at ease.",
-  serviceTitle: "How we serve you",
+    "We share short, general educational resources on beauty, skincare, and wellness, and we are always glad to answer your questions. Our hope is that you leave every conversation a little more informed.",
+  serviceTitle: "Our Approach to Customer Service",
   service:
-    "You deal with people, not a queue. Reach us by message or phone, tell us your name and what you would like to know, and we will reply with care, warmth, and never any pressure.",
+    "Every customer deserves to feel heard and assisted. Whether you're exploring our collection, asking about product specifications, or checking on an order, we're here to help make the process easier.",
+  closingCta: "Discover The Pep Stop Collection",
 };
 
 export const CONTACT_PAGE = {
-  title: "We would love to hear from you.",
-  body: "The quickest way to reach us is by message or phone. There is no form to fill in, just a real person on the other end.",
+  title: "We're Here to Make Things Easier.",
+  body:
+    "Have a question about our collection, product information, or an existing order? Reach out to The Pep Stop. We're happy to assist and help point you in the right direction.",
   hoursTitle: "Hours",
-  channelsTitle: "Ways to reach us",
-  phoneLabel: "Phone",
-  emailLabel: "Email",
-  facebookLabel: "Facebook",
+  channelsTitle: "Connect With Us",
+  channelsBody: "Choose the contact method that works best for you.",
+  phoneLabel: "Call Us",
+  emailLabel: "Email Us",
+  facebookLabel: "Find Us on Facebook",
 };
 
 export const SHOP = {
   bannerEyebrow: "Shop",
-  bannerTitle: "Shop the collections",
-  bannerBody: "Premium beauty and wellness, set out clearly. Take your time, ask us anything, and a real person confirms your order.",
-  searchLabel: "Search products",
-  searchPlaceholder: "Search by name",
-  categoryLabel: "Category",
-  allCategories: "All",
-  sortLabel: "Sort by",
-  sorts: { featured: "Featured", name: "Name", priceLow: "Price, low to high", priceHigh: "Price, high to low" },
-  results: (n: number) => `${n} ${n === 1 ? "product" : "products"}`,
-  empty: "No products match your search.",
-  emptyStore: "Products are coming soon.",
-  emptyStoreHint: "Message or call us to ask what is available.",
-  clear: "Clear filters",
+  bannerTitle: "Explore Our Products",
+  bannerBody:
+    "Browse our available collection and explore the details of each product. Compare listed options, review available specifications, and contact us if you need assistance before proceeding.",
+  searchLabel: "Find a Product",
+  searchPlaceholder: "Enter a product name...",
+  categoryLabel: "Browse by Category",
+  allCategories: "View All",
+  sortLabel: "Sort Products",
+  sorts: { featured: "Featured", name: "Product Name", priceLow: "Price: Lowest to Highest", priceHigh: "Price: Highest to Lowest" },
+  results: (n: number) => `${n} ${n === 1 ? "Product" : "Products"} to Explore`,
+  empty: "No products matched your search. Try another product name or clear your filters.",
+  emptyStore: "Our Collection Is Being Updated.",
+  emptyStoreHint: "We're preparing the product listings. Contact our team if you'd like to inquire about currently available offerings.",
+  clear: "Reset Search",
   sampleBadge: "Sample",
-  viewProduct: "View product",
+  viewProduct: "View Product Details",
   sampleNote: "Sample slot. Product details, price, and photo to be supplied by The Pep Stop.",
   from: "From",
-  addToCart: "Add to cart",
-  added: "Added to cart",
-  viewCart: "View cart",
-  chooseOption: "Choose an option",
+  addToCart: "Add to Cart",
+  added: "Added to Your Cart.",
+  viewCart: "Review Cart",
+  chooseOption: "Select an Available Option",
   quantity: "Quantity",
-  availability: { available: "Available", ask: "Ask for availability", unavailable: "Unavailable" },
-  askAbout: "Ask about this product",
-  priceOnRequest: "Ask for price",
-  detailsTitle: "Details",
+  availability: { available: "Available", ask: "Inquire for Availability", unavailable: "Currently Unavailable" },
+  askAbout: "Ask About This Product",
+  priceOnRequest: "Contact Us for Pricing",
+  productIntro:
+    "Explore the available product information below, including listed options, specifications, packaging details, and supporting documents.",
+  inquiryTitle: "Have a Question About This Product?",
+  inquiryBody: "Need clarification about the listed information or availability? Contact our team before proceeding.",
+  detailsTitle: "Product Overview",
   specsTitle: "Specifications",
-  packagingTitle: "Packaging",
-  storageTitle: "Storage",
+  optionsTitle: "Available Options",
+  packagingTitle: "Packaging Information",
+  storageTitle: "Storage Information",
+  documentsTitle: "Supporting Documents",
+  coaTitle: "Certificate of Analysis",
   regLabel: "Reg. No.",
-  notProvided: "To be provided by The Pep Stop.",
-  back: "All products",
+  notProvided: "Information to be provided by The Pep Stop.",
+  back: "All Products",
   breadcrumbHome: "Home",
   assurance: [
-    "Looked after by a real person",
-    "Delivery and payment arranged with you",
-    "Questions answered before you buy",
+    "Personal assistance from our team",
+    "Delivery and payment confirmed with you",
+    "Questions answered before you proceed",
   ],
   payWith: "Payment options",
-  relatedTitle: "More to discover",
-  productDisclaimer: "Product information is provided by The Pep Stop. It is general information and not medical advice. For health concerns, consult a licensed physician.",
+  relatedTitle: "You May Also Explore",
+  productDisclaimer:
+    "Product information is provided for general informational purposes and should not be interpreted as medical advice, diagnosis, or treatment guidance. Product availability and permitted use depend on the applicable product classification and regulatory requirements. Consult a qualified healthcare professional for personal health concerns.",
 };
 
 export const CART = {
-  title: "Your cart",
-  empty: "Your cart is waiting.",
-  emptyHint: "Browse the collections and add what feels right.",
-  continue: "Continue shopping",
-  checkout: "Proceed to checkout",
-  remove: "Remove",
+  title: "Your Shopping Cart",
+  empty: "Your Cart Is Waiting.",
+  emptyHint: "You haven't added any products yet. Explore our collection and review the available options.",
+  continue: "Continue Exploring",
+  checkout: "Continue to Checkout",
+  remove: "Remove Item",
   subtotal: "Subtotal",
-  shipping: "Shipping",
-  shippingTbc: "Confirmed with your order",
-  priceTbc: "Confirmed when we reply",
-  total: "Estimated total",
-  item: "Item",
+  shipping: "Delivery Fee",
+  shippingTbc: "To be confirmed",
+  priceTbc: "Contact Us for Pricing",
+  total: "Estimated Total",
+  item: "Product",
   price: "Price",
-  qty: "Qty",
+  qty: "Quantity",
   lineTotal: "Total",
   openCart: (n: number) => `Cart, ${n} ${n === 1 ? "item" : "items"}`,
-  note: "Shipping and final availability are confirmed by The Pep Stop after you send your order.",
+  note: "Delivery charges and arrangements will be confirmed by The Pep Stop. Your displayed total is an estimate until product availability and delivery arrangements have been confirmed.",
   decrease: "Decrease quantity",
   increase: "Increase quantity",
 };
 
+/** Cash on delivery stays off until The Pep Stop confirms it is actually supported. */
 export const PAYMENT_METHODS = [
   { id: "gcash", label: "GCash", enabled: true },
   { id: "maya", label: "Maya", enabled: true },
-  { id: "bank", label: "Bank transfer", enabled: true },
-  { id: "cod", label: "Cash on delivery", enabled: true },
+  { id: "bank", label: "Bank Transfer", enabled: true },
+  { id: "cod", label: "Cash on Delivery", enabled: false },
 ];
 
 export const CHECKOUT = {
-  title: "Checkout",
-  bannerBody: "Tell us where to send your order and how you would like to pay. Nothing is charged on this website.",
-  contactTitle: "Your details",
-  addressTitle: "Delivery address",
-  paymentTitle: "Payment method",
-  paymentNote: "No payment is collected here. Payment instructions are sent by The Pep Stop when your order is confirmed.",
-  notesTitle: "Order notes",
+  title: "Complete Your Order Details",
+  bannerBody:
+    "Provide your contact and delivery information so our team can review your order and coordinate the next steps with you.",
+  contactTitle: "Your Contact Details",
+  addressTitle: "Where Should We Send Your Order?",
+  paymentTitle: "Preferred Payment Method",
+  paymentNote:
+    "Choose your preferred payment method. Our team will provide the applicable payment instructions after reviewing and confirming your order.",
+  notesTitle: "Additional Notes (Optional)",
   summaryTitle: "Order summary",
-  place: "Place order",
-  consent: "I agree that The Pep Stop may use these details to process my order, as described in the Privacy Policy.",
+  place: "Submit Order Details",
+  submitNote:
+    "No payment is collected through this form. Submitting your details does not guarantee product availability or constitute final order acceptance. Our team will contact you to confirm the next steps.",
+  consent:
+    "I agree that The Pep Stop may use the information I provide to review and coordinate my order, in accordance with its Privacy Policy.",
   privacyLinkLabel: "Privacy Policy",
   emptyTitle: "Nothing to check out yet.",
   fields: {
-    fullName: "Full name",
-    mobile: "Mobile number",
-    mobileHint: "For example 0991 018 9669",
-    email: "Email (optional)",
-    street: "House number and street",
+    fullName: "Full Name",
+    mobile: "Mobile Number",
+    mobileHint: "Please provide an active mobile number so we can contact you regarding your order.",
+    email: "Email Address (Optional)",
+    street: "House Number and Street",
     barangay: "Barangay",
-    city: "City or municipality",
+    city: "City or Municipality",
     province: "Province",
-    postal: "Postal code",
-    notes: "Notes for The Pep Stop (optional)",
-    notesHint: "Please do not include medical history.",
+    postal: "Postal Code",
+    notes: "Additional Notes (Optional)",
+    notesPlaceholder: "Add any delivery-related instructions or questions for our team.",
+    notesHint: "Please do not include medical history or sensitive health information.",
   },
   errors: {
     required: "This field is required.",
@@ -505,25 +544,30 @@ export const CHECKOUT = {
 };
 
 export const CONFIRMATION = {
-  title: "Your order summary is ready.",
-  lead: "One last step: send this summary to The Pep Stop, and we will confirm availability, delivery, and payment with you personally.",
-  stubNote: "This website does not transmit orders by itself yet. Your order is complete only once you send it to us.",
-  reference: "Order reference",
-  sendTitle: "Send your order",
-  copy: "Copy order summary",
-  copied: "Copied",
-  deliverTo: "Deliver to",
-  payWith: "Payment method",
-  contactLabel: "Contact",
-  none: "We could not find an order in this browser.",
-  noneHint: "Orders are kept only in the browser that placed them. You can start again from the shop.",
+  title: "Thank You for Your Order Inquiry!",
+  lead:
+    "Your order summary has been prepared. Please send it to The Pep Stop so our team can review your selected items and coordinate availability, delivery, and payment arrangements.",
+  stubNote:
+    "Your order is not yet confirmed. Please send the summary to our team using your preferred contact channel. We'll review the details and get back to you with the next steps.",
+  reference: "Order Reference",
+  sendTitle: "One More Step to Complete Your Request",
+  copy: "Copy Order Summary",
+  copied: "Order summary copied successfully.",
+  sendMessenger: "Send via Messenger",
+  sendWhatsapp: "Send via WhatsApp",
+  sendSms: "Send via SMS",
+  deliverTo: "Delivery Information",
+  payWith: "Preferred Payment Method",
+  contactLabel: "Customer Information",
+  none: "No Recent Order Found.",
+  noneHint: "We couldn't find an order summary in this browser. You can return to the shop and start again.",
   messageIntro: "Hi The Pep Stop, I would like to place this order.",
 };
 
 export const NOT_FOUND = {
-  title: "That page has slipped away.",
-  body: "It may have moved, or the link may be mistyped. Let us take you somewhere lovely instead.",
-  home: "Back to home",
+  title: "We Couldn't Find That Page",
+  body: "The page may have moved or the link may be incorrect. Let's help you find your way back.",
+  home: "Return to Homepage",
 };
 
 /* ------------------------------------------------------------------ */
@@ -534,24 +578,28 @@ export const UI = {
   skipToContent: "Skip to content",
   openMenu: "Open menu",
   closeMenu: "Close menu",
-  menuTitle: "Menu",
+  menuTitle: "Explore The Pep Stop",
   primaryNavLabel: "Primary",
   footerNavLabel: "Footer",
   mobileNavLabel: "Mobile",
-  footerContactTitle: "Contact",
+  footerContactTitle: "Get in Touch",
   footerExploreTitle: "Explore",
   privacyLink: "Privacy Policy",
-  footerShopTitle: "Shop",
-  footerShopAll: "All products",
-  footerCompanyTitle: "The Pep Stop",
+  footerShopTitle: "Explore",
+  footerShopAll: "All Products",
+  footerCompanyTitle: "About The Pep Stop",
+  footerBrand: "The Pep Stop is your destination for wellness, beauty, and informed self-care. Explore our collection, discover helpful information, and connect with our team whenever you need assistance.",
+  rights: "All rights reserved.",
+  loading: "Preparing your selection...",
+  error: "Something went wrong. Please try again.",
   footerHelpTitle: "Help",
-  paymentsTitle: "Payment options",
-  paymentsNote: "Arranged with you when your order is confirmed.",
+  paymentsTitle: "Available Payment Methods",
+  paymentsNote: "Payment arrangements are coordinated directly with our team after order review and confirmation.",
   collectionsBarLabel: "Collections",
   disclaimer:
-    "Content on this website is general information. It is not medical advice. For health concerns, consult a licensed physician.",
+    "Information on this website is provided for general informational purposes only and is not a substitute for professional medical advice. Product details and permitted uses should be reviewed in accordance with applicable requirements. For personal health concerns, consult a qualified healthcare professional.",
   articleDisclaimer:
-    "This article is general information. It is not medical advice. For health concerns, consult a licensed physician.",
+    "Information on this website is provided for general informational purposes only and is not a substitute for professional medical advice. For personal health concerns, consult a qualified healthcare professional.",
   placeholderTag: "Image placeholder",
   draftBadge: "Draft",
 };
@@ -641,23 +689,23 @@ export const SEO = {
   routes: {
     "/": {
       title: "The Pep Stop | Health & Beauty",
-      description: "Premium beauty and wellness for women, curated by The Pep Stop. Discover five considered collections and let a real person help you choose.",
+      description: "Explore a thoughtfully presented selection of health, beauty, and wellness products from The Pep Stop. Discover product information and get the guidance you need.",
     },
     "/about": {
       title: "About Us | The Pep Stop",
-      description: "The story behind The Pep Stop: a health and beauty brand for women who value clear information, calm service, and being looked after.",
+      description: "About The Pep Stop: a health, wellness, and beauty business built on clear information, convenient access, and attentive service.",
     },
     "/health-beauty": {
       title: "Beauty & Wellness | The Pep Stop",
-      description: "Five considered collections, from weight and wellness to skin and beauty, explained in warm, plain language.",
+      description: "Explore curated collections covering different areas of health, beauty, and wellness, organized so each product and its information is easy to find.",
     },
     "/education": {
       title: "Wellness Education | The Pep Stop",
-      description: "Calm, plain-language reading on beauty, skincare, and everyday wellness from The Pep Stop.",
+      description: "Easy-to-understand educational resources covering beauty, skincare, and general wellness from The Pep Stop.",
     },
     "/contact": {
       title: "Contact | The Pep Stop",
-      description: "Reach The Pep Stop by message or phone. A real person will help you find what you are looking for.",
+      description: "Have a question about the collection, product information, or an order? Reach out to The Pep Stop.",
     },
     "/shop": {
       title: "Shop | The Pep Stop",

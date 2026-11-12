@@ -19,7 +19,7 @@ A hybrid site for The Pep Stop, a health and beauty brand: it presents the busin
 A curated range, chosen by the owners, sold with plain information and a real person on the other end of every order and question. Orders are confirmed personally, not by a faceless checkout.
 
 ## Operating Context
-Checkout is front end only (COMMERCE_MODE "frontend"): the cart and order live in the browser and the customer sends a prefilled summary by SMS, WhatsApp, Messenger or phone. No payment is collected on the site. Payment methods offered to arrange: GCash, Maya, bank transfer, cash on delivery. Shipping fee, payment account details and delivery areas are not yet defined.
+Checkout is front end only (COMMERCE_MODE "frontend"): the cart and order live in the browser and the customer sends a prefilled summary by SMS, WhatsApp, Messenger or phone. No payment is collected on the site. Payment methods offered to arrange: GCash, Maya, bank transfer (cash on delivery stays hidden until confirmed). Shipping fee, payment account details and delivery areas are not yet defined.
 
 ## Capabilities and Constraints
 - Routes: Home, Shop, Product, Cart, Checkout, Order summary, About, Health & Beauty, Wellness Education (articles), Contact, Privacy, 404.

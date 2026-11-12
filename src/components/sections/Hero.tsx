@@ -1,6 +1,5 @@
 import { useEffect, useRef, type CSSProperties } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
 import { HOME } from "../../content/site";
 import { getFocusAreas } from "../../content/getContent";
 import { primaryCta } from "../../lib/cta";
@@ -119,13 +118,10 @@ export function Hero() {
               <CtaButton
                 variant="secondary"
                 channel={{ kind: primaryCta.kind, href: primaryCta.href, icon: primaryCta.kind === "messenger" ? "messenger" : "phone", external: primaryCta.kind === "messenger" }}
-                label={primaryCta.label}
+                label={HOME.heroTalk}
               />
             </div>
-            <Link to="/#match" className="hero-in mt-5 inline-flex min-h-11 flex-wrap items-center gap-x-2 text-sm text-ink/80" style={d(1.15)}>
-              {HOME.heroMatch.lead}
-              <span className="inline-flex items-center gap-1 font-semibold text-raspberry underline">{HOME.heroMatch.link}<ArrowRight className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" /></span>
-            </Link>
+            <p className="hero-in mt-5 max-w-[40ch] text-sm text-ink/80" style={d(1.15)}>{HOME.heroNote}</p>
             <nav aria-label={HOME.heroCollectionsLabel} className="hero-in mt-5 border-t border-gold pt-4 lg:hidden" style={d(1.3)}>
               <ul className="grid grid-cols-2 gap-x-4 text-sm text-ink/80 sm:flex sm:flex-wrap sm:items-center sm:gap-x-3 sm:gap-y-1">
                 {areas.map((a, i) => (

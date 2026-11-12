@@ -13,7 +13,10 @@ export function EducationHighlights() {
     <section className="bg-white">
       <div className="mx-auto max-w-page px-4 pb-16 sm:px-6 md:pb-24 lg:px-8">
         <div className="flex flex-wrap items-end justify-between gap-4">
-          <SectionHeading title={HOME.educationTitle} />
+          <div>
+            <SectionHeading title={HOME.educationTitle} />
+            <p className="mt-4 max-w-prose text-lg text-ink/80">{HOME.educationBody}</p>
+          </div>
           <Link to="/education" className="inline-flex min-h-11 items-center gap-2 font-semibold text-ink underline hover:text-raspberry">
             {HOME.educationAll}<ArrowRight className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
           </Link>

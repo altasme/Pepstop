@@ -23,7 +23,7 @@ export function Footer() {
         <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-[1.4fr_1.2fr_1fr_1fr]">
           <div className="sm:col-span-2 lg:col-span-1">
             <Logo onDark />
-            <p className="mt-5 max-w-xs text-white/80">{ORG.tagline}</p>
+            <p className="mt-5 max-w-xs text-white/80">{UI.footerBrand}</p>
           </div>
           <nav aria-label={UI.footerNavLabel}>
             <h2 className={colHead}>{UI.footerShopTitle}</h2>
@@ -67,7 +67,7 @@ export function Footer() {
 
         <div className="mt-8 space-y-3 border-t border-white/15 pt-6 text-sm text-white/75">
           <p className="max-w-3xl">{UI.disclaimer}</p>
-          <p>© {__BUILD_YEAR__} {ORG.name}.{legal ? ` ${legal}` : ""}</p>
+          <p>© {__BUILD_YEAR__} {ORG.name}. {UI.rights}{legal ? ` ${legal}` : ""}</p>
         </div>
       </div>
     </footer>

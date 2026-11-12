@@ -18,6 +18,7 @@ export function CategoryTiles() {
     <section className="bg-white">
       <div className="mx-auto max-w-page px-4 py-14 sm:px-6 md:py-20 lg:px-8">
         <SectionHeading title={HOME.categoriesTitle} />
+        <p className="mt-4 max-w-prose text-lg text-ink/80">{HOME.categoriesBody}</p>
         <ul className="mt-8 grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-5 lg:gap-x-5">
           {areas.map((a) => (
             <li key={a.id}>
