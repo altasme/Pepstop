@@ -1,6 +1,6 @@
 ---
 name: The Pep Stop
-description: A premium, feminine, mobile-first health and beauty shop led by the logo's own world of petal pink, claret, raspberry action and gold sparkle, where the curated range leads and a person is one tap away.
+description: A premium, feminine, mobile-first health and beauty shop that sells a curated range and shows the business behind it, led by the logo's own world of petal pink, claret, raspberry action, gold sparkle and line-drawn botanicals, with a quiet decorative motion layer.
 colors:
   ink: "#2B1220"
   claret: "#5A0118"
@@ -107,15 +107,25 @@ components:
   hero:
     backgroundColor: "{colors.petal}"
     textColor: "{colors.claret}"
-    padding: "56px 32px 80px"
-  hero-plate:
+    padding: "64px 32px"
+    height: "672px"
+  story-plate:
     backgroundColor: "{colors.rosewater}"
-    rounded: "{rounded.plate}"
-  match-card:
+    rounded: "{rounded.xl}"
+  collections-ticker:
+    backgroundColor: "{colors.claret}"
+    textColor: "{colors.white}"
+    padding: "20px 0"
+  principle-chip:
+    backgroundColor: "{colors.white}"
+    textColor: "{colors.raspberry-deep}"
+    rounded: "{rounded.full}"
+    padding: "6px 16px"
+  product-view-chip:
     backgroundColor: "{colors.white}"
     textColor: "{colors.raspberry}"
     rounded: "{rounded.full}"
-    padding: "10px 16px 10px 20px"
+    padding: "8px 16px"
   petal-panel:
     backgroundColor: "{colors.petal}"
     textColor: "{colors.ink}"
@@ -147,19 +157,21 @@ components:
 
 **Creative North Star: "The Raspberry Counter"**
 
-The shop takes its world from the supplied logo: raspberry, pink, gold and a four-point sparkle, played softly. A white page carries plum ink and petal panels. The home page opens on a petal field under a claret announcement bar, and one claret field closes every page. Raspberry is held back for action. Between the bars the range is the picture and a person is one tap away. It is a premium, feminine, brand-led store, and it deliberately refuses the older beauty-site tropes: cream grounds, gold arcs, gradient washes, eyebrow labels, and icon-on-card feature grids.
+The shop takes its world from the supplied logo: raspberry, pink, gold, a four-point sparkle and the logo's leaf, played softly. A white page carries plum ink and petal panels. The home page opens on a full-bleed photograph (art-directed for desktop and phone) under a claret announcement bar, then a claret collections ticker, and one claret field closes every page. Raspberry is held back for action. It is a hybrid: the range sells, and a Behind the shop section and a rebuilt About page show the business. It is premium and feminine, and it deliberately refuses the older beauty-site tropes: cream grounds, gold arcs, gradient washes, eyebrow labels, and icon-on-card feature grids.
 
-Voice is high-contrast and warm. Bodoni Moda gives headings a fashion-counter polish; Hanken Grotesk keeps body, buttons and product data plain and legible on a phone. Surfaces are flat, separated by hairlines and the petal tint. Imagery is soft, with 20px corners. Gold appears only as a hairline and as sparkle, never as text on a light ground.
+Voice is high-contrast and warm. Bodoni Moda gives headings a fashion-counter polish; Hanken Grotesk keeps body, buttons and product data plain and legible on a phone. Surfaces are flat, separated by hairlines and the petal tint. Imagery is soft, with 20px corners. Gold appears as a hairline and as sparkle, never as text.
+
+A quiet motion and vector layer sits on top: sparkles twinkle, a line-drawn sprig draws and sways, hairlines draw across, headings rise out of a mask, the hero stages in and its photograph drifts. All of it is decorative, aria-hidden, leaves content visible without JavaScript, and switches off under prefers-reduced-motion (see Components, Motion system).
 
 Honesty about missing material is part of the look. Image slots awaiting real photography render as flat petal boxes with a faint raspberry diagonal cross, a raspberry tag with the registry ID, and a caption stating canvas size, aspect ratio and type.
 
 **Key Characteristics:**
-- White ground, plum ink, petal panels and a petal hero, claret bar and footer, raspberry for action only.
+- White ground, plum ink, petal panels, claret bar, ticker and footer, raspberry for action only.
 - Bodoni Moda 500 headings over Hanken Grotesk body, sentence case.
-- The four-point sparkle is the single motif.
+- The four-point sparkle and the line-drawn sprig are the only ornaments, both from the logo.
 - Pill controls, 20px imagery and cards, 12px fields.
-- Flat surfaces and hairlines; depth by tint and the rosewater plate. The only shadows are the hero match card and the phone bar.
-- One authored motion: sections rise into place once.
+- Flat surfaces and hairlines; depth by tint and the rosewater plate behind the story image. Shadows only on things that float (product View chip, phone bar).
+- One easing (cubic-bezier(0.22, 1, 0.36, 1)), one reveal language, all decorative and reduced-motion safe.
 - Placeholders are flat, labeled and unmistakably placeholders.
 
 ## Colors
@@ -167,32 +179,32 @@ Honesty about missing material is part of the look. Image slots awaiting real ph
 A petal-and-plum palette on white, measured from the logo. Raspberry is saturated and rare: it is the action colour, and nothing else floods a surface.
 
 ### Primary
-- **Logo Raspberry** (#C30239): The action colour. Primary buttons and the header message pill, secondary outline buttons, the hero Get matched link text, nav hover and active text, prices, how-it-works numerals, selected chips, error text and borders, placeholder tags, cart badge, form accent (checkbox, radio, caret), text selection, scrollbar thumb, the sparkle on petal. White text on it passes AA.
+- **Logo Raspberry** (#C30239): The action colour. Primary buttons and the header message pill, secondary outline buttons, the hero Get matched link, the sprig line on petal and white (40 to 60% opacity), nav hover and active text, prices, how-it-works numerals, selected chips, error text and borders, placeholder tags, cart badge, form accent (checkbox, radio, caret), text selection, scrollbar thumb, the sparkle on petal. White text on it passes AA.
 
 ### Secondary
 - **Deep Raspberry** (#7A0220): Heading color on petal panels (page banners, curated and Pep Match headings, value titles, product name, logo wordmark on light), and hover state of the primary button.
-- **Claret** (#5A0118): The home hero headline, the announcement bar above the header, the footer and the full-screen mobile menu. The deep ground and the deep type.
+- **Claret** (#5A0118): The home hero headline and the headings of story, why-us and About sections, the announcement bar above the header, the collections ticker, the footer and the full-screen mobile menu. The deep ground and the deep type.
 
 ### Tertiary
-- **Logo Gold** (#ECB86C): The 1px ring around the hero image, the hairline above the hero collection links on phones, sparkle on claret, and the active link in the mobile menu on claret. Focus ring inside `.on-dark` regions. Never text or icon on white or petal.
+- **Logo Gold** (#ECB86C): The hairline above the hero collection links on phones, the default sparkle fill (twinkles, ticker separators, announcement bar, hero link separators), and the active link in the mobile menu on claret. Focus ring inside `.on-dark` regions. Never text, and never a functional icon, on white or petal.
 
 ### Neutral
 - **Plum Ink** (#2B1220): Body text, default section headings, default focus ring, on-dark button text, skip link.
 - **Page White** (#FFFFFF): Page ground, cards, fields, the primary text color on raspberry and claret.
-- **Petal Tint** (#FFEEF2): The home hero field, page banners, the curated, Pep Match and contact panels, placeholder ground, on-dark button hover, scrollbar track.
-- **Rosewater** (#F8CDD9): The plate behind the hero image only: a flat rounded block offset down and right of the image frame. Never text, never a section ground.
+- **Petal Tint** (#FFEEF2): The hero fallback field behind the photograph, Behind the shop, the mission and vision band, page banners, the curated, Pep Match and contact panels, placeholder ground, on-dark button hover, scrollbar track.
+- **Rosewater** (#F8CDD9): The plate behind the story image only (Behind the shop and About): a flat 28px block offset 16px down and left of the image. Never text, never a section ground.
 - **Hairline Petal** (#F2D9E1): Decorative rules: the scrolled header rule, the collections bar rule, inactive filter chips.
 - **Form Edge** (#8F7A86): Borders of fields, choice rows, search, quantity stepper and inactive variant chips, where a hairline would fall below 3:1.
 - **Muted Plum Grey** (#6F5B66): Secondary text: category names, availability, placeholder specs, wordmark descriptor.
 
 ### Named Rules
-**The Action-Only Raspberry Rule.** Raspberry marks what can be pressed or priced: buttons, links, prices, numerals, the sparkle. It never floods a section; the only full-width saturated fields are claret (announcement bar, footer, mobile menu). The home hero is petal.
+**The Action-Only Raspberry Rule.** Raspberry marks what can be pressed or priced: buttons, links, prices, numerals, the sparkle. It never floods a section; the only full-width saturated fields are claret (announcement bar, ticker, footer, mobile menu). The home hero is a light photograph over petal.
 
-**The Gold-Hairline Rule.** Gold is a hairline (the hero image ring, one rule), sparkle on claret, or the active mobile link on claret. It is never text or icon on white or petal.
+**The Gold-Hairline Rule.** Gold is a hairline, a sparkle (a decorative graphic of 9 to 28px), or the active mobile link on claret. It is never text or a functional icon on white or petal.
 
-**The Rosewater Plate Rule.** Rosewater appears once, as the plate under the hero image. It frames a picture and carries nothing.
+**The Rosewater Plate Rule.** Rosewater appears only as the plate under the story image. It frames a picture and carries nothing.
 
-**The Deep-Heading Rule.** Headings on light grounds are Claret (home hero), Deep Raspberry (banners and panels) or Ink (default sections); bright raspberry stays with actions, prices and numerals.
+**The Deep-Heading Rule.** Headings on light grounds are Claret (home hero, story, why-us, About), Deep Raspberry (banners and panels) or Ink (default sections); bright raspberry stays with actions, prices and numerals.
 
 ## Typography
 
@@ -206,12 +218,13 @@ A petal-and-plum palette on white, measured from the logo. Raspberry is saturate
 - **Display** (500, clamp 2.5rem to 4.25rem, 1.02, -0.02em): Home hero headline, claret on petal.
 - **Headline 1** (500, clamp 2.25rem to 4rem, 1.06, -0.02em): One H1 per inner page, Deep Raspberry on the petal banner.
 - **Headline 2** (500, clamp 1.75rem to 3rem, 1.1, -0.015em): Section headings, capped at 22ch, balanced wrap; Ink by default, Deep Raspberry on petal panels.
-- **Title** (Bodoni 500, 1.5rem): Category names, value titles, article cards. How-it-works numerals are Bodoni 500 at 3rem in raspberry.
+- **Title** (Bodoni 500, 1.5rem): Category names, value titles, why-us reasons, About columns, article cards. How-it-works numerals are Bodoni 500 at 3rem in raspberry. The collections ticker sets collection names in Bodoni 500 at 1.5rem (2rem from md).
+- **Statement** (Bodoni 500, 1.5rem to 1.875rem, snug leading, claret): About mission and vision.
 - **Body** (Hanken 400, 16px, 1.5): Running text, never below 14px; lead text 18 to 20px at 80% ink, prose capped at 40rem. Product titles are Hanken 600 at 16 to 18px.
 - **Label** (Hanken 500 to 600, 14 to 16px): Buttons, nav (15px), badges (12px 600), product meta (14px). Mobile menu links are Hanken 600 at 1.875rem.
 
 ### Named Rules
-**The Heading Carries Itself Rule.** No small label sits above a heading. The sparkle may precede it; text may not.
+**The Heading Carries Itself Rule.** No small label sits above a heading. The sparkle may precede it; text may not. Headings enter with the mask reveal, never with a label.
 
 **The Sentence Case Rule.** Display and headings are sentence case. The build has no uppercase text and no tracked caps.
 
@@ -219,18 +232,22 @@ A petal-and-plum palette on white, measured from the logo. Raspberry is saturate
 
 ## Layout
 
-Single-column mobile first, designed from 320 to 360px, widening at `sm` (640px), `md` (768px) and `lg` (1024px). Page container is 80rem max, centered, with gutters of 16px, 24px (sm) and 32px (lg). The hero is a two-column grid (1.15fr / 0.85fr) from md, headline and actions first on phones with the 4:5 image slot below; from lg a collections bar sits under the header and the hero collection links hide. Section padding is 56 to 64px on phones and 80 to 96px on desktop; components step through 8 / 12 / 16 / 24 / 40. Category tiles are three columns from md; values are one hairline-topped column that becomes 2 then 4 columns. Controls are 48px minimum height, nav links 44px, mobile menu rows 56px. The header is sticky, compacts on scroll and gains a hairline; a claret announcement bar sits above it. A sticky message bar appears on phones once the visitor scrolls past 70% of the viewport and is hidden on Contact, Privacy and product pages. Nothing overflows horizontally.
+Single-column mobile first, designed from 320 to 360px, widening at `sm` (640px), `md` (768px) and `lg` (1024px). Page container is 80rem max, centered, with gutters of 16px, 24px (sm) and 32px (lg). Home runs: full-bleed hero, claret collections ticker, five collections with Pep Match, the range, Behind the shop, Why shop with us, How ordering works, education, contact.
+
+The hero is art-directed. On phones the square (6:5) photograph sits first at full width and the text block sits below it on petal; from md one wide photograph (12:5) fills the section absolutely, subject right (object-position 75% center), and the text column (34rem, 38rem from lg) holds the left light area with a minimum height of 34, 38 and 42rem (md, lg, xl). No scrim or overlay is used; type never sits on the subject. From lg a collections bar sits under the header and the hero collection links hide.
+
+Behind the shop and About pair a 4:5 story image (0.8fr) with copy (1.2fr) from md. Why shop is a 0.9fr and 1.1fr split with a two-column list on drawn hairlines. Section padding is 56 to 64px on phones and 80 to 96px on desktop; components step through 8 / 12 / 16 / 24 / 40. Category tiles are three columns from md; values are one hairline-topped column that becomes 2 then 4 columns. Controls are 48px minimum height, nav links 44px, mobile menu rows 56px. The header is sticky, compacts on scroll and gains a hairline; a claret announcement bar sits above it. A sticky message bar appears on phones once the visitor scrolls past 70% of the viewport and is hidden on Contact, Privacy and product pages. Decorative sprigs and sparkle fields are hidden on small screens (`hidden sm:block`, `md:block` or `lg:block`). Nothing overflows horizontally.
 
 ## Elevation & Depth
 
-Flat. Depth comes from the white, petal, rosewater and claret ground changes and 1px hairlines. Cards, tiles, fields and placeholders carry no shadow at rest or on hover. Hover feedback is color change, underline, a slow 1.03 image zoom, or a 2px lift of the match card. Two shadows exist: the `lift` token on the hero Get matched card (`0 2px 4px rgba(43,18,32,.05), 0 16px 32px -16px rgba(43,18,32,.22)`) and a soft upward shadow on the phone sticky bar. They mark floating things only.
+Flat. Depth comes from the white, petal, rosewater and claret ground changes and 1px hairlines. Cards, tiles, fields and placeholders carry no shadow at rest or on hover. Hover feedback is color change, underline, a slow image zoom (1.03 on category tiles, 1.04 on product tiles) or a 2px arrow nudge. Two shadows exist: the `lift` token (`0 2px 4px rgba(43,18,32,.05), 0 16px 32px -16px rgba(43,18,32,.22)`) on the product tile View chip that rises over the image on hover, and a soft upward shadow on the phone sticky bar. They mark floating things only.
 
 ### Named Rules
-**The Flat-By-Default Rule.** Surfaces carry no shadow. Only an element that floats over another (the hero match card, the phone sticky bar) may. Cards are never nested.
+**The Flat-By-Default Rule.** Surfaces carry no shadow. Only an element that floats over another (the product View chip, the phone sticky bar) may. Cards are never nested.
 
 ## Shapes
 
-Pills (9999px) for buttons, badges, tags, the cart control and the hero match card. 20px for imagery, product tiles, cards and placeholders, so photography reads soft. The home hero image sits inside a 32px frame with a 1px gold ring and 8px of padding, over a 32px rosewater plate offset 16 to 24px down and right. The Pep Match panel is 28px. Fields and option rows use 12px; inline notes use 8px. Borders are 1px: Form Edge on fields and rows, hairline on decorative rules; selected options use a raspberry border plus a 1px raspberry ring. The four-point sparkle (a concave star drawn from the logo) is the one recurring silhouette: 12px in the announcement bar, 24 to 28px ahead of a hero or banner headline, and two larger ones around the hero image on md and up. It is raspberry on petal, gold on claret, and always decorative (`aria-hidden`).
+Pills (9999px) for buttons, badges, tags, principle chips, the cart control and the product View chip. 20px for imagery, product tiles, cards and placeholders, so photography reads soft. The hero photograph is full-bleed and square cornered; the story image is 20px over a 28px rosewater plate. Fields and option rows use 12px; inline notes use 8px. Borders are 1px: Form Edge on fields and rows, hairline on decorative rules; selected options use a raspberry border plus a 1px raspberry ring. Two recurring silhouettes, both from the logo and both decorative (`aria-hidden`): the four-point sparkle (a concave star), 9 to 14px in twinkling fields, 12px in the announcement bar, 16px in the ticker, 24px ahead of a hero or banner headline; and the botanical sprig, a 240 by 320 line drawing of one stem with six leaf pairs (1.25px stroke, leaves at 7% fill), set in currentColor at 15 to 60% opacity.
 
 ## Components
 
@@ -242,10 +259,19 @@ Pills (9999px) for buttons, badges, tags, the cart control and the hero match ca
 - **Focus:** 2px outline offset 2px (ink, gold inside `.on-dark`). Transition 200ms ease-out. Disabled drops to 40% opacity.
 
 ### Hero
-Full-width petal field. A raspberry sparkle, then the claret Bodoni display headline, an 18 to 20px lead at 80% ink capped at 36ch, and two actions: one raspberry primary (Shop the range) and one raspberry outline (message or call). On phones, a gold hairline and the five collection links follow. On the right, the 4:5 image slot sits in a 1px gold ring over a rosewater plate, with a larger sparkle at its upper left from md. The Get matched card (white pill, ink 80% lead, raspberry 600 link with arrow, `lift` shadow) overlaps the lower left of the image and links to the Pep Match panel. Raspberry here is action only.
+Full-bleed and art-directed. A petal field carries one wide photograph (desktop slot, 2400 by 1000) or a separate square recomposed crop above the text (phone slot, 1200 by 1000), with no scrim. The text column holds a raspberry sparkle, the claret Bodoni display headline, an 18 to 20px lead at 80% ink capped at 36ch, and two actions: one raspberry primary (Shop the collections, with sheen) and one raspberry outline (message or call). Below sits a text link, Get matched, with a raspberry 600 underlined label and arrow, leading to the Pep Match panel. On phones a gold hairline and the five collection links follow. Three sparkles twinkle over the light area from md. The entrance staging, photograph parallax and sparkle twinkle are in Motion system. Raspberry here is action only.
+
+### Collections ticker
+A claret band under the hero: the five collection names in Bodoni 500 white, separated by gold sparkles, scrolling slowly. It is `aria-hidden` and duplicates links that live in the header and footer. Hover pauses it. Under reduced motion it stops and wraps as a centered static list (the duplicate set is hidden).
+
+### Behind the shop and About
+Behind the shop is a petal band: story image (20px, white ground) over a rosewater plate, a raspberry sparkle, the story heading in claret, the approved intro copy at 18px 80% ink, three principle chips (white fill, 1px raspberry at 40% border, Deep Raspberry 14px 500 text) and an underlined link to About. A sprig stands at the lower right from lg. About is the longer form: story with the same plate, mission and vision as Bodoni statements in claret on petal, three How we serve columns, the values, and a list of the five collections as hairline rows with an arrow nudge, ending with a sprig.
+
+### Why shop with us and hairline lists
+A two-column list of service reasons, with no icons and no cards. Each item is a RuleItem: a 1px raspberry hairline at 20% with a 70% raspberry line that draws across it on scroll, a Bodoni 500 title in ink and 80% ink body. A sprig and two sparkles fill the empty left column from md.
 
 ### Cards / Containers
-- **Product tile:** No container. A 20px image with a white pill "sample" badge, then category in mute, title Hanken 600 (underline on hover), optional short line, and a raspberry 600 price beside a mute availability. Image zooms to 1.03 on hover.
+- **Product tile:** No container. A 20px image with a white pill "sample" badge and, from md on hover, a white pill View chip (raspberry 600 text, `lift` shadow) that rises 8px into place; then category in mute, title Hanken 600 (underline on hover), optional short line, and a raspberry 600 price beside a mute availability. Image zooms to 1.04 over 700ms on hover.
 - **Card:** White, 20px radius, 1px hairline, 20 to 24px padding, no shadow, never nested.
 - **Petal panel:** Full-width petal band for page banners, the curated statement and the contact block, with a raspberry sparkle, a Deep Raspberry heading and 80% ink body. The Pep Match panel is a 28px petal block inside the white category section, pairing a raspberry sparkle and name, a Deep Raspberry headline and chat buttons.
 - **Value item:** No card. A raspberry hairline at 40% on top, Bodoni 500 title in Deep Raspberry, 80% ink text.
@@ -266,16 +292,39 @@ Ink 15px 500 links, 44px targets, raspberry on hover, raspberry with a 2px under
 Claret strip, white 14px 500 centered text flanked by two small gold sparkles, above the header.
 
 ### Footer
-Claret ground, white text with 75 to 80% white for secondary copy, white hairline at 15%. Logo lockup on dark (badge on a white ring, white wordmark), three columns from md, then the disclaimer and legal row.
+Claret ground, white text with 75 to 80% white for secondary copy, white hairline at 15%. Logo lockup on dark (badge on a white ring, white wordmark), three columns from md, a payment options row of outlined pills, then the disclaimer and legal row. A large sprig in white at 15% and two sparkles sit at the right from lg.
+
+### Motion system
+Everything here is decoration. It is `aria-hidden` or attached to content that is already complete, content is fully visible and in place without JavaScript, and every item switches off under `prefers-reduced-motion: reduce` (animations removed, final state shown, ticker and parallax stopped, sheen hidden, transitions cut to 0.01ms). The mechanism is one hook: server HTML and anything on screen at hydration stay visible; only elements below the fold go hidden, then shown once when they enter view.
+
+Tokens: one easing, `--ease` and Tailwind `ease-out`, cubic-bezier(0.22, 1, 0.36, 1). Durations: state changes 200ms; arrow nudges 200ms; tile zoom 500 to 700ms; View chip 500ms; reveal rise 900ms; hero entrance 1100ms (children staggered by 0.1, 0.35, 0.55, 0.75, 0.9s); heading mask 1000ms; hairline draw 1300ms; leaf unfurl 1300ms; sprig draw 2400ms; button sheen 900ms; sway 9s alternate; twinkle 5s; ticker 48s linear.
+
+- **Scroll reveal** (`Reveal`): rise 22px with a 6px blur clearing, opacity 0 to 1, siblings staggered 80 to 140ms.
+- **Heading mask** (`SectionHeading`): the heading rises 16px out of a clip-path mask from the bottom edge.
+- **Hairline draw** (`RuleItem`): a raspberry line scales from 0 to 1 on X across a static 20% hairline.
+- **Sprig** (`Sprig`): stem and leaf outlines draw by stroke-dashoffset, leaves unfurl from scale 0 staggered 0.14s apiece, then the whole sprig sways plus or minus 1.4 degrees about its base.
+- **Sparkle twinkle** (`SparkleField`, hairline separators): opacity 0.35 to 1, scale 0.7 to 1, a 45 degree turn; placed in empty space only, never over text.
+- **Hero**: staged entrance from CSS alone (plays before hydration), photograph drifts at 12% of scroll to a 900px cap with a 1.1 scale, desktop only.
+- **Button sheen**: on primary and on-dark buttons a 40% wide white 28% skewed band crosses on hover.
+- **Ticker**: see Collections ticker.
+
+### Named Rules
+**The Decoration Only Rule.** Motion and vector ornaments carry no information and gate no content. They are `aria-hidden`, content is visible without JavaScript, and `prefers-reduced-motion` removes all of it.
+
+**The One Ease Rule.** Every curve is cubic-bezier(0.22, 1, 0.36, 1) except the linear ticker and the symmetric sway and twinkle loops.
+
+**The Empty Space Rule.** Sprigs and sparkles occupy empty margins and empty grid cells; they never overlap type or controls, and they are hidden on phones.
 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** keep the ground white and let the range and the petal hero carry the color.
+- **Do** keep the ground white and let the range and the hero photograph carry the color.
 - **Do** keep raspberry to action: buttons, links, prices, numerals and the sparkle. Saturated full-width fields are claret.
-- **Do** use rosewater only as the plate under the hero image.
+- **Do** use rosewater only as the plate under the story image.
 - **Do** set headings in Bodoni Moda 500, sentence case, in Claret, Deep Raspberry or Ink on light grounds and white on claret.
-- **Do** use the four-point sparkle as the only ornament, decorative and `aria-hidden`.
+- **Do** use the four-point sparkle and the line-drawn sprig as the only ornaments, decorative and `aria-hidden`.
+- **Do** use the one ease (cubic-bezier(0.22, 1, 0.36, 1)) for every animation, keep content visible without JavaScript, and cover each new animation in the `prefers-reduced-motion` block.
+- **Do** keep the hero photograph's left light area clear for claret type and recompose, not crop, for phones.
 - **Do** round imagery and cards at 20px, fields at 12px, controls as pills.
 - **Do** give every control 48px height (44px for nav links) and a visible focus ring (ink, gold on dark).
 - **Do** render missing imagery as a registered placeholder stating size, ratio and type.
@@ -289,5 +338,8 @@ Claret ground, white text with 75 to 80% white for secondary copy, white hairlin
 - **Don't** build icon-on-card feature grids.
 - **Don't** nest cards or add drop shadows to anything that does not float.
 - **Don't** use Bodoni for buttons, nav, forms or product data.
+- **Don't** put a scrim, gradient or overlay on the hero photograph; fix the photograph instead.
+- **Don't** animate anything informational, hide content until JavaScript runs, or add motion without a reduced-motion rule.
+- **Don't** place sprigs or sparkles over text or controls, or show them on phones.
 - **Don't** invent photography, testimonials, ratings or claims to fill a slot.
 - **Don't** use hype words such as miracle, breakthrough or guaranteed in any copy.

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-12T12:00:00Z",
+  "generatedAt": "2026-11-12T18:00:00Z",
   "title": "Design System: The Pep Stop",
   "extensions": {
     "colorMeta": {
@@ -173,7 +173,7 @@
     "typographyMeta": {
       "display": {
         "displayName": "Display",
-        "purpose": "Home hero headline, Bodoni 500 claret on petal, clamp 2.5rem to 4.25rem."
+        "purpose": "Home hero headline, Bodoni 500 claret over the hero photograph's light area, clamp 2.5rem to 4.25rem."
       },
       "headline-1": {
         "displayName": "Page Title",
@@ -208,7 +208,7 @@
       {
         "name": "lift",
         "value": "0 2px 4px rgba(43,18,32,.05), 0 16px 32px -16px rgba(43,18,32,.22)",
-        "purpose": "Hero Get matched card only; it floats over the image plate."
+        "purpose": "Product tile View chip only; it floats over the image on hover."
       },
       {
         "name": "sticky-bar",
@@ -220,27 +220,72 @@
       {
         "name": "ease-out",
         "value": "cubic-bezier(0.22, 1, 0.36, 1)",
-        "purpose": "Every transition and the single reveal."
+        "purpose": "The one easing (--ease, Tailwind ease-out) for every transition and keyframe except the linear ticker and symmetric loops."
       },
       {
         "name": "state",
         "value": "200ms",
-        "purpose": "Color and border changes on controls."
+        "purpose": "Color, border and arrow nudges on controls and links."
       },
       {
-        "name": "reveal",
-        "value": "700ms opacity and translateY(18px) to 0",
-        "purpose": "Sections rise into place once; disabled under prefers-reduced-motion."
+        "name": "reveal-rise",
+        "value": "900ms, translateY(22px) and blur(6px) to rest, stagger 80 to 140ms",
+        "purpose": "Scroll reveal for tiles, product cards and story image; below-the-fold only."
+      },
+      {
+        "name": "heading-mask",
+        "value": "1000ms, clip-path inset(0 0 100% 0) and translateY(16px) to rest",
+        "purpose": "Section headings rise out of a mask."
+      },
+      {
+        "name": "hero-in",
+        "value": "1100ms rise, children delayed 0.1, 0.35, 0.55, 0.75, 0.9s",
+        "purpose": "Hero entrance, CSS only so it plays before hydration."
+      },
+      {
+        "name": "hero-parallax",
+        "value": "translateY(scrollY*0.12, max 900px) scale(1.1)",
+        "purpose": "Desktop hero photograph drift; off on phones and under reduced motion."
+      },
+      {
+        "name": "rule-draw",
+        "value": "1300ms scaleX(0 to 1) from left",
+        "purpose": "Raspberry line drawing across a static 20% hairline (RuleItem)."
+      },
+      {
+        "name": "sprig-draw",
+        "value": "2400ms stroke-dashoffset 1 to 0; leaves 1300ms scale 0 to 1, staggered 0.14s; sway 9s plus or minus 1.4deg alternate",
+        "purpose": "Botanical sprig draws, unfurls, then sways."
+      },
+      {
+        "name": "twinkle",
+        "value": "5s infinite, opacity 0.35 to 1, scale 0.7 to 1, rotate 0 to 45deg",
+        "purpose": "Logo sparkles in empty space."
+      },
+      {
+        "name": "ticker",
+        "value": "48s linear infinite translateX(0 to -50%), pauses on hover",
+        "purpose": "Collections ticker."
+      },
+      {
+        "name": "sheen",
+        "value": "900ms translateX across, white 28% skewX(-20deg)",
+        "purpose": "Primary and on-dark button hover."
       },
       {
         "name": "tile-zoom",
-        "value": "500ms scale 1.03",
-        "purpose": "Image on product and category tile hover."
+        "value": "500ms scale 1.03 (category), 700ms scale 1.04 (product)",
+        "purpose": "Image zoom on hover."
       },
       {
-        "name": "match-hover",
-        "value": "200ms translateY(-2px)",
-        "purpose": "Hero Get matched card hover."
+        "name": "view-chip",
+        "value": "500ms opacity and translateY(8px to 0)",
+        "purpose": "Product tile View chip on hover, from md."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "@media (prefers-reduced-motion: reduce)",
+        "purpose": "Removes every animation, shows final state, stops ticker and parallax, hides sheen, cuts transitions to 0.01ms."
       }
     ],
     "breakpoints": [
@@ -259,6 +304,54 @@
     ]
   },
   "components": [
+    {
+      "name": "Hero Field",
+      "kind": "custom",
+      "refersTo": "hero",
+      "description": "Full-bleed photograph slot on petal with a clear light left area: raspberry sparkle, claret Bodoni headline, lead, raspberry primary with sheen, outline action, Get matched text link. No scrim.",
+      "html": "<section class=\"ds-hero\"><div class=\"ds-photo\" aria-hidden=\"true\"></div><div class=\"ds-copy\"><svg class=\"ds-sp\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 0c.7 6.2 5.8 11.3 12 12-6.2.7-11.3 5.8-12 12-.7-6.2-5.8-11.3-12-12C6.2 11.3 11.3 6.2 12 0Z\"/></svg><h1>Your destination for wellness, beauty, and informed self-care.</h1><p>Five focused collections, clear product details, and a real person to match you.</p><div class=\"ds-acts\"><a class=\"ds-hbtn\">Shop the collections</a><a class=\"ds-hout\">Call us</a></div><a class=\"ds-link\">Not sure where to start? <b>Get matched</b></a></div></section>",
+      "css": ".ds-hero{position:relative;overflow:hidden;min-height:480px;display:flex;align-items:center;padding:0 32px;background:#FFEEF2;color:#2B1220;font-family:'Hanken Grotesk',system-ui,sans-serif}.ds-photo{position:absolute;inset:0;background:linear-gradient(90deg,#FFEEF2 0 55%,#F8CDD9 100%)}.ds-copy{position:relative;max-width:34rem;padding:64px 0}.ds-sp{width:24px;height:24px;fill:#C30239}.ds-hero h1{margin:20px 0 0;font:500 56px/1.02 'Bodoni Moda',Georgia,serif;letter-spacing:-.02em;color:#5A0118}.ds-hero p{margin:24px 0 0;font-size:20px;max-width:36ch;opacity:.8}.ds-acts{display:flex;gap:12px;margin-top:32px}.ds-hbtn,.ds-hout{display:inline-flex;align-items:center;min-height:48px;padding:12px 24px;border-radius:9999px;font-weight:600;cursor:pointer;transition:background-color .2s cubic-bezier(.22,1,.36,1),color .2s cubic-bezier(.22,1,.36,1)}.ds-hbtn{background:#C30239;color:#fff}.ds-hbtn:hover{background:#7A0220}.ds-hout{border:1px solid #C30239;color:#C30239}.ds-hout:hover{background:#C30239;color:#fff}.ds-hbtn:focus-visible,.ds-hout:focus-visible{outline:2px solid #2B1220;outline-offset:2px}.ds-link{display:inline-flex;margin-top:24px;font-size:14px;gap:8px;cursor:pointer}.ds-link b{color:#C30239;font-weight:600;text-decoration:underline}"
+    },
+    {
+      "name": "Collections Ticker",
+      "kind": "custom",
+      "refersTo": "collections-ticker",
+      "description": "Claret band of collection names in Bodoni with gold sparkles, slowly scrolling; decorative and static under reduced motion.",
+      "html": "<div class=\"ds-tk\"><div class=\"ds-track\"><span>Weight &amp; Wellness</span><svg class=\"ds-sp\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 0c.7 6.2 5.8 11.3 12 12-6.2.7-11.3 5.8-12 12-.7-6.2-5.8-11.3-12-12C6.2 11.3 11.3 6.2 12 0Z\"/></svg><span>Skin &amp; Beauty</span><svg class=\"ds-sp\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 0c.7 6.2 5.8 11.3 12 12-6.2.7-11.3 5.8-12 12-.7-6.2-5.8-11.3-12-12C6.2 11.3 11.3 6.2 12 0Z\"/></svg><span>Vitality &amp; Cellular Health</span><svg class=\"ds-sp\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 0c.7 6.2 5.8 11.3 12 12-6.2.7-11.3 5.8-12 12-.7-6.2-5.8-11.3-12-12C6.2 11.3 11.3 6.2 12 0Z\"/></svg><span>Weight &amp; Wellness</span><svg class=\"ds-sp\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 0c.7 6.2 5.8 11.3 12 12-6.2.7-11.3 5.8-12 12-.7-6.2-5.8-11.3-12-12C6.2 11.3 11.3 6.2 12 0Z\"/></svg><span>Skin &amp; Beauty</span><svg class=\"ds-sp\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 0c.7 6.2 5.8 11.3 12 12-6.2.7-11.3 5.8-12 12-.7-6.2-5.8-11.3-12-12C6.2 11.3 11.3 6.2 12 0Z\"/></svg></div></div>",
+      "css": ".ds-tk{overflow:hidden;background:#5A0118;color:#fff;padding:20px 0}.ds-track{display:flex;width:max-content;align-items:center;gap:32px;font:500 28px/1.2 'Bodoni Moda',Georgia,serif;white-space:nowrap;animation:ds-marq 48s linear infinite}.ds-track:hover{animation-play-state:paused}.ds-sp{width:16px;height:16px;fill:#ECB86C;flex:none}@keyframes ds-marq{from{transform:translateX(0)}to{transform:translateX(-50%)}}@media (prefers-reduced-motion:reduce){.ds-track{animation:none}}"
+    },
+    {
+      "name": "Story Block",
+      "kind": "custom",
+      "refersTo": "story-plate",
+      "description": "Behind the shop: 20px image over a 28px rosewater plate, raspberry sparkle, claret heading, intro copy, principle chips and an underlined link.",
+      "html": "<section class=\"ds-story\"><div class=\"ds-fig\"><div class=\"ds-plate\"></div><div class=\"ds-img\"></div></div><div><h2>A health and beauty brand built on clear information and attentive service.</h2><p>Approved intro copy sits here at 18px in 80% ink.</p><ul><li>Informed choices</li><li>Honest information</li><li>Attentive service</li></ul><a>Read our story</a></div></section>",
+      "css": ".ds-story{display:grid;grid-template-columns:.8fr 1.2fr;gap:48px;align-items:center;padding:64px 32px;background:#FFEEF2;color:#2B1220;font-family:'Hanken Grotesk',system-ui,sans-serif}.ds-fig{position:relative}.ds-plate{position:absolute;left:-16px;right:32px;top:32px;bottom:-16px;border-radius:28px;background:#F8CDD9}.ds-img{position:relative;aspect-ratio:4/5;border-radius:20px;background:#fff}.ds-story h2{margin:0;max-width:22ch;font:500 40px/1.1 'Bodoni Moda',Georgia,serif;letter-spacing:-.015em;color:#5A0118}.ds-story p{margin:20px 0 0;font-size:18px;opacity:.8}.ds-story ul{display:flex;flex-wrap:wrap;gap:8px;margin:24px 0 0;padding:0;list-style:none}.ds-story li{padding:6px 16px;border:1px solid rgba(195,2,57,.4);border-radius:9999px;background:#fff;color:#7A0220;font-size:14px;font-weight:500}.ds-story a{display:inline-block;margin-top:28px;font-weight:600;text-decoration:underline;cursor:pointer;transition:color .2s cubic-bezier(.22,1,.36,1)}.ds-story a:hover{color:#C30239}"
+    },
+    {
+      "name": "Rule Item",
+      "kind": "custom",
+      "refersTo": "petal-panel",
+      "description": "Hairline list item used for why-us reasons, About columns and collection rows: a raspberry line draws across a 20% hairline.",
+      "html": "<ul class=\"ds-ri\"><li><span class=\"ds-hl\"></span><span class=\"ds-fill\"></span><h3>Real people, real replies</h3><p>Every order is confirmed by a person.</p></li></ul>",
+      "css": ".ds-ri{margin:0;padding:0;list-style:none;font-family:'Hanken Grotesk',system-ui,sans-serif;color:#2B1220}.ds-ri li{position:relative;padding-top:20px}.ds-hl,.ds-fill{position:absolute;left:0;top:0;width:100%;height:1px}.ds-hl{background:rgba(195,2,57,.2)}.ds-fill{background:rgba(195,2,57,.7);transform-origin:left;animation:ds-draw 1.3s cubic-bezier(.22,1,.36,1) both}.ds-ri h3{margin:0;font:500 24px/1.3 'Bodoni Moda',Georgia,serif}.ds-ri p{margin:8px 0 0;opacity:.8}@keyframes ds-draw{from{transform:scaleX(0)}to{transform:scaleX(1)}}@media (prefers-reduced-motion:reduce){.ds-fill{animation:none}}"
+    },
+    {
+      "name": "Botanical Sprig",
+      "kind": "custom",
+      "refersTo": "story-plate",
+      "description": "Line-drawn sprig from the logo leaf in currentColor: stem and leaf outlines draw, then a slow sway. Decorative, hidden on phones.",
+      "html": "<svg class=\"ds-sprig\" viewBox=\"0 0 240 320\" fill=\"none\" aria-hidden=\"true\"><g class=\"ds-sway\" stroke=\"currentColor\" stroke-width=\"1.25\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path class=\"ds-draw\" pathLength=\"1\" d=\"M120 312 C 117 262 126 214 114 168 C 104 128 110 70 128 8\"/><g transform=\"translate(118 270) rotate(-38) scale(1.1)\"><path class=\"ds-draw\" pathLength=\"1\" d=\"M0 0 C 12 -13 38 -13 52 0 C 38 13 12 13 0 0 Z\" fill=\"currentColor\" fill-opacity=\".07\"/></g><g transform=\"translate(121 222) rotate(-36)\"><path class=\"ds-draw\" pathLength=\"1\" d=\"M0 0 C 12 -13 38 -13 52 0 C 38 13 12 13 0 0 Z\" fill=\"currentColor\" fill-opacity=\".07\"/></g></g></svg>",
+      "css": ".ds-sprig{height:240px;width:auto;color:rgba(195,2,57,.55)}.ds-draw{stroke-dasharray:1;animation:ds-d 2.4s cubic-bezier(.22,1,.36,1) both}.ds-sway{transform-box:fill-box;transform-origin:50% 100%;animation:ds-sw 9s ease-in-out infinite alternate}@keyframes ds-d{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}@keyframes ds-sw{from{transform:rotate(-1.4deg)}to{transform:rotate(1.4deg)}}@media (prefers-reduced-motion:reduce){.ds-draw,.ds-sway{animation:none}}"
+    },
+    {
+      "name": "Product View Chip",
+      "kind": "card",
+      "refersTo": "product-view-chip",
+      "description": "Product tile: 20px image that zooms 1.04, with a white View chip that rises into place on hover (from md).",
+      "html": "<a class=\"ds-pt\"><div class=\"ds-pimg\"><span class=\"ds-view\">View product</span></div><p class=\"ds-cat\">Skin &amp; Beauty</p><h3>Sample product</h3><p class=\"ds-price\"><b>Ask for price</b><span>Ask for availability</span></p></a>",
+      "css": ".ds-pt{display:block;width:240px;font-family:'Hanken Grotesk',system-ui,sans-serif;color:#2B1220;cursor:pointer}.ds-pimg{position:relative;overflow:hidden;aspect-ratio:4/5;border-radius:20px;background:#FFEEF2}.ds-view{position:absolute;left:12px;right:12px;bottom:12px;padding:8px 16px;border-radius:9999px;background:#fff;color:#C30239;font-size:14px;font-weight:600;text-align:center;opacity:0;transform:translateY(8px);box-shadow:0 2px 4px rgba(43,18,32,.05),0 16px 32px -16px rgba(43,18,32,.22);transition:opacity .5s cubic-bezier(.22,1,.36,1),transform .5s cubic-bezier(.22,1,.36,1)}.ds-pt:hover .ds-view{opacity:1;transform:none}.ds-cat{margin:12px 0 0;font-size:14px;color:#6F5B66}.ds-pt h3{margin:2px 0 0;font-size:18px;font-weight:600}.ds-pt:hover h3{text-decoration:underline}.ds-price{display:flex;justify-content:space-between;margin:8px 0 0;font-size:14px}.ds-price b{color:#C30239;font-weight:600}.ds-price span{color:#6F5B66}"
+    },
     {
       "name": "Primary Button",
       "kind": "button",
@@ -282,14 +375,6 @@
       "description": "White pill, and a white outline variant, for claret grounds.",
       "html": "<div class=\"ds-ondark\"><button class=\"ds-btn-ondark\">Shop the range</button> <button class=\"ds-btn-ondark-o\">Call us</button></div>",
       "css": ".ds-ondark{display:flex;gap:12px;padding:24px;background:#5A0118}.ds-btn-ondark{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 24px;border-radius:9999px;font:600 16px/1 'Hanken Grotesk',system-ui,sans-serif;cursor:pointer;transition:background-color .2s cubic-bezier(.22,1,.36,1),color .2s cubic-bezier(.22,1,.36,1);background:#fff;color:#2B1220;border:0}.ds-btn-ondark:hover{background:#FFEEF2}.ds-btn-ondark-o{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 24px;border-radius:9999px;font:600 16px/1 'Hanken Grotesk',system-ui,sans-serif;cursor:pointer;transition:background-color .2s cubic-bezier(.22,1,.36,1),color .2s cubic-bezier(.22,1,.36,1);background:transparent;color:#fff;border:1px solid rgba(255,255,255,.6)}.ds-btn-ondark-o:hover{background:#fff;color:#2B1220}.ds-btn-ondark:focus-visible,.ds-btn-ondark-o:focus-visible{outline:2px solid #ECB86C;outline-offset:2px}"
-    },
-    {
-      "name": "Hero Field",
-      "kind": "custom",
-      "refersTo": "hero",
-      "description": "Petal field: raspberry sparkle, claret Bodoni headline, lead, one raspberry action and one outline, image in a gold ring over a rosewater plate, Get matched card.",
-      "html": "<section class=\"ds-hero\"><div><svg class=\"ds-sp\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 0c.7 6.2 5.8 11.3 12 12-6.2.7-11.3 5.8-12 12-.7-6.2-5.8-11.3-12-12C6.2 11.3 11.3 6.2 12 0Z\"/></svg><h1>Your shop for beauty, picked with care.</h1><p>Orders are confirmed by a real person.</p><a class=\"ds-hbtn\">Shop the range</a></div><div class=\"ds-wrap\"><div class=\"ds-plate\"></div><div class=\"ds-frame\"><div class=\"ds-img\"></div></div><a class=\"ds-match\"><span>Not sure where to start?</span><b>Get matched</b></a></div></section>",
-      "css": ".ds-hero{display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center;padding:40px 24px 56px;background:#FFEEF2;color:#2B1220;font-family:'Hanken Grotesk',system-ui,sans-serif}.ds-hero h1{margin:16px 0 0;font:500 44px/1.02 'Bodoni Moda',Georgia,serif;letter-spacing:-.02em;color:#5A0118}.ds-hero p{margin:16px 0 0;font-size:18px;opacity:.8}.ds-sp{width:24px;height:24px;fill:#C30239}.ds-hbtn{display:inline-flex;align-items:center;min-height:48px;margin-top:24px;padding:12px 24px;border-radius:9999px;background:#C30239;color:#fff;font-weight:600;cursor:pointer}.ds-hbtn:hover{background:#7A0220}.ds-wrap{position:relative;padding-bottom:24px}.ds-plate{position:absolute;top:24px;left:32px;right:-16px;bottom:-8px;border-radius:32px;background:#F8CDD9}.ds-frame{position:relative;padding:8px;border-radius:32px;outline:1px solid #ECB86C}.ds-img{aspect-ratio:4/5;border-radius:20px;background:#fff}.ds-match{position:absolute;left:16px;bottom:0;display:flex;gap:12px;align-items:center;padding:10px 16px 10px 20px;border-radius:9999px;background:#fff;font-size:14px;box-shadow:0 2px 4px rgba(43,18,32,.05),0 16px 32px -16px rgba(43,18,32,.22);cursor:pointer}.ds-match b{color:#C30239;font-weight:600}"
     },
     {
       "name": "Petal Panel",
@@ -343,47 +428,47 @@
       "name": "Footer",
       "kind": "custom",
       "refersTo": "footer",
-      "description": "Claret ground, white text, white 15% hairline.",
+      "description": "Claret ground, white text, white 15% hairline, with a white 15% sprig and two sparkles at the right from lg.",
       "html": "<footer class=\"ds-foot\"><b>The Pep Stop</b><p>Health &amp; Beauty</p><hr><small>Content on this website is general information.</small></footer>",
       "css": ".ds-foot{padding:32px 24px;background:#5A0118;color:#fff;font-family:'Hanken Grotesk',system-ui,sans-serif}.ds-foot b{font:600 24px/1 'Bodoni Moda',Georgia,serif}.ds-foot p{margin:12px 0;color:rgba(255,255,255,.8)}.ds-foot hr{border:0;border-top:1px solid rgba(255,255,255,.15)}.ds-foot small{color:rgba(255,255,255,.75)}"
     }
   ],
   "narrative": {
     "northStar": "The Raspberry Counter",
-    "overview": "**Creative North Star: \"The Raspberry Counter\"**\n\nThe shop takes its world from the supplied logo: raspberry, pink, gold and a four-point sparkle, played softly. A white page carries plum ink and petal panels. The home page opens on a petal field under a claret announcement bar, and one claret field closes every page. Raspberry is held back for action. Between the bars the range is the picture and a person is one tap away. It is a premium, feminine, brand-led store, and it deliberately refuses the older beauty-site tropes: cream grounds, gold arcs, gradient washes, eyebrow labels, and icon-on-card feature grids.\n\nVoice is high-contrast and warm. Bodoni Moda gives headings a fashion-counter polish; Hanken Grotesk keeps body, buttons and product data plain and legible on a phone. Surfaces are flat, separated by hairlines and the petal tint. Imagery is soft, with 20px corners. Gold appears only as a hairline and as sparkle, never as text on a light ground.\n\nHonesty about missing material is part of the look. Image slots awaiting real photography render as flat petal boxes with a faint raspberry diagonal cross, a raspberry tag with the registry ID, and a caption stating canvas size, aspect ratio and type.",
+    "overview": "**Creative North Star: \"The Raspberry Counter\"**\n\nThe shop takes its world from the supplied logo: raspberry, pink, gold, a four-point sparkle and the logo's leaf, played softly. A white page carries plum ink and petal panels. The home page opens on a full-bleed photograph (art-directed for desktop and phone) under a claret announcement bar, then a claret collections ticker, and one claret field closes every page. Raspberry is held back for action. It is a hybrid: the range sells, and a Behind the shop section and a rebuilt About page show the business. It is premium and feminine, and it deliberately refuses the older beauty-site tropes: cream grounds, gold arcs, gradient washes, eyebrow labels, and icon-on-card feature grids.\n\nVoice is high-contrast and warm. Bodoni Moda gives headings a fashion-counter polish; Hanken Grotesk keeps body, buttons and product data plain and legible on a phone. Surfaces are flat, separated by hairlines and the petal tint. Imagery is soft, with 20px corners. Gold appears as a hairline and as sparkle, never as text.\n\nA quiet motion and vector layer sits on top: sparkles twinkle, a line-drawn sprig draws and sways, hairlines draw across, headings rise out of a mask, the hero stages in and its photograph drifts. All of it is decorative, aria-hidden, leaves content visible without JavaScript, and switches off under prefers-reduced-motion (see Components, Motion system).\n\nHonesty about missing material is part of the look. Image slots awaiting real photography render as flat petal boxes with a faint raspberry diagonal cross, a raspberry tag with the registry ID, and a caption stating canvas size, aspect ratio and type.",
     "keyCharacteristics": [
-      "White ground, plum ink, petal panels and a petal hero, claret bar and footer, raspberry for action only.",
+      "White ground, plum ink, petal panels, claret bar, ticker and footer, raspberry for action only.",
       "Bodoni Moda 500 headings over Hanken Grotesk body, sentence case.",
-      "The four-point sparkle is the single motif.",
+      "The four-point sparkle and the line-drawn sprig are the only ornaments, both from the logo.",
       "Pill controls, 20px imagery and cards, 12px fields.",
-      "Flat surfaces and hairlines; depth by tint and the rosewater plate. The only shadows are the hero match card and the phone bar.",
-      "One authored motion: sections rise into place once.",
+      "Flat surfaces and hairlines; depth by tint and the rosewater plate behind the story image. Shadows only on things that float (product View chip, phone bar).",
+      "One easing (cubic-bezier(0.22, 1, 0.36, 1)), one reveal language, all decorative and reduced-motion safe.",
       "Placeholders are flat, labeled and unmistakably placeholders."
     ],
     "rules": [
       {
         "name": "The Action-Only Raspberry Rule",
-        "body": "Raspberry marks what can be pressed or priced: buttons, links, prices, numerals, the sparkle. It never floods a section; the only full-width saturated fields are claret (announcement bar, footer, mobile menu). The home hero is petal.",
+        "body": "Raspberry marks what can be pressed or priced: buttons, links, prices, numerals, the sparkle. It never floods a section; the only full-width saturated fields are claret (announcement bar, ticker, footer, mobile menu). The home hero is a light photograph over petal.",
         "section": "colors"
       },
       {
         "name": "The Gold-Hairline Rule",
-        "body": "Gold is a hairline (the hero image ring, one rule), sparkle on claret, or the active mobile link on claret. It is never text or icon on white or petal.",
+        "body": "Gold is a hairline, a sparkle (a decorative graphic of 9 to 28px), or the active mobile link on claret. It is never text or a functional icon on white or petal.",
         "section": "colors"
       },
       {
         "name": "The Rosewater Plate Rule",
-        "body": "Rosewater appears once, as the plate under the hero image. It frames a picture and carries nothing.",
+        "body": "Rosewater appears only as the plate under the story image. It frames a picture and carries nothing.",
         "section": "colors"
       },
       {
         "name": "The Deep-Heading Rule",
-        "body": "Headings on light grounds are Claret (home hero), Deep Raspberry (banners and panels) or Ink (default sections); bright raspberry stays with actions, prices and numerals.",
+        "body": "Headings on light grounds are Claret (home hero, story, why-us, About), Deep Raspberry (banners and panels) or Ink (default sections); bright raspberry stays with actions, prices and numerals.",
         "section": "colors"
       },
       {
         "name": "The Heading Carries Itself Rule",
-        "body": "No small label sits above a heading. The sparkle may precede it; text may not.",
+        "body": "No small label sits above a heading. The sparkle may precede it; text may not. Headings enter with the mask reveal, never with a label.",
         "section": "typography"
       },
       {
@@ -398,16 +483,33 @@
       },
       {
         "name": "The Flat-By-Default Rule",
-        "body": "Surfaces carry no shadow. Only an element that floats over another (the hero match card, the phone sticky bar) may. Cards are never nested.",
+        "body": "Surfaces carry no shadow. Only an element that floats over another (the product View chip, the phone sticky bar) may. Cards are never nested.",
         "section": "elevation"
+      },
+      {
+        "name": "The Decoration Only Rule",
+        "body": "Motion and vector ornaments carry no information and gate no content. They are `aria-hidden`, content is visible without JavaScript, and `prefers-reduced-motion` removes all of it.",
+        "section": "components"
+      },
+      {
+        "name": "The One Ease Rule",
+        "body": "Every curve is cubic-bezier(0.22, 1, 0.36, 1) except the linear ticker and the symmetric sway and twinkle loops.",
+        "section": "components"
+      },
+      {
+        "name": "The Empty Space Rule",
+        "body": "Sprigs and sparkles occupy empty margins and empty grid cells; they never overlap type or controls, and they are hidden on phones.",
+        "section": "components"
       }
     ],
     "dos": [
-      "**Do** keep the ground white and let the range and the petal hero carry the color.",
+      "**Do** keep the ground white and let the range and the hero photograph carry the color.",
       "**Do** keep raspberry to action: buttons, links, prices, numerals and the sparkle. Saturated full-width fields are claret.",
-      "**Do** use rosewater only as the plate under the hero image.",
+      "**Do** use rosewater only as the plate under the story image.",
       "**Do** set headings in Bodoni Moda 500, sentence case, in Claret, Deep Raspberry or Ink on light grounds and white on claret.",
-      "**Do** use the four-point sparkle as the only ornament, decorative and `aria-hidden`.",
+      "**Do** use the four-point sparkle and the line-drawn sprig as the only ornaments, decorative and `aria-hidden`.",
+      "**Do** use the one ease (cubic-bezier(0.22, 1, 0.36, 1)) for every animation, keep content visible without JavaScript, and cover each new animation in the `prefers-reduced-motion` block.",
+      "**Do** keep the hero photograph's left light area clear for claret type and recompose, not crop, for phones.",
       "**Do** round imagery and cards at 20px, fields at 12px, controls as pills.",
       "**Do** give every control 48px height (44px for nav links) and a visible focus ring (ink, gold on dark).",
       "**Do** render missing imagery as a registered placeholder stating size, ratio and type.",
@@ -421,6 +523,9 @@
       "**Don't** build icon-on-card feature grids.",
       "**Don't** nest cards or add drop shadows to anything that does not float.",
       "**Don't** use Bodoni for buttons, nav, forms or product data.",
+      "**Don't** put a scrim, gradient or overlay on the hero photograph; fix the photograph instead.",
+      "**Don't** animate anything informational, hide content until JavaScript runs, or add motion without a reduced-motion rule.",
+      "**Don't** place sprigs or sparkles over text or controls, or show them on phones.",
       "**Don't** invent photography, testimonials, ratings or claims to fill a slot.",
       "**Don't** use hype words such as miracle, breakthrough or guaranteed in any copy."
     ]
