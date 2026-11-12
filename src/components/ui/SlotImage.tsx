@@ -13,14 +13,15 @@ type Props = {
   className?: string;
   compact?: boolean;
   badge?: string;
+  thumb?: boolean;
 };
 
 /** Renders the licensed asset when its Cloudinary id is set, otherwise the registered placeholder. */
-export function SlotImage({ slot, src, alt, label, sizes = "100vw", priority = false, className = "", compact, badge }: Props) {
+export function SlotImage({ slot, src, alt, label, sizes = "100vw", priority = false, className = "", compact, badge, thumb }: Props) {
   const s = IMAGE_SLOTS[slot];
   const id = src ?? s.src;
   const url = id ? cloudinaryUrl(id, s.width) : null;
-  if (!id || !url) return <Placeholder slot={slot} label={label} className={className} compact={compact} badge={badge} />;
+  if (!id || !url) return <Placeholder slot={slot} label={label} className={className} compact={compact} badge={badge} thumb={thumb} />;
   return (
     <img
       src={url}

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import { CONTACT, CONTACT_PAGE, CTA, NAV, ORG, UI } from "../../content/site";
+import { CONTACT, CONTACT_PAGE, CTA, NAV, ORG, PAYMENT_METHODS, UI } from "../../content/site";
+import { getFocusAreas } from "../../content/getContent";
 import { phone } from "../../lib/phone";
 import { Logo } from "../ui/Logo";
 
@@ -7,25 +8,38 @@ declare const __BUILD_YEAR__: string;
 
 const colHead = "text-sm font-semibold text-white";
 const link = "inline-flex min-h-11 items-center text-white/80 hover:text-white hover:underline";
+const company = NAV.filter((n) => ["/about", "/health-beauty", "/education"].includes(n.to));
 
 export function Footer() {
   const legal = ORG.legalName && ORG.registration ? `${ORG.legalName} · ${ORG.registration}` : null; // PH-06
+  const areas = getFocusAreas();
   return (
     <footer className="on-dark bg-claret pb-28 pt-16 text-white md:pb-10">
       <div className="mx-auto max-w-page px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-12 md:grid-cols-[1.2fr_1.2fr_1fr]">
-          <div>
+        <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-[1.4fr_1.2fr_1fr_1fr]">
+          <div className="sm:col-span-2 lg:col-span-1">
             <Logo onDark />
             <p className="mt-5 max-w-xs text-white/80">{ORG.tagline}</p>
           </div>
           <nav aria-label={UI.footerNavLabel}>
-            <h2 className={colHead}>{UI.footerExploreTitle}</h2>
-            <ul className="mt-3 sm:columns-2 sm:gap-8">
-              {NAV.map((n) => (
-                <li key={n.to}><Link to={n.to} className={link}>{n.label}</Link></li>
+            <h2 className={colHead}>{UI.footerShopTitle}</h2>
+            <ul className="mt-3">
+              <li><Link to="/shop" className={link}>{UI.footerShopAll}</Link></li>
+              {areas.map((a) => (
+                <li key={a.id}><Link to={`/shop?cat=${a.id}`} className={link}>{a.title}</Link></li>
               ))}
             </ul>
           </nav>
+          <div>
+            <h2 className={colHead}>{UI.footerCompanyTitle}</h2>
+            <ul className="mt-3">
+              {company.map((n) => (
+                <li key={n.to}><Link to={n.to} className={link}>{n.label}</Link></li>
+              ))}
+              <li><Link to="/contact" className={link}>Contact</Link></li>
+              <li><Link to="/privacy" className={link}>{UI.privacyLink}</Link></li>
+            </ul>
+          </div>
           <div>
             <h2 className={colHead}>{UI.footerContactTitle}</h2>
             <ul className="mt-3">
@@ -36,12 +50,20 @@ export function Footer() {
             </ul>
           </div>
         </div>
-        <div className="mt-14 space-y-3 border-t border-white/15 pt-6 text-sm text-white/75">
+
+        <div className="mt-12 border-t border-white/15 pt-6">
+          <p className="text-sm font-semibold text-white">{UI.paymentsTitle}</p>
+          <ul className="mt-3 flex flex-wrap gap-2">
+            {PAYMENT_METHODS.filter((m) => m.enabled).map((m) => (
+              <li key={m.id} className="rounded-full border border-white/40 px-3.5 py-1.5 text-sm text-white">{m.label}</li>
+            ))}
+          </ul>
+          <p className="mt-2 text-sm text-white/75">{UI.paymentsNote}</p>
+        </div>
+
+        <div className="mt-8 space-y-3 border-t border-white/15 pt-6 text-sm text-white/75">
           <p className="max-w-3xl">{UI.disclaimer}</p>
-          <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-            <p>© {__BUILD_YEAR__} {ORG.name}.{legal ? ` ${legal}` : ""}</p>
-            <Link to="/privacy" className="inline-flex min-h-11 items-center hover:text-white hover:underline">{UI.privacyLink}</Link>
-          </div>
+          <p>© {__BUILD_YEAR__} {ORG.name}.{legal ? ` ${legal}` : ""}</p>
         </div>
       </div>
     </footer>

@@ -313,6 +313,7 @@ export const HEALTH_BEAUTY = {
   bannerTitle: "Five collections, one clear approach.",
   bannerBody: "Each collection is explained in general terms and plain language, with the product details laid out.",
   relatedLabel: "Related reading",
+  shopCollection: "Shop this collection",
   disclaimerLead: "General information only.",
 };
 
@@ -392,6 +393,13 @@ export const SHOP = {
   regLabel: "Reg. No.",
   notProvided: "To be provided by The Pep Stop.",
   back: "All products",
+  breadcrumbHome: "Home",
+  assurance: [
+    "A person confirms every order",
+    "Delivery and payment arranged with you",
+    "Questions answered before you buy",
+  ],
+  payWith: "Payment options",
   relatedTitle: "More from the shop",
   productDisclaimer: "Product information is provided by The Pep Stop. It is general information and not medical advice. For health concerns, consult a licensed physician.",
 };
@@ -499,6 +507,13 @@ export const UI = {
   footerContactTitle: "Contact",
   footerExploreTitle: "Explore",
   privacyLink: "Privacy Policy",
+  footerShopTitle: "Shop",
+  footerShopAll: "All products",
+  footerCompanyTitle: "The Pep Stop",
+  footerHelpTitle: "Help",
+  paymentsTitle: "Payment options",
+  paymentsNote: "Arranged with you when your order is confirmed.",
+  collectionsBarLabel: "Collections",
   disclaimer:
     "Content on this website is general information. It is not medical advice. For health concerns, consult a licensed physician.",
   articleDisclaimer:

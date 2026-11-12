@@ -11,6 +11,7 @@ export default {
         petal: "#FFEEF2",
         mute: "#6F5B66",
         line: "#F2D9E1",
+        edge: "#8F7A86",
         gold: "#ECB86C",
       },
       fontFamily: {

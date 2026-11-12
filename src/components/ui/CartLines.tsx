@@ -12,7 +12,7 @@ export function CartLines() {
     <ul className="divide-y divide-line border-y border-line">
       {lines.map((l) => (
         <li key={`${l.productId}-${l.variantId}`} className="grid grid-cols-[5.5rem_1fr] gap-4 py-5 sm:grid-cols-[7rem_1fr_auto] sm:items-center">
-          <div className="w-[5.5rem] sm:w-28"><SlotImage slot="product" src={l.product.image} label="" alt={l.product.name} sizes="112px" compact /></div>
+          <div className="w-[5.5rem] sm:w-28"><SlotImage slot="product" src={l.product.image} alt={l.product.name} sizes="112px" compact thumb /></div>
           <div className="min-w-0">
             <Link to={`/shop/${l.product.slug}`} className="text-lg font-semibold text-ink hover:underline">{l.product.name}</Link>
             <p className="text-sm text-mute">{l.variant.label}</p>

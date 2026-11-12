@@ -1,13 +1,16 @@
 import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 import { HEALTH_BEAUTY, UI } from "../content/site";
 import { getArticlesForFocusArea, getFocusAreas } from "../content/getContent";
 import { Seo } from "../lib/seo";
 import { PageBanner } from "../components/sections/PageBanner";
 import { ContactBlock } from "../components/sections/ContactBlock";
 import { SlotImage } from "../components/ui/SlotImage";
+import { Button } from "../components/ui/Button";
 import { Disclaimer } from "../components/ui/Disclaimer";
 import { Reveal } from "../components/ui/Reveal";
 
+/** Five collections, set as a quiet editorial index: numeral, name, plain summary, one action. */
 export default function HealthBeauty() {
   const areas = getFocusAreas();
   return (
@@ -15,32 +18,34 @@ export default function HealthBeauty() {
       <Seo path="/health-beauty" />
       <PageBanner title={HEALTH_BEAUTY.bannerTitle} body={HEALTH_BEAUTY.bannerBody} />
       <div className="mx-auto max-w-page px-4 sm:px-6 lg:px-8">
-        {areas.map((a, i) => {
-          const related = getArticlesForFocusArea(a.id);
-          return (
-            <section key={a.id} id={a.id} className="scroll-mt-28 border-b border-ink/10 py-14 last:border-0 md:py-20">
-              <Reveal>
-                <div className={`grid items-center gap-8 md:grid-cols-2 md:gap-14 ${i % 2 === 1 ? "md:[&>*:first-child]:order-2" : ""}`}>
-                  <SlotImage slot="focus" src={a.image} label={a.title} alt="" sizes="(min-width: 768px) 45vw, 90vw" />
-                  <div>
-                    <h2 className="font-sans text-h2 font-semibold text-ink">{a.title}</h2>
-                    <p className="mt-4 text-lg text-ink">{a.summary}</p>
-                    {related.length > 0 && (
-                      <div className="mt-6">
-                        <h3 className="text-sm font-semibold text-mute">{HEALTH_BEAUTY.relatedLabel}</h3>
-                        <ul className="mt-2">
-                          {related.map((r) => (
-                            <li key={r.slug}><Link to={`/education/${r.slug}`} className="inline-flex min-h-11 items-center font-semibold text-raspberry underline underline-offset-4 hover:text-ink">{r.title}</Link></li>
-                          ))}
-                        </ul>
+        <ol>
+          {areas.map((a, i) => {
+            const related = getArticlesForFocusArea(a.id);
+            return (
+              <li key={a.id} id={a.id} className="scroll-mt-40 border-b border-line py-10 last:border-0 md:py-14">
+                <Reveal>
+                  <div className="grid items-start gap-6 md:grid-cols-[4rem_1fr_16rem] md:gap-10 lg:grid-cols-[5rem_1fr_20rem]">
+                    <span className="font-display text-5xl font-medium leading-none text-raspberry md:text-6xl">{i + 1}</span>
+                    <div>
+                      <h2 className="font-display text-h2 font-medium text-raspberry-deep">{a.title}</h2>
+                      <p className="mt-1 text-lg text-mute">{a.tagline}</p>
+                      <p className="mt-4 max-w-prose text-ink/80">{a.summary}</p>
+                      <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2">
+                        <Button to={`/shop?cat=${a.id}`}>{HEALTH_BEAUTY.shopCollection}</Button>
+                        {related.map((r) => (
+                          <Link key={r.slug} to={`/education/${r.slug}`} className="inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-ink underline hover:text-raspberry">
+                            {r.title}<ArrowRight className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
+                          </Link>
+                        ))}
                       </div>
-                    )}
+                    </div>
+                    <SlotImage slot="focus" src={a.image} alt="" sizes="(min-width: 1024px) 20rem, 16rem" compact className="hidden md:block" />
                   </div>
-                </div>
-              </Reveal>
-            </section>
-          );
-        })}
+                </Reveal>
+              </li>
+            );
+          })}
+        </ol>
         <Disclaimer text={`${HEALTH_BEAUTY.disclaimerLead} ${UI.disclaimer}`} className="pb-14" />
       </div>
       <ContactBlock />

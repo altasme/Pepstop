@@ -7,6 +7,7 @@ import { amountLabel } from "../lib/format";
 import { buildOrder, submitOrder, type Customer } from "../lib/orders";
 import { SectionHeading } from "../components/ui/SectionHeading";
 import { Button } from "../components/ui/Button";
+import { SlotImage } from "../components/ui/SlotImage";
 
 type Errors = Partial<Record<keyof Customer | "consent", string>>;
 const empty: Customer = { fullName: "", mobile: "", email: "", street: "", barangay: "", city: "", province: "", postal: "", notes: "", payment: "" };
@@ -32,7 +33,7 @@ function Field({ id, value, error, onChange, label, hint, type = "text", autoCom
     "aria-invalid": error ? true : undefined,
     "aria-describedby": [hint ? `${id}-hint` : "", error ? `${id}-err` : ""].filter(Boolean).join(" ") || undefined,
   };
-  const cls = `w-full rounded-xl border bg-white px-4 py-3 text-base text-ink ${error ? "border-raspberry" : "border-line"}`;
+  const cls = `w-full rounded-xl border bg-white px-4 py-3 text-base text-ink ${error ? "border-raspberry" : "border-edge"}`;
   return (
     <div>
       <label htmlFor={id} className="mb-1 block text-sm font-semibold text-ink">{label}</label>
@@ -92,7 +93,7 @@ export default function Checkout() {
           <div className="space-y-8">
             {errCount > 0 && <p role="alert" className="rounded-lg bg-raspberry px-4 py-3 text-sm font-semibold text-white">{CHECKOUT.errors.summary}</p>}
             <fieldset className="space-y-4">
-              <legend className="mb-2 text-h3 font-semibold text-ink">{CHECKOUT.contactTitle}</legend>
+              <legend className="mb-2 text-h3 font-semibold text-ink"><span className="mr-2 font-display text-raspberry">1</span>{CHECKOUT.contactTitle}</legend>
               {F("fullName", { label: CHECKOUT.fields.fullName, autoComplete: "name" })}
               <div className="grid gap-4 sm:grid-cols-2">
                 {F("mobile", { label: CHECKOUT.fields.mobile, hint: CHECKOUT.fields.mobileHint, type: "tel", autoComplete: "tel" })}
@@ -100,7 +101,7 @@ export default function Checkout() {
               </div>
             </fieldset>
             <fieldset className="space-y-4">
-              <legend className="mb-2 text-h3 font-semibold text-ink">{CHECKOUT.addressTitle}</legend>
+              <legend className="mb-2 text-h3 font-semibold text-ink"><span className="mr-2 font-display text-raspberry">2</span>{CHECKOUT.addressTitle}</legend>
               {F("street", { label: CHECKOUT.fields.street, autoComplete: "address-line1" })}
               <div className="grid gap-4 sm:grid-cols-2">
                 {F("barangay", { label: CHECKOUT.fields.barangay, autoComplete: "address-line2" })}
@@ -110,10 +111,10 @@ export default function Checkout() {
               </div>
             </fieldset>
             <fieldset aria-describedby="pay-note">
-              <legend className="mb-2 text-h3 font-semibold text-ink">{CHECKOUT.paymentTitle}</legend>
+              <legend className="mb-2 text-h3 font-semibold text-ink"><span className="mr-2 font-display text-raspberry">3</span>{CHECKOUT.paymentTitle}</legend>
               <div className="grid gap-3 sm:grid-cols-2">
                 {PAYMENT_METHODS.filter((m) => m.enabled).map((m) => (
-                  <label key={m.id} className={`flex min-h-12 cursor-pointer items-center gap-3 rounded-xl border bg-white px-4 py-3 ${c.payment === m.id ? "border-ink ring-1 ring-ink" : "border-line"}`}>
+                  <label key={m.id} className={`flex min-h-12 cursor-pointer items-center gap-3 rounded-xl border bg-white px-4 py-3 ${c.payment === m.id ? "border-raspberry ring-1 ring-raspberry" : "border-edge"}`}>
                     <input id={`pay-${m.id}`} type="radio" name="payment" value={m.id} checked={c.payment === m.id} onChange={() => set("payment")(m.id)} className="h-5 w-5 accent-raspberry" />
                     <span className="font-semibold">{m.label}</span>
                   </label>
@@ -131,19 +132,20 @@ export default function Checkout() {
               {errors.consent && <p className="mt-1 text-sm font-semibold text-raspberry">{errors.consent}</p>}
             </div>
           </div>
-          <aside className="bg-petal p-6 lg:sticky lg:top-28">
+          <aside className="bg-petal p-6 lg:sticky lg:top-36">
             <h2 className="text-h3 font-semibold text-ink">{CHECKOUT.summaryTitle}</h2>
             <ul className="mt-4 divide-y divide-ink/10">
               {lines.map((l) => (
-                <li key={`${l.productId}-${l.variantId}`} className="flex justify-between gap-3 py-3 text-sm">
-                  <span>{l.product.name}, {l.variant.label} <span className="text-ink/70">x {l.qty}</span></span>
+                <li key={`${l.productId}-${l.variantId}`} className="flex items-center gap-3 py-3 text-sm">
+                  <span className="w-12 shrink-0"><SlotImage slot="product" src={l.product.image} alt="" sizes="48px" compact thumb /></span>
+                  <span className="flex-1">{l.product.name}, {l.variant.label} <span className="text-ink/70">x {l.qty}</span></span>
                   <span className="font-semibold tabular-nums">{amountLabel(l.lineTotal, l.unpriced)}</span>
                 </li>
               ))}
             </ul>
             <dl className="mt-3 space-y-2 border-t border-ink/10 pt-3 text-ink">
-              <div className="flex justify-between"><dt>{CART.shipping}</dt><dd className="text-sm">{CART.shippingTbc}</dd></div>
-              <div className="flex justify-between text-lg"><dt className="font-semibold text-ink">{CART.total}</dt><dd className="text-right font-semibold tabular-nums">{amountLabel(subtotal, hasUnpriced)}</dd></div>
+              <div className="flex flex-wrap justify-between gap-x-4"><dt>{CART.shipping}</dt><dd className="text-sm">{CART.shippingTbc}</dd></div>
+              <div className="flex flex-wrap justify-between gap-x-4 text-lg"><dt className="font-semibold text-ink">{CART.total}</dt><dd className="text-right font-semibold tabular-nums">{amountLabel(subtotal, hasUnpriced)}</dd></div>
             </dl>
             <Button submit className="mt-5 w-full">{CHECKOUT.place}</Button>
           </aside>

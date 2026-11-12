@@ -57,8 +57,8 @@ export default function OrderConfirmation() {
             ))}
           </ul>
           <dl className="mt-3 space-y-1 border-t border-ink/10 pt-3 text-ink">
-            <div className="flex justify-between"><dt>{CART.shipping}</dt><dd className="text-sm">{CART.shippingTbc}</dd></div>
-            <div className="flex justify-between text-lg"><dt className="font-semibold text-ink">{CART.total}</dt><dd className="font-semibold tabular-nums">{amountLabel(order.subtotal, order.hasUnpriced)}</dd></div>
+            <div className="flex flex-wrap justify-between gap-x-4"><dt>{CART.shipping}</dt><dd className="text-sm">{CART.shippingTbc}</dd></div>
+            <div className="flex flex-wrap justify-between gap-x-4 text-lg"><dt className="font-semibold text-ink">{CART.total}</dt><dd className="font-semibold tabular-nums">{amountLabel(order.subtotal, order.hasUnpriced)}</dd></div>
           </dl>
           <dl className="mt-6 grid gap-3 text-sm text-ink sm:grid-cols-2">
             <div><dt className="font-semibold text-ink">{CONFIRMATION.contactLabel}</dt><dd>{order.customer.fullName}<br />{order.customer.mobile}{order.customer.email && <><br />{order.customer.email}</>}</dd></div>

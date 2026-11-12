@@ -22,11 +22,11 @@ export default function Cart() {
         ) : (
           <div className="mt-10 grid gap-10 lg:grid-cols-[1fr_22rem] lg:items-start">
             <CartLines />
-            <aside className="bg-petal p-6 lg:sticky lg:top-28">
+            <aside className="bg-petal p-6 lg:sticky lg:top-36">
               <dl className="space-y-3 text-ink">
-                <div className="flex justify-between"><dt>{CART.subtotal}</dt><dd className="text-right font-semibold tabular-nums">{amountLabel(subtotal, hasUnpriced)}</dd></div>
+                <div className="flex flex-wrap justify-between gap-x-4"><dt>{CART.subtotal}</dt><dd className="text-right font-semibold tabular-nums">{amountLabel(subtotal, hasUnpriced)}</dd></div>
                 <div className="flex justify-between gap-4"><dt>{CART.shipping}</dt><dd className="text-right text-sm text-mute">{CART.shippingTbc}</dd></div>
-                <div className="flex justify-between border-t border-ink/15 pt-3 text-lg"><dt className="font-semibold">{CART.total}</dt><dd className="text-right font-semibold tabular-nums">{amountLabel(subtotal, hasUnpriced)}</dd></div>
+                <div className="flex flex-wrap justify-between gap-x-4 border-t border-ink/15 pt-3 text-lg"><dt className="font-semibold">{CART.total}</dt><dd className="text-right font-semibold tabular-nums">{amountLabel(subtotal, hasUnpriced)}</dd></div>
               </dl>
               <p className="mt-4 text-sm text-mute">{CART.note}</p>
               <div className="mt-5 flex flex-col gap-3">

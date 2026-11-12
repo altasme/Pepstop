@@ -10,18 +10,30 @@ type Props = {
   compact?: boolean;
   /** Extra text on the badge, for example "Sample". */
   badge?: string;
+  /** Tiny tile (cart, summary): cross only, no text. */
+  thumb?: boolean;
 };
 
 /**
  * Registered image placeholder (CLAUDE.md section 2.1). States canvas size, aspect ratio and image type so
  * the correct asset can be supplied. Flat, hairline, unmistakably a placeholder; no image is generated.
  */
-export function Placeholder({ slot, label, className = "", compact = false, badge }: Props) {
+export function Placeholder({ slot, label, className = "", compact = false, badge, thumb = false }: Props) {
   const s = IMAGE_SLOTS[slot];
   const ratio = aspectRatioLabel(s.width, s.height);
   const orientation = orientationLabel(s.width, s.height);
   const name = label ?? s.label;
   const aria = `${UI.placeholderTag} ${s.ph}: ${name}. ${s.width} by ${s.height} pixels, aspect ratio ${ratio}, ${s.format}.`;
+  if (thumb) {
+    return (
+      <div role="img" aria-label={aria} style={{ aspectRatio: `${s.width} / ${s.height}` }} className={`relative w-full overflow-hidden rounded-xl bg-petal ${className}`}>
+        <svg aria-hidden="true" focusable="false" className="absolute inset-0 h-full w-full text-raspberry/20" preserveAspectRatio="none" viewBox="0 0 100 100">
+          <line x1="0" y1="0" x2="100" y2="100" stroke="currentColor" strokeWidth="1" vectorEffect="non-scaling-stroke" />
+          <line x1="100" y1="0" x2="0" y2="100" stroke="currentColor" strokeWidth="1" vectorEffect="non-scaling-stroke" />
+        </svg>
+      </div>
+    );
+  }
   const tag = [s.ph, compact ? null : UI.placeholderTag, badge].filter(Boolean).join(" · ");
   return (
     <div

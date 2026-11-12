@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, Check, ChevronDown } from "lucide-react";
-import { CTA, SEO, SHOP } from "../content/site";
+import { Check, ChevronDown, ChevronRight } from "lucide-react";
+import { CTA, PAYMENT_METHODS, SEO, SHOP } from "../content/site";
 import { getCategoryName, getProduct, getProducts } from "../content/getContent";
 import { Seo } from "../lib/seo";
 import { useCart } from "../lib/cart";
@@ -51,10 +51,18 @@ export default function Product() {
     <>
       <Seo path={`/shop/${product.slug}`} title={`${product.name}${SEO.titleSuffix}`} description={product.shortDescription || SHOP.bannerBody} noindex={!!product.isSample} />
       <div className="mx-auto max-w-page px-4 pb-16 pt-6 sm:px-6 lg:px-8">
-        <Link to="/shop" className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-ink underline hover:text-raspberry"><ArrowLeft className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />{SHOP.back}</Link>
+        <nav aria-label="Breadcrumb" className="text-sm text-mute">
+          <ol className="flex flex-wrap items-center gap-x-1">
+            <li><Link to="/" className="inline-flex min-h-11 items-center hover:text-raspberry hover:underline">{SHOP.breadcrumbHome}</Link></li>
+            <li aria-hidden="true"><ChevronRight className="h-3.5 w-3.5" strokeWidth={1.75} /></li>
+            <li><Link to="/shop" className="inline-flex min-h-11 items-center hover:text-raspberry hover:underline">{SHOP.back}</Link></li>
+            <li aria-hidden="true"><ChevronRight className="h-3.5 w-3.5" strokeWidth={1.75} /></li>
+            <li><Link to={`/shop?cat=${product.categoryId}`} className="inline-flex min-h-11 items-center hover:text-raspberry hover:underline">{getCategoryName(product.categoryId)}</Link></li>
+          </ol>
+        </nav>
         {product.isSample && <p role="note" className="mt-3 rounded-lg bg-petal px-4 py-3 text-sm font-medium text-ink">{SHOP.sampleNote}</p>}
         <div className="mt-6 grid gap-8 md:grid-cols-[1.1fr_0.9fr] md:gap-14">
-          <div className="md:sticky md:top-28 md:self-start">
+          <div className="md:sticky md:top-36 md:self-start">
             <SlotImage slot="product" src={product.image} label={product.name} alt={product.name} priority sizes="(min-width: 768px) 52vw, 92vw" />
           </div>
           <div>
@@ -76,7 +84,7 @@ export default function Product() {
                       disabled={!v.available}
                       aria-pressed={selectedId === v.id}
                       onClick={() => { setVariantId(v.id); setAdded(false); }}
-                      className={`inline-flex min-h-11 items-center rounded-full border px-5 text-sm font-semibold disabled:opacity-40 ${selectedId === v.id ? "border-raspberry bg-raspberry text-white" : "border-line text-ink hover:border-raspberry"}`}
+                      className={`inline-flex min-h-11 items-center rounded-full border px-5 text-sm font-semibold disabled:opacity-40 ${selectedId === v.id ? "border-raspberry bg-raspberry text-white" : "border-edge text-ink hover:border-raspberry"}`}
                     >
                       {v.label}
                     </button>
@@ -102,6 +110,15 @@ export default function Product() {
               )}
             </div>
             <div className="mt-1"><CtaButton channel={chat} label={SHOP.askAbout} variant="secondary" className="w-full" /></div>
+
+            <ul className="mt-6 space-y-2 text-sm text-ink/80">
+              {SHOP.assurance.map((a) => (
+                <li key={a} className="flex items-center gap-2"><Check className="h-4 w-4 shrink-0 text-raspberry" strokeWidth={2} aria-hidden="true" />{a}</li>
+              ))}
+            </ul>
+            <p className="mt-5 text-sm text-mute">
+              <span className="font-semibold text-ink">{SHOP.payWith}:</span> {PAYMENT_METHODS.filter((m) => m.enabled).map((m) => m.label).join(", ")}.
+            </p>
 
             <div className="mt-8 border-t border-line">
               {product.fullDescription && <Detail title={SHOP.detailsTitle}>{product.fullDescription}</Detail>}
