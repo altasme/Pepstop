@@ -46,6 +46,7 @@ function Field({ id, value, error, onChange, label, hint, type = "text", autoCom
   );
 }
 
+const [consentBefore, consentAfter] = CHECKOUT.consent.split(CHECKOUT.privacyLinkLabel);
 export default function Checkout() {
   const { lines, subtotal, hasUnpriced, clear } = useCart();
   const navigate = useNavigate();
@@ -140,7 +141,7 @@ export default function Checkout() {
             <div>
               <label className="flex cursor-pointer items-start gap-3">
                 <input id="consent" type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} aria-invalid={errors.consent ? true : undefined} className="mt-1 h-5 w-5 shrink-0 accent-raspberry" />
-                <span className="text-ink">{CHECKOUT.consent} <Link to="/privacy" className="font-semibold text-raspberry underline underline-offset-4">{CHECKOUT.privacyLinkLabel}</Link>.</span>
+                <span className="text-ink">{consentBefore}<Link to="/privacy" className="font-semibold text-raspberry underline underline-offset-4">{CHECKOUT.privacyLinkLabel}</Link>{consentAfter}</span>
               </label>
               {errors.consent && <p className="mt-1 text-sm font-semibold text-raspberry">{errors.consent}</p>}
             </div>

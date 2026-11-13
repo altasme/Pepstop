@@ -24,7 +24,7 @@ export const ORG = {
     "To make exploring health, beauty, and wellness products a more informed and convenient experience through clear product information and attentive customer service.",
   vision:
     "To become a trusted destination for customers seeking a thoughtful approach to beauty, wellness, and product education.",
-  missionStatus: "draft" as "draft" | "approved", // ★C1
+  missionStatus: "approved" as "draft" | "approved", // ★C1
 };
 
 export const CONTACT = {
@@ -773,7 +773,7 @@ export const PRIVACY = {
     },
   ],
   retentionFallback: "We keep messages only as long as needed to answer you and to keep a reasonable record of our service. A fixed retention period will be stated here once confirmed.",
-  registrationFallback: "Business registration details will be added here once confirmed.",
+  registrationFallback: "",
   updated: "Last updated",
 };
 

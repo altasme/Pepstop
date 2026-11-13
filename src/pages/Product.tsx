@@ -71,7 +71,7 @@ export default function Product() {
       <div className="mx-auto max-w-page px-4 pb-16 pt-6 sm:px-6 lg:px-8">
         <nav aria-label="Breadcrumb" className="text-sm text-mute">
           <ol className="flex flex-wrap items-center gap-x-1">
-            <li><Link to="/" className="inline-flex min-h-11 items-center hover:text-raspberry hover:underline">{SHOP.breadcrumbHome}</Link></li>
+            <li><Link to="/" className="inline-flex min-h-11 items-center px-1.5 hover:text-raspberry hover:underline">{SHOP.breadcrumbHome}</Link></li>
             <li aria-hidden="true"><ChevronRight className="h-3.5 w-3.5" strokeWidth={1.75} /></li>
             <li><Link to="/shop" className="inline-flex min-h-11 items-center hover:text-raspberry hover:underline">{SHOP.back}</Link></li>
             <li aria-hidden="true"><ChevronRight className="h-3.5 w-3.5" strokeWidth={1.75} /></li>
@@ -87,7 +87,7 @@ export default function Product() {
             <p className="text-sm text-mute">{getCategoryName(product.categoryId)}</p>
             <h1 className="mt-1 font-display text-h1 font-medium text-raspberry-deep">{product.name}</h1>
             {product.shortDescription && <p className="mt-3 text-lg text-ink/80">{product.shortDescription}</p>}
-            <p className="mt-3 text-sm text-mute">{SHOP.productIntro}</p>
+            {(product.specifications || product.packaging || product.storage || (product.coas && product.coas.length > 0)) && <p className="mt-3 text-sm text-mute">{SHOP.productIntro}</p>}
             {product.regNumber && <p className="mt-2 text-sm text-mute">{SHOP.regLabel} {product.regNumber}</p>}
             <p className="mt-5 text-2xl font-semibold text-ink">{selected && product.showPrice && selected.pricePhp !== null ? formatPhp(selected.pricePhp) : priceLabel(product)}</p>
             <p className="mt-1 text-sm text-mute">{SHOP.availability[unavailable ? "unavailable" : product.availability]}</p>

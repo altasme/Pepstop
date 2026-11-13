@@ -30,7 +30,7 @@ export function Header() {
       <header className={`sticky top-0 z-40 border-b bg-white/95 backdrop-blur transition-[border-color] duration-200 ${scrolled ? "border-line" : "border-transparent"}`}>
         <div className={`mx-auto flex max-w-page items-center justify-between gap-4 px-4 transition-all duration-200 ease-out sm:px-6 lg:px-8 ${scrolled ? "py-2" : "py-3"}`}>
           <Logo compact={scrolled} />
-          <nav aria-label={UI.primaryNavLabel} className="hidden lg:block">
+          <nav aria-label={UI.primaryNavLabel} className="hidden xl:block">
             <ul className="flex items-center gap-1">
               {NAV.map((item) => (
                 <li key={item.to}>
@@ -64,7 +64,7 @@ export function Header() {
               aria-label={UI.openMenu}
               aria-haspopup="dialog"
               aria-expanded={open}
-              className="inline-flex h-12 w-12 items-center justify-center rounded-full text-ink hover:bg-petal lg:hidden"
+              className="inline-flex h-12 w-12 items-center justify-center rounded-full text-ink hover:bg-petal xl:hidden"
             >
               <Menu className="h-6 w-6" strokeWidth={1.75} aria-hidden="true" />
             </button>

@@ -23,7 +23,7 @@ export function InquiryForm() {
     }
   };
   return (
-    <section className="mx-auto max-w-page px-4 pb-16 sm:px-6 md:pb-24 lg:px-8">
+    <div>
       <div className="max-w-xl">
         <h2 className="font-sans text-h3 font-semibold text-ink">{C.formTitle}</h2>
         <p className="mt-2 text-ink">{C.formBody}</p>
@@ -43,6 +43,6 @@ export function InquiryForm() {
           </form>
         )}
       </div>
-    </section>
+    </div>
   );
 }

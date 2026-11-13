@@ -23,13 +23,13 @@ export default function Privacy() {
         <div role="note" className="bg-raspberry px-4 py-3 text-center text-sm font-semibold text-white">{PRIVACY.banner}</div>
       )}
       <article className="mx-auto max-w-prose px-4 py-12 sm:px-6 md:py-20">
-        <h1 className="font-sans text-h1 font-semibold text-ink">{PRIVACY.title}</h1>
+        <h1 className="font-display text-h1 font-medium text-claret">{PRIVACY.title}</h1>
         <p className="mt-2 text-sm text-ink/80">{PRIVACY.updated} {formatDate(LEGAL.updatedAt)}</p>
         <p className="mt-6 text-lg text-ink">{PRIVACY.lead}</p>
         {PRIVACY.sections.map((s) => (
           <section key={s.id} className="mt-10">
-            <h2 className="font-sans text-h3 font-semibold text-ink">{s.title}</h2>
-            <div className="mt-3 space-y-4 text-ink">{s.body.map((p) => <p key={p}>{fill(p)}</p>)}</div>
+            <h2 className="font-display text-h3 font-medium text-claret">{s.title}</h2>
+            <div className="mt-3 space-y-4 text-ink">{s.body.map((p) => fill(p).trim()).filter(Boolean).map((p) => <p key={p}>{p}</p>)}</div>
           </section>
         ))}
       </article>

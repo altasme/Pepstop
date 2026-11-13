@@ -1,5 +1,6 @@
 import { AccountLink } from "./AccountLink";
 import { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { NavLink } from "react-router-dom";
 import { X } from "lucide-react";
 import { NAV, UI } from "../../content/site";
@@ -10,7 +11,11 @@ import { Logo } from "../ui/Logo";
 
 const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
-/** Full-screen menu. Focus is trapped while open, Esc closes, focus returns to the opener. */
+/**
+ * Full-screen menu. Focus is trapped while open, Esc closes, focus returns to the opener.
+ * It is portalled to the page body: the sticky header uses a backdrop blur, and a blurred ancestor becomes the containing
+ * block for fixed children, which would shrink "full screen" to the height of the header.
+ */
 export function MobileNav({ open, onClose }: { open: boolean; onClose: () => void }) {
   const panel = useRef<HTMLDivElement>(null);
   const closeBtn = useRef<HTMLButtonElement>(null);
@@ -52,13 +57,13 @@ export function MobileNav({ open, onClose }: { open: boolean; onClose: () => voi
   if (!open) return null;
   const channels = getChannels();
 
-  return (
+  return createPortal(
     <div
       ref={panel}
       role="dialog"
       aria-modal="true"
       aria-label={UI.menuTitle}
-      className="on-dark fixed inset-0 z-50 flex flex-col overflow-y-auto bg-claret px-4 pb-8 pt-3 text-white sm:px-6 lg:hidden"
+      className="on-dark fixed inset-0 z-50 flex flex-col overflow-y-auto bg-claret px-4 pb-8 pt-3 text-white sm:px-6 xl:hidden"
     >
       <div className="flex items-center justify-between">
         <Logo onDark />
@@ -90,6 +95,7 @@ export function MobileNav({ open, onClose }: { open: boolean; onClose: () => voi
           ))}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

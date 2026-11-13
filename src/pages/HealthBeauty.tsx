@@ -1,13 +1,12 @@
 import { useRemote } from "../lib/remote";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
-import { HEALTH_BEAUTY, UI } from "../content/site";
+import { HEALTH_BEAUTY } from "../content/site";
 import { getArticlesForFocusArea, getFocusAreas } from "../content/getContent";
 import { Seo } from "../lib/seo";
 import { PageBanner } from "../components/sections/PageBanner";
 import { SlotImage } from "../components/ui/SlotImage";
 import { Button } from "../components/ui/Button";
-import { Disclaimer } from "../components/ui/Disclaimer";
 import { Reveal } from "../components/ui/Reveal";
 import { Sparkle } from "../components/ui/Sparkle";
 
@@ -54,7 +53,6 @@ export default function HealthBeauty() {
           <p className="mx-auto mt-4 max-w-prose text-lg text-ink/80">{HEALTH_BEAUTY.closingBody}</p>
           <div className="mt-6"><Button to="/contact">{HEALTH_BEAUTY.closingCta}</Button></div>
         </section>
-        <Disclaimer text={`${HEALTH_BEAUTY.disclaimerLead} ${UI.disclaimer}`} className="pb-14" />
       </div>
     </>
   );
