@@ -1,9 +1,10 @@
 import { StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter, NavLink, Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import { BrowserRouter, NavLink, Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import "./admin.css";
 import { api, errorText, onUnauthorized } from "./api";
-import { ToastProvider } from "./ui";
+import { ToastProvider, useToast } from "./ui";
+import { useCounts, type Counts } from "./counts";
 import { AuthShell, BrandMark, Sparkle } from "./brand";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
@@ -17,29 +18,46 @@ import { CustomerList, CustomerProfile } from "./pages/Customers";
 
 type Me = { username: string; mustChange: boolean };
 
-const NAV: [string, string][] = [
-  ["/", "Dashboard"], ["/customers", "Customers"], ["/products", "Products"], ["/categories", "Categories"], ["/variants", "Product Variants"],
-  ["/coa", "COA Library"], ["/information", "Product Information"], ["/orders", "Orders"], ["/inquiries", "Customer Inquiries"],
+const NAV: [string, string, (keyof Counts)?][] = [
+  ["/", "Dashboard"], ["/customers", "Customers", "customers"], ["/products", "Products"], ["/categories", "Categories"], ["/variants", "Product Variants"],
+  ["/coa", "COA Library"], ["/information", "Product Information"], ["/orders", "Orders", "orders"], ["/inquiries", "Customer Inquiries", "inquiries"],
   ["/content", "Website Content"], ["/logs", "Activity Logs"], ["/settings", "Settings"],
 ];
 
 function Shell({ me, onLogout }: { me: Me; onLogout: () => void }) {
   const [open, setOpen] = useState(false);
   const nav = useNavigate();
+  const { pathname } = useLocation();
+  const toast = useToast();
+  const counts = useCounts(pathname, (what, by) => {
+    const msg = what === "customers" ? `${by === 1 ? "A new registration is" : `${by} new registrations are`} waiting for approval.`
+      : what === "orders" ? `${by === 1 ? "A new order has" : `${by} new orders have`} arrived.`
+      : what === "payments" ? `${by === 1 ? "A payment is" : `${by} payments are`} waiting to be verified.`
+      : `${by === 1 ? "A new inquiry has" : `${by} new inquiries have`} arrived.`;
+    toast("ok", msg);
+  });
   return (
     <div className="layout">
       <aside className={`side${open ? " open" : ""}`}>
         <NavLink to="/" className="brandlink" aria-label="The Pep Stop admin, dashboard"><BrandMark onDark /></NavLink>
         <button className="btn ghost menu-toggle" aria-expanded={open} onClick={() => setOpen(!open)}>Menu</button>
         <nav aria-label="Admin">
-          {NAV.map(([to, text]) => <NavLink key={to} to={to} end={to === "/"} onClick={() => setOpen(false)} className={({ isActive }) => (isActive ? "active" : "")}>{text}</NavLink>)}
+          {NAV.map(([to, text, key]) => {
+            const n = key ? counts[key] : 0;
+            return (
+              <NavLink key={to} to={to} end={to === "/"} onClick={() => setOpen(false)} className={({ isActive }) => (isActive ? "active" : "")}>
+                {text}
+                {n > 0 && <span className="count" aria-label={`${n} waiting`}>{n > 99 ? "99+" : n}</span>}
+              </NavLink>
+            );
+          })}
           <button onClick={async () => { await api("POST", "/logout").catch(() => {}); onLogout(); nav("/"); }}>Logout ({me.username})</button>
         </nav>
         <p className="navnote"><Sparkle />Private area. Activity is recorded.</p>
       </aside>
       <main className="main">
         <Routes>
-          <Route path="/" element={<Dashboard />} />
+          <Route path="/" element={<Dashboard counts={counts} />} />
           <Route path="/customers" element={<CustomerList />} />
           <Route path="/customers/:id" element={<CustomerProfile />} />
           <Route path="/products" element={<ProductsList />} />

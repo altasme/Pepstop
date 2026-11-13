@@ -9,7 +9,7 @@ const METHOD: Record<string, string> = { gcash: "GCash", maya: "Maya", bank: "Ba
 export function Orders() {
   const [sp] = useSearchParams();
   const nav = useNavigate();
-  const [q, setQ] = useState(""); const [status, setStatus] = useState(sp.get("status") ?? ""); const [payment, setPayment] = useState(""); const [page, setPage] = useState(1);
+  const [q, setQ] = useState(""); const [status, setStatus] = useState(sp.get("status") ?? ""); const [payment, setPayment] = useState(sp.get("payment") ?? ""); const [page, setPage] = useState(1);
   const { data, error, loading } = useLoad(() => api<{ total: number; rows: any[] }>("GET", `/orders?${new URLSearchParams({ q, status, payment, page: String(page), per: "20" })}`), [q, status, payment, page]);
   return (
     <>

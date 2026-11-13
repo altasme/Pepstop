@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { api, errorText, label, peso, when } from "../api";
 import { Badge, ConfirmButton, Empty, ErrorNote, Field, ImageField, Loading, PageHead, Pager, Switch, useLoad, useToast, useUnsavedWarning } from "../ui";
 
 export function ProductsList() {
   const toast = useToast();
-  const [q, setQ] = useState(""); const [category, setCategory] = useState(""); const [status, setStatus] = useState("");
+  const [sp] = useSearchParams();
+  const [q, setQ] = useState(""); const [category, setCategory] = useState(""); const [status, setStatus] = useState(sp.get("status") ?? "");
   const [availability, setAvail] = useState(""); const [regulatory, setReg] = useState(""); const [sort, setSort] = useState("updated"); const [page, setPage] = useState(1);
   const cats = useLoad(() => api<any[]>("GET", "/categories"), []);
   const { data, error, loading, reload } = useLoad(() => {

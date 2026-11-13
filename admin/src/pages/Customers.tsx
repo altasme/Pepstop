@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { api, errorText, label, when } from "../api";
 import { Badge, Empty, ErrorNote, Field, Loading, PageHead, Pager, useLoad, useToast } from "../ui";
 
@@ -7,7 +7,8 @@ const STATUSES = ["pending", "approved", "rejected", "suspended"];
 
 export function CustomerList() {
   const nav = useNavigate();
-  const [q, setQ] = useState(""); const [status, setStatus] = useState("pending"); const [page, setPage] = useState(1);
+  const [sp] = useSearchParams();
+  const [q, setQ] = useState(""); const [status, setStatus] = useState(sp.get("status") ?? "pending"); const [page, setPage] = useState(1);
   const { data, error, loading } = useLoad(() => api<{ total: number; rows: any[] }>("GET", `/customers?${new URLSearchParams({ q, status, page: String(page), per: "20" })}`), [q, status, page]);
   return (
     <>
