@@ -8,7 +8,6 @@ import { useRemote } from "../lib/remote";
 import { trackArticleView } from "../lib/analytics";
 import { formatDate } from "../lib/format";
 import { Disclaimer } from "../components/ui/Disclaimer";
-import { ContactBlock } from "../components/sections/ContactBlock";
 import NotFound from "./NotFound";
 
 export default function Article() {
@@ -56,7 +55,6 @@ export default function Article() {
         )}
         <Disclaimer text={UI.articleDisclaimer} className="mt-10 border-t border-ink/10 pt-6" />
       </article>
-      <ContactBlock />
     </>
   );
 }

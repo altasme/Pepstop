@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import { api, errorText, label, peso, when } from "../api";
 import { Badge, Empty, ErrorNote, Field, Loading, PageHead, Pager, useLoad, useToast } from "../ui";
 
@@ -8,7 +8,6 @@ const METHOD: Record<string, string> = { gcash: "GCash", maya: "Maya", bank: "Ba
 
 export function Orders() {
   const [sp] = useSearchParams();
-  const nav = useNavigate();
   const [q, setQ] = useState(""); const [status, setStatus] = useState(sp.get("status") ?? ""); const [payment, setPayment] = useState(sp.get("payment") ?? ""); const [page, setPage] = useState(1);
   const { data, error, loading } = useLoad(() => api<{ total: number; rows: any[] }>("GET", `/orders?${new URLSearchParams({ q, status, payment, page: String(page), per: "20" })}`), [q, status, payment, page]);
   return (
@@ -23,11 +22,11 @@ export function Orders() {
       {loading && !data ? <Loading /> : data && data.rows.length === 0 ? <Empty>No orders match. Orders placed on the website appear here.</Empty> : data && (
         <>
           <div className="tablewrap"><table>
-            <thead><tr><th>Reference</th><th>Customer</th><th>Order date</th><th className="num">Items</th><th className="num">Total</th><th>Payment method</th><th>Payment</th><th>Order status</th><th>Actions</th></tr></thead>
+            <thead><tr><th>Order</th><th>Customer</th><th>Placed</th><th className="num">Items</th><th className="num">Total</th><th>Status</th></tr></thead>
             <tbody>{data.rows.map((o) => (
               <tr key={o.id}><td><Link to={`/orders/${o.id}`}><b>{o.ref}</b></Link></td><td>{o.full_name}</td><td>{when(o.created_at)}</td><td className="num">{o.items}</td>
-                <td className="num">{o.has_unpriced ? `${peso(o.total)} + unpriced` : peso(o.total)}</td><td>{METHOD[o.payment_method] ?? o.payment_method}</td><td><Badge value={o.payment_status} /></td><td><Badge value={o.order_status} /></td>
-                <td><button className="btn ghost sm" onClick={() => nav(`/orders/${o.id}`)}>View</button></td></tr>
+                <td className="num">{o.has_unpriced ? `${peso(o.total)} + unpriced` : peso(o.total)}</td>
+                <td><Badge value={o.order_status} /><span className="subline">{METHOD[o.payment_method] ?? o.payment_method} · payment {o.payment_status}</span></td></tr>
             ))}</tbody>
           </table></div>
           <Pager page={page} per={20} total={data.total} onPage={setPage} />

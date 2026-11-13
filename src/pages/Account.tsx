@@ -91,6 +91,7 @@ export default function Account() {
         <Sparkle className="mb-4 h-5 w-5" fill="#C30239" />
         <h1 className="font-display text-display font-medium text-claret">{A.title}</h1>
         <p className="mt-3 text-lg text-ink/80">{A.intro}</p>
+        <p className="mt-2 text-ink/80">{A.explain} <Link to="/contact" className="font-semibold text-raspberry underline">{A.explainLink}</Link></p>
 
         {done ? (
           <div role="status" className="mt-8 rounded-[28px] bg-petal p-6 sm:p-8">

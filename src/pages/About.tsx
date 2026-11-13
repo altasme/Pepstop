@@ -42,7 +42,7 @@ export default function About() {
 
       {showMissionVision && (
         <section className="relative overflow-hidden bg-petal">
-          <SparkleField className="hidden md:block" spots={[{ x: "47%", y: "14%", size: 14, delay: 0.3 }, { x: "96%", y: "30%", size: 10, delay: 1.7, fill: "#C30239" }, { x: "50%", y: "82%", size: 11, delay: 2.4, fill: "#C30239" }]} />
+          <SparkleField className="hidden md:block" spots={[{ x: "47%", y: "14%", size: 14, delay: 0.3 }]} />
           <div className="relative mx-auto grid max-w-page gap-10 px-4 py-16 sm:px-6 md:grid-cols-2 md:gap-16 md:py-24 lg:px-8">
             <div>
               <Sparkle className="mb-4 h-5 w-5" fill="#C30239" />

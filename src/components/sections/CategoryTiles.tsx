@@ -1,22 +1,21 @@
 import { Link } from "react-router-dom";
 import { ArrowUpRight } from "lucide-react";
-import { CHAT_HELPER, HOME } from "../../content/site";
+import { HOME } from "../../content/site";
 import { getFocusAreas } from "../../content/getContent";
-import { getChannelsWithMessage, hasChatChannel } from "../../lib/cta";
+import { getChannelsWithMessage } from "../../lib/cta";
 import { SectionHeading } from "../ui/SectionHeading";
 import { SlotImage } from "../ui/SlotImage";
 import { CtaButton } from "../ui/CtaButton";
 import { Sparkle } from "../ui/Sparkle";
 import { Reveal } from "../ui/Reveal";
-import { SparkleField } from "../ui/SparkleField";
 
 /** Goal-led shopping: five collections, then Pep Match, the hand-off to a person. */
 export function CategoryTiles() {
   const areas = getFocusAreas();
-  const channels = getChannelsWithMessage(HOME.matchMessage);
+  const primary = getChannelsWithMessage(HOME.matchMessage)[0];
   return (
     <section className="bg-white">
-      <div className="mx-auto max-w-page px-4 py-14 sm:px-6 md:py-20 lg:px-8">
+      <div className="mx-auto max-w-page px-4 py-12 sm:px-6 md:py-20 lg:px-8">
         <SectionHeading title={HOME.categoriesTitle} />
         <p className="mt-4 max-w-prose text-lg text-ink/80">{HOME.categoriesBody}</p>
         <ul className="mt-8 grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-5 lg:gap-x-5">
@@ -38,20 +37,14 @@ export function CategoryTiles() {
           ))}
         </ul>
 
-        <div id="match" className="relative mt-14 scroll-mt-40 grid gap-8 overflow-hidden rounded-[28px] bg-petal p-6 sm:p-10 md:grid-cols-[1.1fr_0.9fr] md:items-center md:gap-12">
-          <SparkleField className="hidden md:block" spots={[{ x: "52%", y: "16%", size: 14, delay: 0.2 }, { x: "58%", y: "78%", size: 10, delay: 1.6, fill: "#C30239" }, { x: "96%", y: "10%", size: 9, delay: 2.6 }]} />
-          <div className="relative">
+        <div id="match" className="relative mt-10 scroll-mt-40 md:mt-14 grid gap-8 overflow-hidden rounded-[28px] bg-petal p-6 sm:p-10 md:grid-cols-[1.1fr_0.9fr] md:items-center md:gap-12">
+                    <div className="relative">
             <Sparkle className="mb-4 h-5 w-5" fill="#C30239" />
             <h3 className="max-w-[20ch] font-display text-h2 font-medium text-raspberry-deep">{HOME.matchTitle}</h3>
             <p className="mt-4 max-w-prose text-ink/80"><span className="font-semibold text-raspberry-deep">{HOME.matchName}</span> {HOME.matchBody}</p>
           </div>
           <div className="relative">
-            <p className="mb-3 text-sm text-mute">{hasChatChannel() ? CHAT_HELPER.withChat : CHAT_HELPER.phoneOnly}</p>
-            <div className="flex flex-col gap-3">
-              {channels.map((c, i) => (
-                <CtaButton key={c.kind} channel={c} label={i === 0 && c.kind === "call" ? HOME.matchCta : c.label} variant={i === 0 ? "primary" : "secondary"} />
-              ))}
-            </div>
+            {primary && <CtaButton channel={primary} label={HOME.matchCta} variant="primary" className="w-full" />}
           </div>
         </div>
       </div>

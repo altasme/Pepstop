@@ -8,7 +8,7 @@ import { buildOrder, submitOrderRemote, type Customer } from "../lib/orders";
 import { useRemote } from "../lib/remote";
 import { SectionHeading } from "../components/ui/SectionHeading";
 import { Button } from "../components/ui/Button";
-import { SlotImage } from "../components/ui/SlotImage";
+import { ProductImage } from "../components/ui/ProductImage";
 
 type Errors = Partial<Record<keyof Customer | "consent", string>>;
 const empty: Customer = { fullName: "", mobile: "", email: "", street: "", barangay: "", city: "", province: "", postal: "", notes: "", payment: "" };
@@ -25,11 +25,12 @@ function validate(c: Customer, consent: boolean): Errors {
   return e;
 }
 
-type FieldExtra = { label: string; hint?: string; type?: string; autoComplete?: string; multiline?: boolean; readOnly?: boolean };
+type FieldExtra = { label: string; hint?: string; type?: string; autoComplete?: string; multiline?: boolean; readOnly?: boolean; inputMode?: "numeric" | "tel" | "email" | "text" };
+const OPTIONAL = ["email", "notes"];
 
-function Field({ id, value, error, onChange, label, hint, type = "text", autoComplete, multiline, readOnly }: FieldExtra & { id: keyof Customer; value: string; error?: string; onChange: (v: string) => void; readOnly?: boolean }) {
+function Field({ id, value, error, onChange, label, hint, type = "text", autoComplete, multiline, readOnly, inputMode }: FieldExtra & { id: keyof Customer; value: string; error?: string; onChange: (v: string) => void; readOnly?: boolean }) {
   const common = {
-    id, name: id, value, autoComplete, readOnly,
+    id, name: id, value, autoComplete, readOnly, inputMode, "aria-required": OPTIONAL.includes(id) ? undefined : true,
     onChange: (e: { target: { value: string } }) => onChange(e.target.value),
     "aria-invalid": error ? true : undefined,
     "aria-describedby": [hint ? `${id}-hint` : "", error ? `${id}-err` : ""].filter(Boolean).join(" ") || undefined,
@@ -37,7 +38,7 @@ function Field({ id, value, error, onChange, label, hint, type = "text", autoCom
   const cls = `w-full rounded-xl border px-4 py-3 text-base text-ink ${readOnly ? "bg-petal" : "bg-white"} ${error ? "border-raspberry" : "border-edge"}`;
   return (
     <div>
-      <label htmlFor={id} className="mb-1 block text-sm font-semibold text-ink">{label}</label>
+      <label htmlFor={id} className="mb-1 block text-sm font-semibold text-ink">{label}{!OPTIONAL.includes(id) && !readOnly && <span aria-hidden="true" className="text-raspberry"> *</span>}</label>
       {multiline ? <textarea {...common} rows={3} maxLength={500} className={cls} /> : <input {...common} type={type} className={`${cls} min-h-12`} />}
       {hint && <p id={`${id}-hint`} className="mt-1 text-sm text-ink/80">{hint}</p>}
       {error && <p id={`${id}-err`} className="mt-1 text-sm font-semibold text-raspberry">{error}</p>}
@@ -101,6 +102,8 @@ export default function Checkout() {
       <section className="mx-auto max-w-page px-4 pb-20 pt-8 sm:px-6 md:pt-10 lg:px-8">
         <form onSubmit={onSubmit} noValidate className="grid gap-8 lg:grid-cols-[1fr_24rem] lg:items-start">
           <div className="space-y-8">
+            <a href="#order-summary" className="inline-flex min-h-11 items-center gap-2 rounded-full border border-edge px-5 text-sm font-semibold text-ink lg:hidden">{CHECKOUT.summaryJump(lines.length, amountLabel(subtotal, hasUnpriced))}</a>
+            <p className="text-sm text-ink/80">{CHECKOUT.requiredNote}</p>
             {errCount > 0 && <p role="alert" className="rounded-lg bg-raspberry px-4 py-3 text-sm font-semibold text-white">{CHECKOUT.errors.summary}</p>}
             <fieldset className="space-y-4">
               <legend className="mb-2 text-h3 font-semibold text-ink"><span className="mr-2 font-display text-raspberry">1</span>{CHECKOUT.contactTitle}</legend>
@@ -117,7 +120,7 @@ export default function Checkout() {
                 {F("barangay", { label: CHECKOUT.fields.barangay, autoComplete: "address-line2" })}
                 {F("city", { label: CHECKOUT.fields.city, autoComplete: "address-level2" })}
                 {F("province", { label: CHECKOUT.fields.province, autoComplete: "address-level1" })}
-                {F("postal", { label: CHECKOUT.fields.postal, autoComplete: "postal-code" })}
+                {F("postal", { label: CHECKOUT.fields.postal, autoComplete: "postal-code", inputMode: "numeric" })}
               </div>
             </fieldset>
             <fieldset aria-describedby="pay-note">
@@ -142,12 +145,12 @@ export default function Checkout() {
               {errors.consent && <p className="mt-1 text-sm font-semibold text-raspberry">{errors.consent}</p>}
             </div>
           </div>
-          <aside className="bg-petal p-6 lg:sticky lg:top-36">
+          <aside id="order-summary" className="scroll-mt-24 rounded-[20px] bg-petal p-6 lg:sticky lg:top-28">
             <h2 className="text-h3 font-semibold text-ink">{CHECKOUT.summaryTitle}</h2>
             <ul className="mt-4 divide-y divide-ink/10">
               {lines.map((l) => (
                 <li key={`${l.productId}-${l.variantId}`} className="flex items-center gap-3 py-3 text-sm">
-                  <span className="w-12 shrink-0"><SlotImage slot="product" src={l.product.image} alt="" sizes="48px" compact thumb /></span>
+                  <span className="w-12 shrink-0"><ProductImage src={l.product.image} alt="" sizes="48px" /></span>
                   <span className="flex-1">{l.product.name}, {l.variant.label} <span className="text-ink/70">x {l.qty}</span></span>
                   <span className="font-semibold tabular-nums">{amountLabel(l.lineTotal, l.unpriced)}</span>
                 </li>

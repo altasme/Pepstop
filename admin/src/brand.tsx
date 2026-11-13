@@ -34,7 +34,6 @@ export function AuthShell({ title, lead, children }: { title: string; lead?: str
         </div>
         <BrandMark onDark size={56} />
         <div className="auth-copy">
-          <p className="auth-kicker">Health &amp; Beauty</p>
           <p className="auth-line">Everything behind the shop, kept in one calm place.</p>
           <p className="auth-sub">Approve customers, manage the catalog, and look after every order.</p>
         </div>

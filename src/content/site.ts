@@ -523,6 +523,8 @@ export const CHECKOUT = {
     "Provide your contact and delivery information so our team can review your order and coordinate the next steps with you.",
   contactTitle: "Your Contact Details",
   addressTitle: "Where Should We Send Your Order?",
+  requiredNote: "Fields marked * are required.",
+  summaryJump: (n: number, total: string) => `Order summary: ${n} ${n === 1 ? "item" : "items"}, ${total}`,
   paymentTitle: "Preferred Payment Method",
   paymentNote:
     "Choose your preferred payment method. Our team will provide the applicable payment instructions after reviewing and confirming your order.",
@@ -594,8 +596,10 @@ export const CONFIRMATION = {
 };
 
 export const ACCOUNT = {
-  title: "View Products",
-  intro: "Our product catalog is private. Log in to your account, or create one and we will review it.",
+  title: "Log in to view products",
+  intro: "Our product catalog is shared with approved customers only. Log in if you already have an account, or create one and our team will review it.",
+  explain: "Questions first? Our team is happy to answer them before you register.",
+  explainLink: "Talk to Our Team",
   loginTab: "Login",
   registerTab: "Create an Account",
   phone: "Phone Number",

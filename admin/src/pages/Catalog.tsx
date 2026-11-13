@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { api, errorText, peso } from "../api";
-import { Badge, Empty, ErrorNote, Field, ImageField, Loading, PageHead, useLoad, useToast } from "../ui";
+import { SafeImg, Badge, Empty, ErrorNote, Field, ImageField, Loading, PageHead, useLoad, useToast } from "../ui";
 
 export function Categories() {
   const toast = useToast();
@@ -35,7 +35,7 @@ export function Categories() {
           <thead><tr><th>Image</th><th>Name</th><th>Slug</th><th className="num">Order</th><th className="num">Products</th><th>Status</th><th>Actions</th></tr></thead>
           <tbody>{data.map((c) => (
             <tr key={c.id}>
-              <td>{c.image ? <img className="thumb" src={c.image} alt="" /> : <span className="thumb" />}</td>
+              <td>{c.image ? <SafeImg className="thumb" src={c.image} tile="thumb" /> : <span className="thumb" />}</td>
               <td><b>{c.name}</b><br /><span className="muted">{c.description}</span></td><td>{c.slug}</td><td className="num">{c.sort}</td><td className="num">{c.products}</td>
               <td><Badge value={c.status === "draft" ? "draft" : "published"} /></td>
               <td><button className="btn ghost sm" onClick={() => setEdit(c)}>Edit</button></td>

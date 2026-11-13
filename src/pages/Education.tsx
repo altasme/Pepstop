@@ -5,7 +5,6 @@ import { EDUCATION } from "../content/site";
 import { getPublishedArticles } from "../content/getContent";
 import { Seo } from "../lib/seo";
 import { PageBanner } from "../components/sections/PageBanner";
-import { ContactBlock } from "../components/sections/ContactBlock";
 import { Card } from "../components/ui/Card";
 import { Disclaimer } from "../components/ui/Disclaimer";
 import { formatDate } from "../lib/format";
@@ -45,7 +44,6 @@ export default function Education() {
         )}
         <Disclaimer className="mt-12" />
       </section>
-      <ContactBlock />
     </>
   );
 }

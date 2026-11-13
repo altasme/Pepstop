@@ -3,9 +3,10 @@ export function formatDate(iso: string): string {
   return new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-PH", { year: "numeric", month: "long", day: "numeric", timeZone: "UTC" });
 }
 
-/** 1234.5 -> "PHP 1,234.50". */
+/** 650 -> "PHP 650", 1234.5 -> "PHP 1,234.50". Whole pesos drop the empty decimals. */
 export function formatPhp(amount: number): string {
-  return `PHP ${amount.toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  const whole = Number.isInteger(amount);
+  return `PHP ${amount.toLocaleString("en-PH", { minimumFractionDigits: whole ? 0 : 2, maximumFractionDigits: 2 })}`;
 }
 
 import { CART, SHOP } from "../content/site";

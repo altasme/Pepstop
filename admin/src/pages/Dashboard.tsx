@@ -32,7 +32,7 @@ export default function Dashboard({ counts }: { counts: Counts }) {
   const c = data?.cards;
   return (
     <>
-      <PageHead title="Dashboard" crumbs={["Dashboard"]}>
+      <PageHead title="Dashboard">
         <Link className="btn ghost" to="/products/new">Add product</Link>
         <Link className="btn ghost" to="/coa">Upload COA</Link>
         <Link className="btn ghost" to="/content">Edit website content</Link>

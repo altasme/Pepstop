@@ -3,7 +3,6 @@ import { COA } from "../content/site";
 import { Seo } from "../lib/seo";
 import { getCoaList, type Coa } from "../lib/remote";
 import { PageBanner } from "../components/sections/PageBanner";
-import { ContactBlock } from "../components/sections/ContactBlock";
 import { Disclaimer } from "../components/ui/Disclaimer";
 
 /** Public directory of published certificates of analysis. Documents are never labeled verified. */
@@ -42,7 +41,6 @@ export default function CoaDirectory() {
         )}
         <Disclaimer text={COA.note} className="mt-10" />
       </section>
-      <ContactBlock />
     </>
   );
 }

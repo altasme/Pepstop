@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { api, errorText, label, peso, when } from "../api";
-import { Badge, ConfirmButton, Empty, ErrorNote, Field, ImageField, Loading, PageHead, Pager, Switch, useLoad, useToast, useUnsavedWarning } from "../ui";
+import { api, errorText, peso, when } from "../api";
+import { Badge, ConfirmButton, Empty, ErrorNote, Field, ImageField, Loading, PageHead, Pager, RowMenu, SafeImg, Switch, useLoad, useToast, useUnsavedWarning } from "../ui";
 
 export function ProductsList() {
   const toast = useToast();
@@ -13,11 +13,10 @@ export function ProductsList() {
     const p = new URLSearchParams({ q, category, status, availability, regulatory, sort, page: String(page), per: "20" });
     return api<{ total: number; rows: any[] }>("GET", `/products?${p}`);
   }, [q, category, status, availability, regulatory, sort, page]);
-  const nav = useNavigate();
   const act = async (fn: () => Promise<unknown>, ok: string) => { try { await fn(); toast("ok", ok); reload(); } catch (e) { toast("error", errorText(e)); } };
   return (
     <>
-      <PageHead title="Products"><Link className="btn pink" to="/products/new">Add Product</Link></PageHead>
+      <PageHead title="Products"><Link className="btn ghost" to="/variants">All variants</Link><Link className="btn" to="/products/new">Add product</Link></PageHead>
       <div className="filters">
         <input aria-label="Search by product name" placeholder="Search by product name" value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }} />
         <select aria-label="Category" value={category} onChange={(e) => { setCategory(e.target.value); setPage(1); }}><option value="">All categories</option>{cats.data?.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select>
@@ -30,10 +29,10 @@ export function ProductsList() {
       {loading && !data ? <Loading /> : data && data.rows.length === 0 ? <Empty>No products match. Add your first product to get started.</Empty> : data && (
         <>
           <div className="tablewrap"><table>
-            <thead><tr><th>Image</th><th>Product</th><th>Category</th><th className="num">Price</th><th className="num">Variants</th><th>Availability</th><th>Regulatory review</th><th>Status</th><th>Last updated</th><th>Actions</th></tr></thead>
+            <thead><tr><th>Image</th><th>Product</th><th>Category</th><th className="num">Price</th><th className="num">Variants</th><th>Availability</th><th>Regulatory review</th><th>Status</th><th>Last updated</th><th><span className="sr-only">Actions</span></th></tr></thead>
             <tbody>{data.rows.map((p) => (
               <tr key={p.id}>
-                <td>{p.main_image ? <img className="thumb" src={p.main_image} alt="" /> : <span className="thumb" />}</td>
+                <td>{p.main_image ? <SafeImg className="thumb" src={p.main_image} tile="thumb" /> : <span className="thumb" />}</td>
                 <td><Link to={`/products/${p.id}`}><b>{p.name}</b></Link></td>
                 <td>{p.category ?? ""}</td>
                 <td className="num">{peso(p.base_price)}</td>
@@ -42,14 +41,16 @@ export function ProductsList() {
                 <td><Badge value={p.regulatory_status} /></td>
                 <td><Badge value={p.status} /></td>
                 <td>{when(p.updated_at)}</td>
-                <td><div className="actions">
-                  <button className="btn ghost sm" onClick={() => nav(`/products/${p.id}`)}>Edit</button>
-                  {p.status === "published" && <a className="btn ghost sm" href={`/shop/${p.slug}`} target="_blank" rel="noreferrer">View</a>}
-                  <button className="btn ghost sm" onClick={() => act(() => api("POST", `/products/${p.id}/duplicate`), "Product duplicated as a draft.")}>Duplicate</button>
-                  {p.status === "archived"
-                    ? <button className="btn ghost sm" onClick={() => act(() => api("POST", `/products/${p.id}/status`, { status: "draft" }), "Product restored as a draft.")}>Restore</button>
-                    : <ConfirmButton className="btn danger sm" message={`Archive "${p.name}"? It will be removed from the public catalog.`} onConfirm={() => act(() => api("POST", `/products/${p.id}/status`, { status: "archived" }), "Product archived.")}>Archive</ConfirmButton>}
-                </div></td>
+                <td className="rowact">
+                  <RowMenu label={`More actions for ${p.name}`}>
+                    <Link to={`/products/${p.id}`}>Edit</Link>
+                    {p.status === "published" && <a href={`/shop/${p.slug}`} target="_blank" rel="noreferrer">View on website</a>}
+                    <button onClick={() => act(() => api("POST", `/products/${p.id}/duplicate`), "Product duplicated as a draft.")}>Duplicate</button>
+                    {p.status === "archived"
+                      ? <button onClick={() => act(() => api("POST", `/products/${p.id}/status`, { status: "draft" }), "Product restored as a draft.")}>Restore</button>
+                      : <button className="danger" onClick={() => { if (window.confirm(`Archive "${p.name}"? It will be removed from the private catalog.`)) act(() => api("POST", `/products/${p.id}/status`, { status: "archived" }), "Product archived."); }}>Archive</button>}
+                  </RowMenu>
+                </td>
               </tr>
             ))}</tbody>
           </table></div>
@@ -102,102 +103,114 @@ export function ProductForm() {
   };
 
   if (loading && !isNew) return <Loading />;
+  const verified = f.regulatory_status === "verified";
   return (
     <>
-      <PageHead title={isNew ? "Add Product" : f.name || "Edit Product"} crumbs={["Products", isNew ? "Add" : "Edit"]}>
+      <PageHead title={isNew ? "Add product" : f.name || "Edit product"} crumbs={["Products", isNew ? "Add" : "Edit"]}>
         <Link className="btn ghost" to="/products">Back to products</Link>
-        <Badge value={f.status} />
       </PageHead>
       <ErrorNote text={error} />
 
-      <section className="card"><h2>A. Basic information</h2>
-        <div className="form">
-          <Field label="Product name"><input value={f.name} onChange={(e) => { set("name", e.target.value); if (!slugEdited) set("slug", e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")); }} /></Field>
-          <Field label="Product slug" hint="The web address of the product page."><input value={f.slug} onChange={(e) => { setSlugEdited(true); set("slug", e.target.value); }} /></Field>
-          <Field label="Category"><select value={f.category_id} onChange={(e) => set("category_id", e.target.value)}><option value="">Choose a category</option>{cats.data?.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select></Field>
-          <Field label="Display order" hint="Lower numbers appear first."><input type="number" value={f.sort} onChange={(e) => set("sort", e.target.value)} /></Field>
-          <Field label="Short description" wide><input value={f.short_description} maxLength={400} onChange={(e) => set("short_description", e.target.value)} /></Field>
-          <Field label="Full description" wide hint="Plain text. Only supply content verified by the client."><textarea value={f.full_description} onChange={(e) => set("full_description", e.target.value)} /></Field>
-          <ImageField kind="catalog" label="Main product image (private, shown only to approved customers)" value={f.main_image} onChange={(u) => set("main_image", u)} />
-        </div>
-        <div style={{ marginTop: "1rem" }}>
-          <span className="lbl">Additional product images</span>
-          <div className="imgrow" style={{ flexWrap: "wrap", marginTop: ".4rem" }}>
-            {f.images.map((u: string, i: number) => <div key={u + i}><img src={u} alt="" /><button type="button" className="btn ghost sm" onClick={() => set("images", f.images.filter((_: string, j: number) => j !== i))}>Remove</button></div>)}
-            <ImageField kind="catalog" label="" value={null} onChange={(u) => u && set("images", [...f.images, u])} />
-          </div>
-        </div>
-      </section>
-
-      <section className="card"><h2>B. Product information</h2>
-        <p className="muted">Only information supplied and verified by the client should be published.</p>
-        <div className="form">
-          <Field label="Product overview" wide><textarea value={f.overview} onChange={(e) => set("overview", e.target.value)} /></Field>
-          <Field label="Specifications" wide hint="One line per item."><textarea value={f.specifications} onChange={(e) => set("specifications", e.target.value)} /></Field>
-          <Field label="Composition or listed contents" wide><textarea value={f.composition} onChange={(e) => set("composition", e.target.value)} /></Field>
-          <Field label="Packaging information"><textarea value={f.packaging} onChange={(e) => set("packaging", e.target.value)} /></Field>
-          <Field label="Storage information"><textarea value={f.storage} onChange={(e) => set("storage", e.target.value)} /></Field>
-          <Field label="Additional product notes" wide><textarea value={f.notes} onChange={(e) => set("notes", e.target.value)} /></Field>
-          <Field label="Registration type (optional)"><input value={f.reg_type ?? ""} onChange={(e) => set("reg_type", e.target.value)} /></Field>
-          <Field label="Registration number (optional)"><input value={f.reg_number ?? ""} onChange={(e) => set("reg_number", e.target.value)} /></Field>
-          <Field label="Registration holder (optional)"><input value={f.reg_holder ?? ""} onChange={(e) => set("reg_holder", e.target.value)} /></Field>
-        </div>
-        {!isNew && <p><Link to={`/information?product=${id}`}>Edit rich-text information sections and guidelines for this product</Link></p>}
-      </section>
-
-      <section className="card"><h2>C. Pricing and availability</h2>
-        <div className="form">
-          <Field label="Base price (PHP)" hint="Used for variants that have no price of their own."><input type="number" min={0} value={f.base_price ?? ""} onChange={(e) => set("base_price", e.target.value)} /></Field>
-          <Field label="Product availability"><select value={f.availability} onChange={(e) => set("availability", e.target.value)}><option value="available">Available</option><option value="ask">Inquire for availability</option><option value="unavailable">Currently unavailable</option></select></Field>
-          <div><Switch checked={f.show_price} onChange={(v) => set("show_price", v)}>Display price on the website</Switch>
-            <Switch checked={f.inquire_price} onChange={(v) => set("inquire_price", v)}>Inquire for pricing (hides the price)</Switch>
-            <small className="muted">A price is shown only when display price is on and inquire for pricing is off.</small></div>
-        </div>
-      </section>
-
-      <section className="card"><h2>Product variants</h2>
-        <p className="muted">Each variant has its own price and availability. Variants do not share stock.</p>
-        {f.variants.length === 0 && <Empty>No variants yet. Add one if this product comes in different strengths or sizes.</Empty>}
-        {f.variants.map((v: any, i: number) => (
-          <div className="variant" key={v.id ?? i}>
-            <Field label="Variant name"><input value={v.name ?? ""} onChange={(e) => setVar(i, "name", e.target.value)} /></Field>
-            <Field label="Strength or specification"><input value={v.strength ?? ""} onChange={(e) => setVar(i, "strength", e.target.value)} /></Field>
-            <Field label="SKU or internal reference"><input value={v.sku ?? ""} onChange={(e) => setVar(i, "sku", e.target.value)} /></Field>
-            <Field label="Price (PHP)"><input type="number" min={0} value={v.price ?? ""} onChange={(e) => setVar(i, "price", e.target.value)} /></Field>
-            <Field label="Availability"><select value={v.availability ?? "available"} onChange={(e) => setVar(i, "availability", e.target.value)}><option value="available">Available</option><option value="ask">Inquire</option><option value="unavailable">Unavailable</option></select></Field>
-            <Field label="Variant"><select value={v.status ?? "published"} onChange={(e) => setVar(i, "status", e.target.value)}><option value="published">Enabled</option><option value="draft">Disabled</option></select></Field>
-            <div className="actions">
-              <button type="button" className="btn ghost sm" aria-label="Move up" onClick={() => move(i, -1)}>Up</button>
-              <button type="button" className="btn ghost sm" aria-label="Move down" onClick={() => move(i, 1)}>Down</button>
-              <ConfirmButton className="btn danger sm" message="Remove this variant?" onConfirm={() => set("variants", f.variants.filter((_: any, j: number) => j !== i))}>Remove</ConfirmButton>
+      <div className="split">
+        <div className="split-main">
+          <section className="card"><h2>Basics</h2>
+            <div className="form">
+              <Field label="Product name"><input value={f.name} onChange={(e) => { set("name", e.target.value); if (!slugEdited) set("slug", e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")); }} /></Field>
+              <Field label="Category"><select value={f.category_id} onChange={(e) => set("category_id", e.target.value)}><option value="">Choose a category</option>{cats.data?.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select></Field>
+              <Field label="Short description" wide><input value={f.short_description} maxLength={400} onChange={(e) => set("short_description", e.target.value)} /></Field>
+              <Field label="Full description" wide hint="Plain text. Only add content the client has verified."><textarea value={f.full_description} onChange={(e) => set("full_description", e.target.value)} /></Field>
             </div>
-          </div>
-        ))}
-        <p><button type="button" className="btn ghost" onClick={() => set("variants", [...f.variants, { name: "", strength: "", price: "", availability: "available", status: "published" }])}>Add variant</button></p>
-      </section>
+          </section>
 
-      <section className="card"><h2>Regulatory review</h2>
-        <p className="muted">Only products verified as legally authorized for their intended sale and promotion in the Philippines may be published. Account approval for a customer never makes a product available. Moving a product out of Verified takes it off the catalog immediately.</p>
-        <div className="form">
-          <Field label="Regulatory review status"><select value={f.regulatory_status} onChange={(e) => set("regulatory_status", e.target.value)}>
-            <option value="pending_review">Pending review</option><option value="verified">Verified for intended sale</option><option value="not_cleared">Not cleared</option></select></Field>
-          <div><span className="lbl">Current</span><p><Badge value={f.regulatory_status} /></p></div>
-        </div>
-        {f.regulatory_status !== "verified" && <p className="note">This product cannot be published until it is marked Verified for intended sale.</p>}
-      </section>
+          <section className="card"><h2>Photos</h2>
+            <p className="muted">Private: shown only to approved customers.</p>
+            <ImageField kind="catalog" label="Main photo" value={f.main_image} onChange={(u) => set("main_image", u)} />
+            <div style={{ marginTop: "1rem" }}>
+              <span className="lbl">More photos</span>
+              <div className="imgrow" style={{ flexWrap: "wrap", marginTop: ".4rem" }}>
+                {f.images.map((u: string, i: number) => <div key={u + i}><SafeImg src={u} tile="noimg" /><button type="button" className="btn ghost sm" onClick={() => set("images", f.images.filter((_: string, j: number) => j !== i))}>Remove</button></div>)}
+                <ImageField kind="catalog" label="" value={null} onChange={(u) => u && set("images", [...f.images, u])} />
+              </div>
+            </div>
+          </section>
 
-      <section className="card"><h2>D. Publication controls</h2>
-        <p className="muted">Draft, unpublished and archived products are never visible to customers. Current status: <Badge value={f.status} /></p>
-        <div className="actions">
-          <button className="btn ghost" disabled={busy} onClick={() => save("draft")}>Save as Draft</button>
-          <button className="btn pink" disabled={busy || f.regulatory_status !== "verified"} title={f.regulatory_status !== "verified" ? "Mark the product Verified for intended sale first" : ""} onClick={() => save("published")}>{f.status === "published" ? "Save and Keep Published" : "Publish Product"}</button>
-          {f.status === "published" && <button className="btn ghost" disabled={busy} onClick={() => save("unpublished")}>Unpublish Product</button>}
-          {!isNew && f.status !== "archived" && <ConfirmButton className="btn danger" message="Archive this product? It will be removed from the private catalog." onConfirm={() => save("archived")}>Archive Product</ConfirmButton>}
-          {f.status === "archived" && <button className="btn ghost" disabled={busy} onClick={() => save("draft")}>Restore as Draft</button>}
-          {dirty && <span className="muted">Unsaved changes</span>}
+          <section className="card"><h2>Price and availability</h2>
+            <div className="form">
+              <Field label="Base price (PHP)" hint="Used for variants without a price of their own."><input type="number" min={0} value={f.base_price ?? ""} onChange={(e) => set("base_price", e.target.value)} /></Field>
+              <Field label="Availability"><select value={f.availability} onChange={(e) => set("availability", e.target.value)}><option value="available">Available</option><option value="ask">Inquire for availability</option><option value="unavailable">Currently unavailable</option></select></Field>
+              <div className="wide"><Switch checked={f.show_price} onChange={(v) => set("show_price", v)}>Show the price to customers</Switch>
+                <Switch checked={f.inquire_price} onChange={(v) => set("inquire_price", v)}>Ask customers to inquire for the price instead</Switch>
+                <small className="muted">A price is shown only when the first is on and the second is off.</small></div>
+            </div>
+          </section>
+
+          <section className="card"><h2>Variants</h2>
+            <p className="muted">Each variant has its own price and availability. Variants do not share stock.</p>
+            {f.variants.length === 0 && <p className="muted">No variants yet. Add one if this product comes in different strengths or sizes.</p>}
+            {f.variants.map((v: any, i: number) => (
+              <div className="variant" key={v.id ?? i}>
+                <Field label="Name"><input value={v.name ?? ""} onChange={(e) => setVar(i, "name", e.target.value)} /></Field>
+                <Field label="Strength or size"><input value={v.strength ?? ""} onChange={(e) => setVar(i, "strength", e.target.value)} /></Field>
+                <Field label="SKU"><input value={v.sku ?? ""} onChange={(e) => setVar(i, "sku", e.target.value)} /></Field>
+                <Field label="Price (PHP)"><input type="number" min={0} value={v.price ?? ""} onChange={(e) => setVar(i, "price", e.target.value)} /></Field>
+                <Field label="Availability"><select value={v.availability ?? "available"} onChange={(e) => setVar(i, "availability", e.target.value)}><option value="available">Available</option><option value="ask">Inquire</option><option value="unavailable">Unavailable</option></select></Field>
+                <Field label="Shown to customers"><select value={v.status ?? "published"} onChange={(e) => setVar(i, "status", e.target.value)}><option value="published">Yes</option><option value="draft">No</option></select></Field>
+                <div className="actions">
+                  <button type="button" className="btn ghost sm" aria-label="Move up" onClick={() => move(i, -1)}>Up</button>
+                  <button type="button" className="btn ghost sm" aria-label="Move down" onClick={() => move(i, 1)}>Down</button>
+                  <ConfirmButton className="btn danger sm" message="Remove this variant?" onConfirm={() => set("variants", f.variants.filter((_: any, j: number) => j !== i))}>Remove</ConfirmButton>
+                </div>
+              </div>
+            ))}
+            <p><button type="button" className="btn ghost" onClick={() => set("variants", [...f.variants, { name: "", strength: "", price: "", availability: "available", status: "published" }])}>Add a variant</button></p>
+          </section>
+
+          <section className="card"><h2>Product details</h2>
+            <p className="muted">Only add information the client has supplied and verified.</p>
+            <div className="form">
+              <Field label="Overview" wide><textarea value={f.overview} onChange={(e) => set("overview", e.target.value)} /></Field>
+              <Field label="Specifications" wide hint="One line per item."><textarea value={f.specifications} onChange={(e) => set("specifications", e.target.value)} /></Field>
+              <Field label="Packaging"><textarea value={f.packaging} onChange={(e) => set("packaging", e.target.value)} /></Field>
+              <Field label="Storage"><textarea value={f.storage} onChange={(e) => set("storage", e.target.value)} /></Field>
+            </div>
+            <details className="more"><summary>More details (optional)</summary>
+              <div className="form">
+                <Field label="Listed contents" wide><textarea value={f.composition} onChange={(e) => set("composition", e.target.value)} /></Field>
+                <Field label="Additional notes" wide><textarea value={f.notes} onChange={(e) => set("notes", e.target.value)} /></Field>
+                <Field label="Registration type"><input value={f.reg_type ?? ""} onChange={(e) => set("reg_type", e.target.value)} /></Field>
+                <Field label="Registration number"><input value={f.reg_number ?? ""} onChange={(e) => set("reg_number", e.target.value)} /></Field>
+                <Field label="Registration holder"><input value={f.reg_holder ?? ""} onChange={(e) => set("reg_holder", e.target.value)} /></Field>
+                <Field label="Web address (slug)" hint="Made from the name. Change only if you need to."><input value={f.slug} onChange={(e) => { setSlugEdited(true); set("slug", e.target.value); }} /></Field>
+                <Field label="Display order" hint="Lower numbers appear first."><input type="number" value={f.sort} onChange={(e) => set("sort", e.target.value)} /></Field>
+              </div>
+            </details>
+            {!isNew && <p><Link to={`/information?product=${id}`}>Edit the rich-text information sections and guidelines for this product</Link></p>}
+          </section>
         </div>
-        <p className="muted">{label(f.status)} products can be changed at any time. Products referenced by orders are never deleted, only archived.</p>
-      </section>
+
+        <aside className="rail" aria-label="Publishing">
+          <section className="card">
+            <h2>Publishing</h2>
+            <p className="railrow"><span className="muted">Status</span><Badge value={f.status} /></p>
+            <Field label="Regulatory review">
+              <select value={f.regulatory_status} onChange={(e) => set("regulatory_status", e.target.value)}>
+                <option value="pending_review">Pending review</option><option value="verified">Verified for intended sale</option><option value="not_cleared">Not cleared</option>
+              </select>
+            </Field>
+            <p className="muted small">Only products verified for their intended sale and promotion in the Philippines can be published. Leaving Verified takes a product off the catalog at once.</p>
+            {!verified && <p className="note">Mark this product Verified to enable Publish.</p>}
+            <div className="stackbtns">
+              <button className="btn" disabled={busy} onClick={() => save()}>{dirty ? "Save changes" : "Save"}</button>
+              {f.status !== "published" && <button className="btn ghost" disabled={busy || !verified} title={!verified ? "Mark the product Verified first" : ""} onClick={() => save("published")}>Publish</button>}
+              {f.status === "published" && <button className="btn ghost" disabled={busy} onClick={() => save("unpublished")}>Unpublish</button>}
+              {f.status === "archived" && <button className="btn ghost" disabled={busy} onClick={() => save("draft")}>Restore as draft</button>}
+              {!isNew && f.status !== "archived" && <ConfirmButton className="btn danger" message="Archive this product? It will be removed from the private catalog." onConfirm={() => save("archived")}>Archive</ConfirmButton>}
+            </div>
+            {dirty && <p className="muted small" role="status">You have unsaved changes.</p>}
+            <p className="muted small">Products used by orders are never deleted, only archived. Draft, unpublished and archived products are never shown to customers.</p>
+          </section>
+        </aside>
+      </div>
     </>
   );
 }

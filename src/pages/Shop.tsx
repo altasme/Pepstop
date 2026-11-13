@@ -5,10 +5,8 @@ import { useRemote } from "../lib/remote";
 import { getCategories, getProducts } from "../content/getContent";
 import { Seo } from "../lib/seo";
 import { PageBanner } from "../components/sections/PageBanner";
-import { ContactBlock } from "../components/sections/ContactBlock";
 import { ProductCard } from "../components/ui/ProductCard";
 import { Button } from "../components/ui/Button";
-import { Disclaimer } from "../components/ui/Disclaimer";
 
 type Sort = keyof typeof SHOP.sorts;
 const minPrice = (p: ReturnType<typeof getProducts>[number]) => Math.min(...p.variants.map((v) => v.pricePhp ?? Infinity));
@@ -84,9 +82,7 @@ export default function Shop() {
             )}
           </>
         )}
-        <Disclaimer text={SHOP.productDisclaimer} className="mt-12" />
       </section>
-      <ContactBlock />
     </>
   );
 }

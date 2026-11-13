@@ -5,7 +5,6 @@ import { HEALTH_BEAUTY, UI } from "../content/site";
 import { getArticlesForFocusArea, getFocusAreas } from "../content/getContent";
 import { Seo } from "../lib/seo";
 import { PageBanner } from "../components/sections/PageBanner";
-import { ContactBlock } from "../components/sections/ContactBlock";
 import { SlotImage } from "../components/ui/SlotImage";
 import { Button } from "../components/ui/Button";
 import { Disclaimer } from "../components/ui/Disclaimer";
@@ -57,7 +56,6 @@ export default function HealthBeauty() {
         </section>
         <Disclaimer text={`${HEALTH_BEAUTY.disclaimerLead} ${UI.disclaimer}`} className="pb-14" />
       </div>
-      <ContactBlock />
     </>
   );
 }

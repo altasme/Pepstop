@@ -86,6 +86,7 @@ export async function handleAdmin(req: Request, env: Env, url: URL): Promise<Res
   const [a, b, d] = seg;
   const key = `${method} ${a}`;
   switch (key) {
+    case "GET counts": return counts(c);
     case "GET dashboard": return dashboard(c);
     case "GET settings": return json(await getSettings(env));
     case "PUT settings": return putSettings(c);
@@ -192,6 +193,14 @@ async function resetPassword(c: Ctx): Promise<Response> {
 
 /* ---------------- dashboard, settings, logs ---------------- */
 
+/** Work waiting for the administrator. One cheap read, polled by the admin menu badges. */
+async function counts(c: Ctx) {
+  const row = await c.env.DB.prepare(
+    "SELECT (SELECT COUNT(*) FROM customers WHERE status='pending') AS customers, (SELECT COUNT(*) FROM orders WHERE order_status='new_order') AS orders, (SELECT COUNT(*) FROM payments WHERE status='submitted') AS payments, (SELECT COUNT(*) FROM customer_inquiries WHERE status='new' AND archived=0) AS inquiries",
+  ).first<{ customers: number; orders: number; payments: number; inquiries: number }>();
+  return json(row ?? { customers: 0, orders: 0, payments: 0, inquiries: 0 });
+}
+
 async function dashboard(c: Ctx) {
   const q = async (sql: string) => (await c.env.DB.prepare(sql).first<{ n: number }>())?.n ?? 0;
   const all = c.env.DB;
@@ -215,7 +224,7 @@ async function dashboard(c: Ctx) {
     latestOrders: await rows("SELECT id,ref,full_name,total,order_status,created_at FROM orders ORDER BY created_at DESC LIMIT 5"),
     updatedProducts: await rows("SELECT id,name,status,updated_at FROM products ORDER BY updated_at DESC LIMIT 5"),
     coas: await rows("SELECT id,title,batch,uploaded_at FROM coa_documents ORDER BY uploaded_at DESC LIMIT 5"),
-    activity: await rows("SELECT at,username,action,entity FROM admin_activity_logs ORDER BY at DESC LIMIT 8"),
+    activity: await rows("SELECT at,username,action,entity FROM admin_activity_logs WHERE action NOT IN ('login','logout','login_failed') ORDER BY at DESC LIMIT 8"),
   });
 }
 

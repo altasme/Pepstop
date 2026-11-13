@@ -58,6 +58,41 @@ typography:
     fontSize: "1rem"
     fontWeight: 600
     lineHeight: 1
+  admin-title:
+    fontFamily: "Bodoni Moda, Georgia, serif"
+    fontSize: "2rem"
+    fontWeight: 500
+    lineHeight: 1.1
+  admin-heading:
+    fontFamily: "Hanken Grotesk, system-ui, sans-serif"
+    fontSize: "1.0625rem"
+    fontWeight: 600
+    lineHeight: 1.3
+  admin-table:
+    fontFamily: "Hanken Grotesk, system-ui, sans-serif"
+    fontSize: "0.9375rem"
+    fontWeight: 400
+    lineHeight: 1.5
+  admin-dense:
+    fontFamily: "Hanken Grotesk, system-ui, sans-serif"
+    fontSize: "0.875rem"
+    fontWeight: 500
+    lineHeight: 1.5
+  admin-badge:
+    fontFamily: "Hanken Grotesk, system-ui, sans-serif"
+    fontSize: "0.8125rem"
+    fontWeight: 600
+    lineHeight: 1.4
+  admin-lockup:
+    fontFamily: "Bodoni Moda, Georgia, serif"
+    fontSize: "1.3rem"
+    fontWeight: 600
+    lineHeight: 1
+  admin-auth-line:
+    fontFamily: "Bodoni Moda, Georgia, serif"
+    fontSize: "clamp(1.9rem, 1.3rem + 1.8vw, 2.8rem)"
+    fontWeight: 500
+    lineHeight: 1.08
 rounded:
   sm: "8px"
   md: "12px"
@@ -344,13 +379,30 @@ Tokens: one easing, `--ease` and Tailwind `ease-out`, cubic-bezier(0.22, 1, 0.36
 - **Don't** invent photography, testimonials, ratings or claims to fill a slot.
 - **Don't** use hype words such as miracle, breakthrough or guaranteed in any copy.
 
-## Admin panel (v1.22)
+## Admin panel (v1.22, revised v1.23)
 
-The admin panel at `/admin` uses the same brand system as the public site, tuned for dense, repeated work.
+The admin panel at `/admin` is an Operate surface: the person using it is completing a task, so the brand is carried by precise details and the structure is built for scanning, not display.
 
-- **Ground and chrome:** claret `#5A0118` sidebar with the logo badge on a white disc, the Bodoni wordmark, a gold hairline under the lockup, and a small sparkle note at the foot. The content area is a barely pink white `#FFF8FA` with white cards at 20px radius and petal `#FFEEF2` table headers.
-- **Type:** Bodoni Moda for page titles, card headings and the large figures on dashboard tiles; Hanken Grotesk for everything else. Both are bundled with the admin app.
-- **Colour roles:** raspberry `#C30239` is the action colour (primary buttons); claret is the dark ground and heading colour; gold is a hairline, the active-item bar and the sparkle only; status badges use green, amber and raspberry-tinted pairs that all pass AA.
-- **Sign-in, password change and reset:** a claret brand panel with a headline and twinkling sparkles beside a white form card; on phones the panel collapses to a compact header.
-- **Motion:** only the sparkle twinkle and short colour transitions, all switched off under `prefers-reduced-motion`.
+- **Ground and chrome:** claret `#5A0118` sidebar with the logo badge on a white disc, the Bodoni wordmark and a gold hairline under the lockup. The content area is a barely pink white `#FFF8FA` with white surfaces at 20px radius and petal `#FFEEF2` table headers. Surfaces carry a hairline and no shadow; only things that float (the row menu, toasts) have one.
+- **Navigation:** grouped by the job being done, with plain sentence-case group labels (Work, Catalog, Website, System): Dashboard; Orders, Customers, Inquiries; Products, Categories, Certificates, Product information; Website content; Activity log, Settings. Variants live inside Products. The active item is marked by a gold sparkle on a soft highlight, never a side stripe. Signed-in name and Log out sit in the sidebar footer, not in the list.
+- **Notification counters:** Orders (new orders not yet reviewed), Customers (registrations waiting for approval) and Inquiries (new) carry a white pill with the count in claret. The browser tab title shows the total ("(3) The Pep Stop Admin"). Counts refresh every 30 seconds while the tab is visible, when the tab regains focus and on each page change, and a toast announces anything new that arrives. Nothing is shown at zero.
+- **Dashboard:** leads with "Needs your attention", a plain list of what is waiting, each as a sentence with one button, or an all-caught-up line. Totals follow as a compact "At a glance" list, then the latest orders, registrations waiting and recent activity. There are no stat tiles and routine sign-ins are left out of the activity list.
+- **Tables:** the name or reference is the primary action. Secondary actions sit in one "More" overflow menu that is fixed-position, so a scrolling table never clips it; it closes on Escape and outside click. Orders show one combined status with the payment method and payment state as a quiet second line. Numbers do not wrap.
+- **Forms:** long forms use a main column and a sticky right rail holding status, regulatory review and the publish controls, so they never scroll out of view. Optional fields sit under "More details". On narrow screens the rail moves to the top.
+- **Type (dense scale):** Bodoni Moda for the page title and the sign-in headline only; everything else is Hanken Grotesk. Sizes are fixed rem, not fluid: 15px body and table text, 14px for labels, helper text, breadcrumbs and table headers, 13px for badges only. Nothing else goes below 14px.
+- **Targets:** 44px for every control on touch devices, including small buttons, row-menu triggers and links in tables; 20px checkboxes.
+- **Empty states:** plain text inside a card; a quiet bordered panel only when it is the whole page. No dashed boxes.
+- **Sign-in, password change and reset:** a claret brand panel with a headline and twinkling sparkles beside a white form card; no label above the headline. On phones the panel collapses to a compact header and the sparkles are not shown.
+- **Motion:** only the sparkle twinkle and short colour transitions, switched off under `prefers-reduced-motion`.
 - **Decision:** the admin specification suggested navy and deep blue accents. The client asked for the admin to be fully branded, so the brand palette is used instead.
+
+## Public site refinements (v1.23)
+
+Applied after an Impeccable critique, keeping the client's wording and changing structure only.
+
+- **Home** runs six bands, not nine: hero, collections ticker, collections with a single Pep Match button, one merged section for "More Than a Collection" and "A Better Way to Explore Wellness", the three steps, and one closing contact band. The three pillars are a hairline list, not cards. The second header row of collection links is gone; collections remain in the footer, on Home and on Health & Beauty.
+- **Ornament is rationed:** page banners carry one sparkle and no sprig; the sprig lives in the closing contact band, the footer, the 404 and empty states; the hero uses three sparkles.
+- **Product photos** sit in a fixed square frame. With no photo, or if the file fails, a quiet petal tile with one sparkle stands in; customers never see a broken-image icon or a developer placeholder. Prices drop empty decimals (PHP 650).
+- **Product page** shows only what exists: empty accordions are not rendered, one assurance line replaces the list, and the disclaimer appears once.
+- **Checkout** marks required fields, asks for a numeric keyboard on the postal code, and links to the order summary from the top on phones.
+- **The contact band** closes Home and About only; other pages end on their own call to action and the footer.

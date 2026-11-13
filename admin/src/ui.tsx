@@ -40,6 +40,35 @@ export function useLoad<T>(fn: () => Promise<T>, deps: unknown[]) {
 
 export const Loading = () => <p className="muted" role="status">Loading...</p>;
 export const Empty = ({ children }: { children: ReactNode }) => <p className="empty">{children}</p>;
+
+/** Overflow menu for the secondary actions of a table row. Closes on outside click and Escape. */
+export function RowMenu({ label: l, children }: { label: string; children: ReactNode }) {
+  const ref = useRef<HTMLDetailsElement>(null);
+  const menu = useRef<HTMLDivElement>(null);
+  const place = () => {
+    const d = ref.current, m = menu.current;
+    if (!d?.open || !m) return;
+    const r = d.getBoundingClientRect();
+    const h = m.offsetHeight, w = m.offsetWidth;
+    // Fixed position: a table's scroll box cannot clip it. Open upward when there is no room below.
+    m.style.left = `${Math.max(8, Math.min(window.innerWidth - w - 8, r.right - w))}px`;
+    m.style.top = `${r.bottom + h + 8 > window.innerHeight ? Math.max(8, r.top - h - 4) : r.bottom + 4}px`;
+  };
+  useEffect(() => {
+    const close = () => { if (ref.current?.open) ref.current.open = false; };
+    const outside = (e: Event) => { if (ref.current?.open && !(e.target instanceof Node && ref.current.contains(e.target))) close(); };
+    const esc = (e: KeyboardEvent) => { if (e.key === "Escape" && ref.current?.open) { close(); ref.current?.querySelector("summary")?.focus(); } };
+    document.addEventListener("click", outside); document.addEventListener("keydown", esc);
+    window.addEventListener("scroll", close, true); window.addEventListener("resize", close);
+    return () => { document.removeEventListener("click", outside); document.removeEventListener("keydown", esc); window.removeEventListener("scroll", close, true); window.removeEventListener("resize", close); };
+  }, []);
+  return (
+    <details className="rowmenu" ref={ref} onToggle={place}>
+      <summary aria-label={l}>More</summary>
+      <div className="menu" ref={menu} onClick={() => { if (ref.current) ref.current.open = false; }}>{children}</div>
+    </details>
+  );
+}
 export const ErrorNote = ({ text }: { text: string | null }) => (text ? <p className="note error" role="alert">{text}</p> : null);
 
 /* ---- small parts ---- */
@@ -54,7 +83,7 @@ export function PageHead({ title, crumbs, children }: { title: string; crumbs?: 
   return (
     <header className="page-head">
       <div>
-        <nav aria-label="Breadcrumb" className="crumbs">{["Admin", ...(crumbs ?? [title])].join(" / ")}</nav>
+        {crumbs && crumbs.length > 1 && <nav aria-label="Breadcrumb" className="crumbs">{crumbs.join(" / ")}</nav>}
         <h1>{title}</h1>
       </div>
       <div className="actions">{children}</div>
@@ -102,6 +131,13 @@ export function useUnsavedWarning(dirty: boolean) {
   }, [dirty]);
 }
 
+/** Image that never shows a broken-image icon: if the file cannot load, a quiet tile stands in. */
+export function SafeImg({ src, className, tile }: { src: string; className?: string; tile: string }) {
+  const [failed, setFailed] = useState(false);
+  if (failed) return <span className={tile} role="img" aria-label="Image unavailable" />;
+  return <img src={src} alt="" className={className} onError={() => setFailed(true)} />;
+}
+
 /* ---- image upload ---- */
 /** kind "catalog" stores private product images (approved customers only); "image" stores public site images. */
 export function ImageField({ value, onChange, label: l, kind = "image" }: { value: string | null; onChange: (url: string | null) => void; label: string; kind?: "image" | "catalog" }) {
@@ -112,7 +148,7 @@ export function ImageField({ value, onChange, label: l, kind = "image" }: { valu
     <div className="imgfield">
       <span className="lbl">{l}</span>
       <div className="imgrow">
-        {value ? <img src={value} alt="" /> : <div className="noimg">No image</div>}
+        {value ? <SafeImg src={value} tile="noimg" /> : <div className="noimg">No image</div>}
         <div>
           <input ref={ref} type="file" accept="image/png,image/jpeg,image/webp" hidden onChange={async (e) => {
             const f = e.target.files?.[0]; if (!f) return;

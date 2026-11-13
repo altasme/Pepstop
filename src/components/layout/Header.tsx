@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { Menu } from "lucide-react";
 import { HOME, NAV, UI } from "../../content/site";
 import { primaryCta } from "../../lib/cta";
 import { trackCta } from "../../lib/analytics";
 import { Logo } from "../ui/Logo";
 import { Sparkle } from "../ui/Sparkle";
-import { getFocusAreas } from "../../content/getContent";
 import { MobileNav } from "./MobileNav";
 import { CartButton } from "./CartButton";
 import { AccountLink } from "./AccountLink";
@@ -15,7 +14,6 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
-  const areas = getFocusAreas();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -72,15 +70,6 @@ export function Header() {
             </button>
           </div>
         </div>
-        <nav aria-label={UI.collectionsBarLabel} className="hidden border-t border-line lg:block">
-          <ul className="mx-auto flex max-w-page items-center justify-center gap-1 px-8">
-            {areas.map((a) => (
-              <li key={a.id}>
-                <Link to={`/shop?cat=${a.id}`} className="inline-flex min-h-11 items-center px-4 text-sm font-medium text-ink/80 transition-colors hover:text-raspberry">{a.title}</Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
         <MobileNav open={open} onClose={() => setOpen(false)} />
       </header>
     </>

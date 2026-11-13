@@ -1,28 +1,28 @@
 import { HOME } from "../../content/site";
 import { SectionHeading } from "../ui/SectionHeading";
 import { RuleItem } from "../ui/RuleItem";
-import { Sparkle } from "../ui/Sparkle";
 
 /** The sequence carries information, so the steps are numbered; the rule draws from step to step. */
 export function HowItWorks() {
   return (
     <section className="bg-white">
-      <div className="mx-auto max-w-page px-4 py-16 sm:px-6 md:py-24 lg:px-8">
+      <div className="mx-auto max-w-page px-4 py-12 sm:px-6 md:py-24 lg:px-8">
         <SectionHeading title={HOME.howTitle} />
         <p className="mt-4 max-w-prose text-lg text-ink/80">{HOME.howIntro}</p>
-        <ol className="mt-10 grid gap-8 md:grid-cols-3 md:gap-10">
+        <ol className="mt-8 grid gap-6 md:mt-10 md:grid-cols-3 md:gap-10">
           {HOME.howSteps.map((s, i) => (
             <RuleItem key={s.title} delay={i * 220}>
-              <span className="flex items-center gap-3">
-                <span className="font-display text-5xl font-medium leading-none text-raspberry">{i + 1}</span>
-                {i < HOME.howSteps.length - 1 && <Sparkle className="twinkle hidden h-3 w-3 md:block" />}
-              </span>
-              <h3 className="mt-3 text-h3 font-semibold text-ink">{s.title}</h3>
-              <p className="mt-2 max-w-[36ch] text-ink/80">{s.body}</p>
+              <div className="flex gap-4 md:block">
+                <span className="font-display text-4xl font-medium leading-none text-raspberry md:text-5xl">{i + 1}</span>
+                <div>
+                  <h3 className="text-h3 font-semibold text-ink md:mt-3">{s.title}</h3>
+                  <p className="mt-1.5 max-w-[36ch] text-ink/80 md:mt-2">{s.body}</p>
+                </div>
+              </div>
             </RuleItem>
           ))}
         </ol>
-        <p className="mt-10 max-w-prose text-sm text-ink/80">{HOME.howNote}</p>
+        <p className="mt-8 max-w-prose text-sm text-ink/80 md:mt-10">{HOME.howNote}</p>
       </div>
     </section>
   );

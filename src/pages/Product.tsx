@@ -9,7 +9,7 @@ import { UI } from "../content/site";
 import { useCart } from "../lib/cart";
 import { priceLabel, formatPhp } from "../lib/format";
 import { getChannels } from "../lib/cta";
-import { SlotImage } from "../components/ui/SlotImage";
+import { ProductImage } from "../components/ui/ProductImage";
 import { QuantityStepper } from "../components/ui/QuantityStepper";
 import { Button } from "../components/ui/Button";
 import { CtaButton } from "../components/ui/CtaButton";
@@ -33,6 +33,7 @@ function HtmlDetail({ title, html }: { title: string; html: string }) {
 
 function Detail({ title, children }: { title: string; children: string | string[] }) {
   const items = (Array.isArray(children) ? children : [children]).filter(Boolean);
+  if (items.length === 0) return null; // nothing supplied yet: no empty accordion
   return (
     <details className="group border-b border-line" open={false}>
       <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 text-base font-semibold text-ink [&::-webkit-details-marker]:hidden">
@@ -80,7 +81,7 @@ export default function Product() {
         {product.isSample && <p role="note" className="mt-3 rounded-lg bg-petal px-4 py-3 text-sm font-medium text-ink">{SHOP.sampleNote}</p>}
         <div className="mt-6 grid gap-8 md:grid-cols-[1.1fr_0.9fr] md:gap-14">
           <div className="md:sticky md:top-36 md:self-start">
-            <SlotImage slot="product" src={product.image} label={product.name} alt={product.name} priority sizes="(min-width: 768px) 52vw, 92vw" />
+            <ProductImage src={product.image} alt={product.name} priority sizes="(min-width: 768px) 52vw, 92vw" />
           </div>
           <div>
             <p className="text-sm text-mute">{getCategoryName(product.categoryId)}</p>
@@ -129,27 +130,16 @@ export default function Product() {
             </div>
             <div className="mt-1"><CtaButton channel={chat} label={SHOP.askAbout} variant="secondary" className="w-full" /></div>
 
-            <ul className="mt-6 space-y-2 text-sm text-ink/80">
-              {SHOP.assurance.map((a) => (
-                <li key={a} className="flex items-center gap-2"><Check className="h-4 w-4 shrink-0 text-raspberry" strokeWidth={2} aria-hidden="true" />{a}</li>
-              ))}
-            </ul>
-            <p className="mt-5 text-sm text-mute">
-              <span className="font-semibold text-ink">{SHOP.payWith}:</span> {PAYMENT_METHODS.filter((m) => m.enabled).map((m) => m.label).join(", ")}.
+            <p className="mt-5 flex items-start gap-2 text-sm text-ink/80">
+              <Check className="mt-0.5 h-4 w-4 shrink-0 text-raspberry" strokeWidth={2} aria-hidden="true" />
+              <span>{SHOP.assurance[1]}. {SHOP.payWith}: {PAYMENT_METHODS.filter((m) => m.enabled).map((m) => m.label).join(", ")}.</span>
             </p>
-
-            <div className="mt-6 rounded-2xl bg-petal p-5">
-              <h2 className="font-sans text-base font-semibold text-ink">{SHOP.inquiryTitle}</h2>
-              <p className="mt-1 text-sm text-ink/80">{SHOP.inquiryBody}</p>
-            </div>
 
             <div className="mt-8 border-t border-line">
               {(product.overview || product.fullDescription) && <Detail title={SHOP.detailsTitle}>{product.overview || product.fullDescription}</Detail>}
               <Detail title={SHOP.specsTitle}>{product.specifications}</Detail>
-              <Detail title={SHOP.optionsTitle}>{product.variants.map((v) => v.label)}</Detail>
               <Detail title={SHOP.packagingTitle}>{product.packaging}</Detail>
               <Detail title={SHOP.storageTitle}>{product.storage}</Detail>
-              <Detail title={SHOP.documentsTitle}>{[]}</Detail>
               {product.composition && <Detail title={SHOP.compositionTitle}>{product.composition}</Detail>}
               {product.notes && <Detail title={SHOP.notesTitle}>{product.notes}</Detail>}
               {product.info?.filter((i) => i.html.trim()).map((i) => <HtmlDetail key={i.section} title={i.section === "guidelines" ? "Product guidelines" : i.section[0].toUpperCase() + i.section.slice(1)} html={i.html} />)}
@@ -159,9 +149,9 @@ export default function Product() {
                   <ul className="space-y-2 pb-5 text-ink/80">{product.coas.map((c) => <li key={c.id}>{c.title} ({SHOP.batchLabel}: {c.batch}) <a className="font-semibold text-raspberry underline" href={`/files/coa/${c.id}`} target="_blank" rel="noreferrer">{SHOP.coaOpen}</a></li>)}</ul>
                   <p className="pb-5 text-sm text-mute">{SHOP.coaNote}</p>
                 </details>
-              ) : <Detail title={SHOP.coaTitle}>{[]}</Detail>}
+              ) : null}
             </div>
-            <Disclaimer text={SHOP.productDisclaimer} className="mt-6" />
+            <Disclaimer text={SHOP.productDisclaimer} className="mt-6 text-sm" />
           </div>
         </div>
       </div>

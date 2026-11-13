@@ -94,11 +94,8 @@ export function Hero() {
           bloom
           spots={[
             { x: "52%", y: "12%", size: 24, delay: 0.2 },
-            { x: "70%", y: "9%", size: 14, delay: 1.1, fill: "#C30239" },
-            { x: "88%", y: "14%", size: 20, delay: 0.6 },
-            { x: "44%", y: "30%", size: 13, delay: 1.7, fill: "#C30239" },
-            { x: "46%", y: "84%", size: 17, delay: 0.9 },
-            { x: "96%", y: "8%", size: 12, delay: 2.1, fill: "#C30239" },
+            { x: "88%", y: "14%", size: 18, delay: 0.7, fill: "#C30239" },
+            { x: "44%", y: "30%", size: 12, delay: 1.4 },
           ]}
         />
       </div>
