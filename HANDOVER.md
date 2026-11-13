@@ -2,7 +2,7 @@
 
 **Built by:** Altaventures Business Development Services
 **Handover date:** 2026-11-11 · **Spec version built:** v1.20 (storefront added per client direction; logo and palette applied)
-**Preview URL:** https://pepstop.vanamaranto1.workers.dev (deployed 2026-11-11, noindex) · **Live URL:** not live: gates open · **Repo:** altasme/pepstop
+**Preview URL:** https://pepstop.altasmeworks.workers.dev (moved to the dedicated account 2026-11-13, noindex) · **Live URL:** not live: gates open · **Repo:** altasme/pepstop
 
 ## 1. What was delivered
 - Routes, all prerendered: `/`, `/about`, `/health-beauty`, `/education`, `/education/:slug` (published articles only; none published yet, so none generated), `/contact`, `/privacy`, `/404` plus `404.html`.
@@ -99,7 +99,7 @@
 - Tools: Cloudflare Web Analytics loads only when `ANALYTICS.cfBeaconToken` is set (★C8). Meta Pixel is not loaded; ID slot exists, public routes only. Conversion = outbound chat or call click. Events: `cta_*_click`, `article_view`, payloads `{ page, cta }` or `{ slug }` only. Events also dispatch a `pepstop:event` window event.
 
 ## 8. Accounts & infrastructure (pointers, never secrets)
-- Cloudflare Worker `pepstop` (account: Vanamaranto1@gmail.com's Account, subdomain `vanamaranto1`), owner Altaventures (see §2 for the account-separation recommendation in Appendix C-15)
+- Cloudflare Worker `pepstop` with D1 `pepstop_db` and R2 `pepstop-files`, in a dedicated account (Altasmeworks@gmail.com's Account, subdomain `altasmeworks`), separate from other Altaventures client sites as Appendix C-15 recommends. The earlier Worker on the shared account (`pepstop.vanamaranto1.workers.dev`) is superseded; remove it and its empty D1 database and R2 bucket there once the client confirms the new address.
 - Cloudinary: cloud name not set · Repo: altasme/pepstop
 
 ## 9. Known limitations / conflicts noted
@@ -108,7 +108,7 @@
 - **Client copy refresh (v1.18):** all page copy now follows the client's "E-Commerce Website Copy Refresh" document. Three calls to confirm with the client: cash on delivery is hidden (flip `PAYMENT_METHODS` in `site.ts` once supported); the document's eyebrow labels are not rendered; the audit exempts only the exact phrase "diagnosis, or treatment guidance" in the client's product disclaimer (the word "treat" is otherwise banned, spec section 12). The five category taglines and summaries are still the earlier v1.16 text; the client's document asks that taglines stay as they are, so confirm those too.
 - **Client imagery (v1.19):** the five collection images, brand story image and product image were supplied by the client and are wired in. The product and story images show branded gift boxes that look like rendered mockups, and some photographs may be AI-generated; CLAUDE.md §6 and §12.6 allow licensed imagery only, so the client must confirm origin and licence before launch. All six sample products currently share the one product image; replace per product when real photos exist.
 - **Admin panel built against the Phase 1 only rule (v1.20).** CLAUDE.md v1.1 to v1.19 reserved admin, database, COA and orders for Phase 2 and said not to build them. The client's Admin Panel specification asked for them, so v1.20 supersedes those rules. The reasons for the old rules still apply: product listings, prices, claims, documents and registration details are client content (Appendix B.1); ★G3 should be signed before real products go live; and the Appendix C-15 risk stands (see the shared-account note below).
-- **Shared Cloudflare account.** The D1 database and R2 bucket were created in the account that already hosts other client projects. Appendix C-15 recommends a separate account for this catalog. Raise with Chief Alta before launch; moving means recreating the bindings and running the migrations.
+- **Cloudflare account separation (done 2026-11-13).** The database, bucket and Worker were first created on the shared Altaventures account, then moved to a dedicated account per Appendix C-15. The Worker secrets must be set on the new account (`npx wrangler secret put`), and a custom domain, when added, goes on this account.
 - **Password hashing is PBKDF2-SHA256 (100,000 iterations), not Argon2id or bcrypt.** Neither is available in the Workers runtime and 100,000 is the platform maximum. Passwords are salted, never returned by the API, never in local storage. Sessions are random 256-bit tokens, stored hashed, in HttpOnly Secure SameSite=Strict cookies.
 - **Temporary password.** The specification contains the initial password in plain text. It is stored only as the Worker secret `ADMIN_BOOTSTRAP_PASSWORD`, never in source (the audit fails the build if it appears), and must be changed at first login. Because it travelled in a document and a chat, treat it as exposed and change it immediately.
 - **Categories.** The specification names four categories (Weight & Metabolic Research and others). The client's five categories (Weight & Wellness and others) were already live, and the specification says to preserve existing assignments, so the five are seeded and remain editable. The "Research" wording is not used on the site.
