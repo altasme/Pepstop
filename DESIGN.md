@@ -343,3 +343,14 @@ Tokens: one easing, `--ease` and Tailwind `ease-out`, cubic-bezier(0.22, 1, 0.36
 - **Don't** place sprigs or sparkles over text or controls, or show them on phones.
 - **Don't** invent photography, testimonials, ratings or claims to fill a slot.
 - **Don't** use hype words such as miracle, breakthrough or guaranteed in any copy.
+
+## Admin panel (v1.22)
+
+The admin panel at `/admin` uses the same brand system as the public site, tuned for dense, repeated work.
+
+- **Ground and chrome:** claret `#5A0118` sidebar with the logo badge on a white disc, the Bodoni wordmark, a gold hairline under the lockup, and a small sparkle note at the foot. The content area is a barely pink white `#FFF8FA` with white cards at 20px radius and petal `#FFEEF2` table headers.
+- **Type:** Bodoni Moda for page titles, card headings and the large figures on dashboard tiles; Hanken Grotesk for everything else. Both are bundled with the admin app.
+- **Colour roles:** raspberry `#C30239` is the action colour (primary buttons); claret is the dark ground and heading colour; gold is a hairline, the active-item bar and the sparkle only; status badges use green, amber and raspberry-tinted pairs that all pass AA.
+- **Sign-in, password change and reset:** a claret brand panel with a headline and twinkling sparkles beside a white form card; on phones the panel collapses to a compact header.
+- **Motion:** only the sparkle twinkle and short colour transitions, all switched off under `prefers-reduced-motion`.
+- **Decision:** the admin specification suggested navy and deep blue accents. The client asked for the admin to be fully branded, so the brand palette is used instead.
