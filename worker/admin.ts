@@ -4,7 +4,12 @@ import { clip, err, getSettings, hashPassword, intOrNull, ip, json, log, now, ra
 const COOKIE = "ps_admin";
 const IDLE_MS = 60 * 60 * 1000; // inactive sessions expire after 60 minutes
 const MAX_MS = 12 * 60 * 60 * 1000; // absolute session lifetime
-export const INFO_SECTIONS = ["overview", "general", "specifications", "guidelines", "storage", "handling", "supporting", "notes"];
+export const INFO_SECTIONS = ["overview", "general", "specifications", "manufacturer", "guidelines", "storage", "handling", "supporting", "notices", "notes"];
+const PUB_STATUSES = ["draft", "published", "unpublished", "archived"];
+const REG_STATUSES = ["pending_review", "verified", "not_cleared"];
+/** "Unpublished" is stored as a draft with unpublished = 1 (see migration 0003). */
+const toDb = (s: string) => (s === "unpublished" ? { status: "draft", unpublished: 1 } : { status: s, unpublished: 0 });
+const GATE_MESSAGE = "Only products verified for their intended sale and promotion can be published. Set the regulatory review status to Verified for Intended Sale first.";
 export const ORDER_STATUSES = ["new_order", "under_review", "awaiting_payment", "payment_submitted", "payment_verified", "processing", "ready_for_dispatch", "shipped", "completed", "cancelled"];
 const CONTENT_KEYS = ["home", "about", "contact", "footer"];
 
@@ -22,7 +27,7 @@ async function newSession(env: Env, adminId: string) {
   return token;
 }
 
-async function currentAdmin(req: Request, env: Env): Promise<Admin | null> {
+export async function currentAdmin(req: Request, env: Env): Promise<Admin | null> {
   const token = cookieOf(req);
   if (!token) return null;
   const id = await sha256(token);
@@ -85,6 +90,9 @@ export async function handleAdmin(req: Request, env: Env, url: URL): Promise<Res
     case "GET settings": return json(await getSettings(env));
     case "PUT settings": return putSettings(c);
     case "GET logs": return listLogs(c);
+    case "GET customers": return b ? customerProfile(c, b) : listCustomers(c);
+    case "POST customers": return b && d === "status" ? customerStatus(c, b) : err(404, "not_found");
+    case "PUT customers": return b ? saveCustomerNotes(c, b) : err(404, "not_found");
     case "GET variants": return json((await env.DB.prepare("SELECT v.*, p.name AS product_name FROM product_variants v JOIN products p ON p.id=v.product_id WHERE p.status!='archived' ORDER BY p.name, v.sort").all()).results);
     case "GET categories": return json((await env.DB.prepare("SELECT c.*, (SELECT COUNT(*) FROM products p WHERE p.category_id=c.id) AS products FROM categories c ORDER BY sort,name").all()).results);
     case "POST categories": return saveCategory(c, null);
@@ -190,17 +198,21 @@ async function dashboard(c: Ctx) {
   const rows = async (sql: string) => (await all.prepare(sql).all()).results;
   return json({
     cards: {
+      customers: await q("SELECT COUNT(*) n FROM customers"),
+      pendingCustomers: await q("SELECT COUNT(*) n FROM customers WHERE status='pending'"),
+      approvedCustomers: await q("SELECT COUNT(*) n FROM customers WHERE status='approved'"),
+      rejectedCustomers: await q("SELECT COUNT(*) n FROM customers WHERE status='rejected'"),
+      suspendedCustomers: await q("SELECT COUNT(*) n FROM customers WHERE status='suspended'"),
       totalProducts: await q("SELECT COUNT(*) n FROM products WHERE status!='archived'"),
       published: await q("SELECT COUNT(*) n FROM products WHERE status='published'"),
-      draft: await q("SELECT COUNT(*) n FROM products WHERE status='draft'"),
-      pendingOrders: await q("SELECT COUNT(*) n FROM orders WHERE order_status IN ('new_order','under_review','awaiting_payment')"),
-      processingOrders: await q("SELECT COUNT(*) n FROM orders WHERE order_status IN ('payment_submitted','payment_verified','processing','ready_for_dispatch','shipped')"),
-      completedOrders: await q("SELECT COUNT(*) n FROM orders WHERE order_status='completed'"),
+      unpublished: await q("SELECT COUNT(*) n FROM products WHERE status IN ('draft') AND status!='archived'"),
+      newOrders: await q("SELECT COUNT(*) n FROM orders WHERE order_status='new_order'"),
+      reviewOrders: await q("SELECT COUNT(*) n FROM orders WHERE order_status IN ('under_review','awaiting_payment','payment_submitted')"),
       pendingPayments: await q("SELECT COUNT(*) n FROM payments WHERE status='submitted'"),
       inquiries: await q("SELECT COUNT(*) n FROM customer_inquiries WHERE archived=0"),
     },
+    pendingList: await rows("SELECT id,full_name,phone,created_at FROM customers WHERE status='pending' ORDER BY created_at DESC LIMIT 5"),
     latestOrders: await rows("SELECT id,ref,full_name,total,order_status,created_at FROM orders ORDER BY created_at DESC LIMIT 5"),
-    newProducts: await rows("SELECT id,name,status,created_at FROM products ORDER BY created_at DESC LIMIT 5"),
     updatedProducts: await rows("SELECT id,name,status,updated_at FROM products ORDER BY updated_at DESC LIMIT 5"),
     coas: await rows("SELECT id,title,batch,uploaded_at FROM coa_documents ORDER BY uploaded_at DESC LIMIT 5"),
     activity: await rows("SELECT at,username,action,entity FROM admin_activity_logs ORDER BY at DESC LIMIT 8"),
@@ -214,6 +226,12 @@ async function putSettings(c: Ctx) {
     search_visibility: (v) => (v === "visible" || v === "hidden" ? v : null),
     delivery_fee: (v) => (v === "" || v === null ? "" : intOrNull(v) === null ? null : String(intOrNull(v))),
     cod_enabled: (v) => (v === "1" || v === "0" ? v : null),
+    disclose_rejection_reason: (v) => (v === "1" || v === "0" ? v : null),
+    registration_message: (v) => (typeof v === "string" && v.trim().length > 0 ? clip(v, 4000) : null),
+    contact_messenger: (v) => (typeof v === "string" && (v.trim() === "" || /^https:\/\//i.test(v.trim())) ? clip(v, 300) : null),
+    contact_whatsapp: (v) => (typeof v === "string" && (v.trim() === "" || /^\+?\d[\d\s-]{6,20}$/.test(v.trim())) ? clip(v, 30) : null),
+    contact_phone: (v) => (typeof v === "string" && (v.trim() === "" || /^\+?\d[\d\s-]{6,20}$/.test(v.trim())) ? clip(v, 30) : null),
+    payment_instructions: (v) => (typeof v === "string" ? clip(v, 4000) : null),
   };
   for (const [k, fn] of Object.entries(allowed)) {
     if (!(k in data)) continue;
@@ -267,12 +285,16 @@ async function listProducts(c: Ctx) {
   const where: string[] = []; const args: unknown[] = [];
   if (p.get("q")) { where.push("p.name LIKE ? ESCAPE '\\'"); args.push(likeEsc(p.get("q")!)); }
   if (p.get("category")) { where.push("p.category_id=?"); args.push(p.get("category")); }
-  if (p.get("status")) { where.push("p.status=?"); args.push(p.get("status")); } else where.push("p.status!='archived'");
+  const st = p.get("status");
+  if (st === "unpublished") where.push("p.status='draft' AND p.unpublished=1");
+  else if (st === "draft") where.push("p.status='draft' AND p.unpublished=0");
+  else if (st) { where.push("p.status=?"); args.push(st); } else where.push("p.status!='archived'");
+  if (p.get("regulatory")) { where.push("p.regulatory_status=?"); args.push(p.get("regulatory")); }
   if (p.get("availability")) { where.push("p.availability=?"); args.push(p.get("availability")); }
   const order = p.get("sort") === "name" ? "p.name COLLATE NOCASE" : "p.updated_at DESC";
   const w = where.length ? "WHERE " + where.join(" AND ") : "";
   const total = (await c.env.DB.prepare(`SELECT COUNT(*) n FROM products p ${w}`).bind(...args).first<{ n: number }>())!.n;
-  const rows = (await c.env.DB.prepare(`SELECT p.id,p.slug,p.name,p.main_image,p.base_price,p.availability,p.status,p.updated_at,c.name AS category,(SELECT COUNT(*) FROM product_variants v WHERE v.product_id=p.id) AS variants FROM products p LEFT JOIN categories c ON c.id=p.category_id ${w} ORDER BY ${order} LIMIT ? OFFSET ?`).bind(...args, per, offset).all()).results;
+  const rows = (await c.env.DB.prepare(`SELECT p.id,p.slug,p.name,p.main_image,p.base_price,p.availability,CASE WHEN p.status='draft' AND p.unpublished=1 THEN 'unpublished' ELSE p.status END AS status,p.regulatory_status,p.updated_at,c.name AS category,(SELECT COUNT(*) FROM product_variants v WHERE v.product_id=p.id) AS variants FROM products p LEFT JOIN categories c ON c.id=p.category_id ${w} ORDER BY ${order} LIMIT ? OFFSET ?`).bind(...args, per, offset).all()).results;
   return json({ total, rows });
 }
 
@@ -281,7 +303,8 @@ async function getProduct(c: Ctx, id: string) {
   if (!p) return err(404, "not_found");
   const variants = (await c.env.DB.prepare("SELECT * FROM product_variants WHERE product_id=? ORDER BY sort").bind(id).all()).results;
   const images = (await c.env.DB.prepare("SELECT * FROM product_images WHERE product_id=? ORDER BY sort").bind(id).all()).results;
-  return json({ ...p, variants, images });
+  const row = p as Record<string, any>;
+  return json({ ...row, status: row.status === "draft" && row.unpublished ? "unpublished" : row.status, variants, images });
 }
 
 async function saveProduct(c: Ctx, id: string | null) {
@@ -290,41 +313,57 @@ async function saveProduct(c: Ctx, id: string | null) {
   if (!d || !name) return err(400, "name_required");
   const { env } = c;
   const slug = await uniqueSlug(env, "products", slugify(clip(d.slug, 100) || name), id);
-  const status = ["draft", "published", "archived"].includes(d.status) ? d.status : "draft";
+  const wanted = PUB_STATUSES.includes(d.status) ? d.status : "draft";
   const avail = ["available", "ask", "unavailable"].includes(d.availability) ? d.availability : "ask";
+  const existing = id ? await env.DB.prepare("SELECT regulatory_status FROM products WHERE id=?").bind(id).first<{ regulatory_status: string }>() : null;
+  if (id && !existing) return err(404, "not_found");
+  const regulatory = REG_STATUSES.includes(d.regulatory_status) ? d.regulatory_status : (existing?.regulatory_status ?? "pending_review");
+  // Server-side gate: nothing is published without a verified regulatory status. The UI cannot bypass it.
+  if (wanted === "published" && regulatory !== "verified") return err(409, "regulatory_review_required", { message: GATE_MESSAGE });
+  const { status, unpublished } = toDb(wanted);
   const t = now();
   const vals = [name, slug, clip(d.short_description, 400), sanitizeHtml(clip(d.full_description, 20000)), clip(d.category_id, 80) || null, clip(d.main_image, 300) || null, intOrNull(d.sort) ?? 0,
     clip(d.overview, 5000), clip(d.specifications, 5000), clip(d.composition, 5000), clip(d.packaging, 2000), clip(d.storage, 2000), clip(d.notes, 5000),
     clip(d.reg_type, 80) || null, clip(d.reg_number, 80) || null, clip(d.reg_holder, 120) || null,
-    intOrNull(d.base_price), avail, d.show_price ? 1 : 0, d.inquire_price === false || d.inquire_price === 0 ? 0 : 1, status];
+    intOrNull(d.base_price), avail, d.show_price ? 1 : 0, d.inquire_price === false || d.inquire_price === 0 ? 0 : 1, status, regulatory, unpublished];
   const isNew = !id;
   if (isNew) {
     id = uid();
-    await env.DB.prepare("INSERT INTO products (name,slug,short_description,full_description,category_id,main_image,sort,overview,specifications,composition,packaging,storage,notes,reg_type,reg_number,reg_holder,base_price,availability,show_price,inquire_price,status,id,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)").bind(...vals, id, t, t).run();
+    await env.DB.prepare("INSERT INTO products (name,slug,short_description,full_description,category_id,main_image,sort,overview,specifications,composition,packaging,storage,notes,reg_type,reg_number,reg_holder,base_price,availability,show_price,inquire_price,status,regulatory_status,unpublished,id,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)").bind(...vals, id, t, t).run();
   } else {
-    const r = await env.DB.prepare("UPDATE products SET name=?,slug=?,short_description=?,full_description=?,category_id=?,main_image=?,sort=?,overview=?,specifications=?,composition=?,packaging=?,storage=?,notes=?,reg_type=?,reg_number=?,reg_holder=?,base_price=?,availability=?,show_price=?,inquire_price=?,status=?,updated_at=? WHERE id=?").bind(...vals, t, id).run();
+    const r = await env.DB.prepare("UPDATE products SET name=?,slug=?,short_description=?,full_description=?,category_id=?,main_image=?,sort=?,overview=?,specifications=?,composition=?,packaging=?,storage=?,notes=?,reg_type=?,reg_number=?,reg_holder=?,base_price=?,availability=?,show_price=?,inquire_price=?,status=?,regulatory_status=?,unpublished=?,updated_at=? WHERE id=?").bind(...vals, t, id).run();
     if (!r.meta.changes) return err(404, "not_found");
   }
   const pid = id as string;
   const stmts: D1PreparedStatement[] = [env.DB.prepare("DELETE FROM product_variants WHERE product_id=?").bind(pid), env.DB.prepare("DELETE FROM product_images WHERE product_id=?").bind(pid)];
   (Array.isArray(d.variants) ? d.variants : []).slice(0, 40).forEach((v: any, i: number) => {
     const vname = clip(v?.name, 100); if (!vname) return;
-    stmts.push(env.DB.prepare("INSERT INTO product_variants (id,product_id,name,strength,price,availability,image,sort,status) VALUES (?,?,?,?,?,?,?,?,?)")
-      .bind(clip(v.id, 40) || uid(), pid, vname, clip(v.strength, 100), intOrNull(v.price), ["available", "ask", "unavailable"].includes(v.availability) ? v.availability : "available", clip(v.image, 300) || null, i, v.status === "draft" ? "draft" : "published"));
+    stmts.push(env.DB.prepare("INSERT INTO product_variants (id,product_id,name,strength,sku,price,availability,image,sort,status) VALUES (?,?,?,?,?,?,?,?,?,?)")
+      .bind(clip(v.id, 40) || uid(), pid, vname, clip(v.strength, 100), clip(v.sku, 80), intOrNull(v.price), ["available", "ask", "unavailable"].includes(v.availability) ? v.availability : "available", clip(v.image, 300) || null, i, v.status === "draft" ? "draft" : "published"));
   });
   (Array.isArray(d.images) ? d.images : []).slice(0, 20).forEach((im: any, i: number) => {
     const u = clip(typeof im === "string" ? im : im?.image, 300); if (u) stmts.push(env.DB.prepare("INSERT INTO product_images (id,product_id,image,sort) VALUES (?,?,?,?)").bind(uid(), pid, u, i));
   });
   await env.DB.batch(stmts);
-  await log(env, c.admin, isNew ? "product_created" : status === "published" ? "product_published" : "product_updated", "product", pid, { name, status }, c.ip);
+  await log(env, c.admin, isNew ? "product_created" : wanted === "published" ? "product_published" : "product_updated", "product", pid, { name, status: wanted, regulatory }, c.ip);
   return json({ ok: true, id: pid, slug });
 }
 
 async function productStatus(c: Ctx, id: string) {
-  const d = await body<{ status?: string }>(c.req);
-  if (!d || !["draft", "published", "archived"].includes(d.status ?? "")) return err(400, "bad_status");
-  const r = await c.env.DB.prepare("UPDATE products SET status=?, updated_at=? WHERE id=?").bind(d.status, now(), id).run();
-  if (!r.meta.changes) return err(404, "not_found");
+  const d = await body<{ status?: string; regulatory_status?: string }>(c.req);
+  const p = await c.env.DB.prepare("SELECT regulatory_status FROM products WHERE id=?").bind(id).first<{ regulatory_status: string }>();
+  if (!p) return err(404, "not_found");
+  if (d?.regulatory_status !== undefined) {
+    if (!REG_STATUSES.includes(d.regulatory_status)) return err(400, "bad_status");
+    // Leaving "verified" takes a published product off the catalog immediately.
+    await c.env.DB.prepare("UPDATE products SET regulatory_status=?, status=CASE WHEN ?!='verified' AND status='published' THEN 'draft' ELSE status END, unpublished=CASE WHEN ?!='verified' AND status='published' THEN 1 ELSE unpublished END, updated_at=? WHERE id=?").bind(d.regulatory_status, d.regulatory_status, d.regulatory_status, now(), id).run();
+    await log(c.env, c.admin, "product_regulatory_status_changed", "product", id, { from: p.regulatory_status, to: d.regulatory_status }, c.ip);
+    return json({ ok: true });
+  }
+  if (!d || !PUB_STATUSES.includes(d.status ?? "")) return err(400, "bad_status");
+  if (d.status === "published" && p.regulatory_status !== "verified") return err(409, "regulatory_review_required", { message: GATE_MESSAGE });
+  const m = toDb(d.status!);
+  await c.env.DB.prepare("UPDATE products SET status=?, unpublished=?, updated_at=? WHERE id=?").bind(m.status, m.unpublished, now(), id).run();
   await log(c.env, c.admin, d.status === "archived" ? "product_archived" : d.status === "published" ? "product_published" : "product_unpublished", "product", id, undefined, c.ip);
   return json({ ok: true });
 }
@@ -335,7 +374,7 @@ async function duplicateProduct(c: Ctx, id: string) {
   const nid = uid(), t = now();
   const slug = await uniqueSlug(c.env, "products", `${p.slug}-copy`, null);
   await c.env.DB.prepare("INSERT INTO products (id,slug,name,short_description,full_description,category_id,main_image,sort,overview,specifications,composition,packaging,storage,notes,reg_type,reg_number,reg_holder,base_price,availability,show_price,inquire_price,status,created_at,updated_at) SELECT ?,?,name || ' (copy)',short_description,full_description,category_id,main_image,sort,overview,specifications,composition,packaging,storage,notes,reg_type,reg_number,reg_holder,base_price,availability,show_price,inquire_price,'draft',?,? FROM products WHERE id=?").bind(nid, slug, t, t, id).run();
-  await c.env.DB.prepare("INSERT INTO product_variants (id,product_id,name,strength,price,availability,image,sort,status) SELECT lower(hex(randomblob(16))),?,name,strength,price,availability,image,sort,status FROM product_variants WHERE product_id=?").bind(nid, id).run();
+  await c.env.DB.prepare("INSERT INTO product_variants (id,product_id,name,strength,sku,price,availability,image,sort,status) SELECT lower(hex(randomblob(16))),?,name,strength,sku,price,availability,image,sort,status FROM product_variants WHERE product_id=?").bind(nid, id).run();
   await c.env.DB.prepare("INSERT INTO product_images (id,product_id,image,sort) SELECT lower(hex(randomblob(16))),?,image,sort FROM product_images WHERE product_id=?").bind(nid, id).run();
   await log(c.env, c.admin, "product_duplicated", "product", nid, { from: id }, c.ip);
   return json({ ok: true, id: nid });
@@ -552,7 +591,8 @@ async function publishContent(c: Ctx, key: string, action: string) {
 /* ---------------- uploads and private files ---------------- */
 
 async function upload(c: Ctx, kind: string | undefined) {
-  if (!kind || !["image", "coa", "proof"].includes(kind)) return err(404, "not_found");
+  // image = public site images; catalog = private product images; coa = certificate PDFs; proof = payment proofs.
+  if (!kind || !["image", "catalog", "coa", "proof"].includes(kind)) return err(404, "not_found");
   const form = await c.req.formData().catch(() => null);
   const file = form?.get("file");
   if (!(file instanceof File)) return err(400, "file_required");
@@ -560,12 +600,13 @@ async function upload(c: Ctx, kind: string | undefined) {
   if (file.size > max) return err(413, "file_too_large");
   const bytes = new Uint8Array(await file.arrayBuffer());
   const type = sniff(bytes);
-  const ok = type && (kind === "coa" ? type.ext === "pdf" : kind === "image" ? type.ext !== "pdf" : true);
+  const ok = type && (kind === "coa" ? type.ext === "pdf" : kind === "image" || kind === "catalog" ? type.ext !== "pdf" : true);
   if (!ok) return err(415, "unsupported_file_type");
-  const key = `${kind === "image" ? "images" : kind}/${uid()}.${type.ext}`;
+  const dir = kind === "image" ? "images" : kind;
+  const key = `${dir}/${uid()}.${type.ext}`;
   await c.env.FILES.put(key, bytes, { httpMetadata: { contentType: type.mime } });
   await log(c.env, c.admin, "file_uploaded", kind, key, { size: file.size }, c.ip);
-  return json({ ok: true, key, url: kind === "image" ? `/files/${key}` : null, name: file.name.slice(0, 200), size: file.size });
+  return json({ ok: true, key, url: kind === "image" || kind === "catalog" ? `/files/${key}` : null, name: file.name.slice(0, 200), size: file.size });
 }
 
 async function adminFile(c: Ctx, kind: string | undefined, id: string | undefined) {
@@ -577,4 +618,61 @@ async function adminFile(c: Ctx, kind: string | undefined, id: string | undefine
   const obj = await c.env.FILES.get(key);
   if (!obj) return err(404, "not_found");
   return new Response(obj.body, { headers: { "content-type": obj.httpMetadata?.contentType ?? "application/octet-stream", "cache-control": "private, no-store", "x-robots-tag": "noindex, nofollow", "content-disposition": "inline", "x-content-type-options": "nosniff" } });
+}
+
+/* ---------------- customer access management ---------------- */
+
+const CUSTOMER_ACTIONS: Record<string, { from: string[]; to: string }> = {
+  approve: { from: ["pending", "rejected"], to: "approved" },
+  reject: { from: ["pending"], to: "rejected" },
+  suspend: { from: ["approved"], to: "suspended" },
+  restore: { from: ["suspended"], to: "approved" },
+};
+
+async function listCustomers(c: Ctx) {
+  const { per, offset } = pageOf(c.url);
+  const p = c.url.searchParams;
+  const where: string[] = []; const args: unknown[] = [];
+  if (p.get("q")) { where.push("(full_name LIKE ? ESCAPE '\\' OR phone LIKE ? ESCAPE '\\')"); const q = likeEsc(p.get("q")!); args.push(q, q); }
+  if (p.get("status")) { where.push("status=?"); args.push(p.get("status")); }
+  const w = where.length ? "WHERE " + where.join(" AND ") : "";
+  const total = (await c.env.DB.prepare(`SELECT COUNT(*) n FROM customers ${w}`).bind(...args).first<{ n: number }>())!.n;
+  const rows = (await c.env.DB.prepare(`SELECT id,full_name,phone,status,created_at,last_login_at FROM customers ${w} ORDER BY CASE status WHEN 'pending' THEN 0 ELSE 1 END, created_at DESC LIMIT ? OFFSET ?`).bind(...args, per, offset).all()).results;
+  return json({ total, rows });
+}
+
+async function customerProfile(c: Ctx, id: string) {
+  const cu = await c.env.DB.prepare("SELECT id,full_name,phone,status,status_note,admin_notes,created_at,decided_at,last_login_at FROM customers WHERE id=?").bind(id).first();
+  if (!cu) return err(404, "not_found");
+  const history = (await c.env.DB.prepare("SELECT * FROM customer_status_history WHERE customer_id=? ORDER BY at DESC").bind(id).all()).results;
+  const orders = (await c.env.DB.prepare("SELECT id,ref,total,order_status,created_at FROM orders WHERE customer_id=? ORDER BY created_at DESC LIMIT 20").bind(id).all()).results;
+  const activity = (await c.env.DB.prepare("SELECT at,username,action,detail FROM admin_activity_logs WHERE entity='customer' AND entity_id=? ORDER BY at DESC LIMIT 20").bind(id).all()).results;
+  return json({ ...cu, history, orders, activity });
+}
+
+async function customerStatus(c: Ctx, id: string) {
+  const d = await body<{ action?: string; note?: string }>(c.req);
+  const rule = d?.action ? CUSTOMER_ACTIONS[d.action] : undefined;
+  if (!d || !rule) return err(400, "bad_action");
+  const cu = await c.env.DB.prepare("SELECT status FROM customers WHERE id=?").bind(id).first<{ status: string }>();
+  if (!cu) return err(404, "not_found");
+  if (!rule.from.includes(cu.status)) return err(409, "invalid_transition", { message: `A ${cu.status} account cannot be ${d.action}d.` });
+  const t = now(), note = clip(d.note, 500);
+  await c.env.DB.batch([
+    c.env.DB.prepare("UPDATE customers SET status=?, status_note=?, decided_at=? WHERE id=?").bind(rule.to, note, t, id),
+    c.env.DB.prepare("INSERT INTO customer_status_history (id,customer_id,at,from_status,to_status,by_user,note) VALUES (?,?,?,?,?,?,?)").bind(uid(), id, t, cu.status, rule.to, c.admin!.username, note),
+    // Access is enforced on every request, but sessions are also removed so a blocked customer is signed out at once.
+    ...(rule.to === "approved" ? [] : [c.env.DB.prepare("DELETE FROM customer_sessions WHERE customer_id=?").bind(id)]),
+  ]);
+  await log(c.env, c.admin, `customer_${d.action}${d.action!.endsWith("e") ? "d" : "ed"}`, "customer", id, { from: cu.status, to: rule.to, note }, c.ip);
+  return json({ ok: true, status: rule.to });
+}
+
+async function saveCustomerNotes(c: Ctx, id: string) {
+  const d = await body<{ admin_notes?: string }>(c.req);
+  if (!d || typeof d.admin_notes !== "string") return err(400, "bad_request");
+  const r = await c.env.DB.prepare("UPDATE customers SET admin_notes=? WHERE id=?").bind(clip(d.admin_notes, 5000), id).run();
+  if (!r.meta.changes) return err(404, "not_found");
+  await log(c.env, c.admin, "customer_notes_updated", "customer", id, undefined, c.ip);
+  return json({ ok: true });
 }

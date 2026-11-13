@@ -66,7 +66,7 @@ export default function Product() {
 
   return (
     <>
-      <Seo path={`/shop/${product.slug}`} title={`${product.name}${SEO.titleSuffix}`} description={product.shortDescription || SHOP.bannerBody} noindex={!!product.isSample} />
+      <Seo path={`/shop/${product.slug}`} title={`${product.name}${SEO.titleSuffix}`} description={product.shortDescription || SHOP.bannerBody} noindex />
       <div className="mx-auto max-w-page px-4 pb-16 pt-6 sm:px-6 lg:px-8">
         <nav aria-label="Breadcrumb" className="text-sm text-mute">
           <ol className="flex flex-wrap items-center gap-x-1">

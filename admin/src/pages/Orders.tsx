@@ -54,7 +54,7 @@ export function OrderDetail() {
       <p className="note">An order submission is not an accepted order. Confirm availability, the final amount, delivery and payment instructions with the customer, then update the status. Never mark payment verified from a screenshot alone.</p>
       <div className="grid2" style={{ marginTop: "1rem" }}>
         <section className="card"><h2>Customer information</h2>
-          <dl className="kv"><dt>Full name</dt><dd>{o.full_name}</dd><dt>Mobile</dt><dd>{o.mobile}</dd><dt>Email</dt><dd>{o.email || "Not provided"}</dd></dl></section>
+          <dl className="kv"><dt>Full name</dt><dd>{o.customer_id ? <Link to={`/customers/${o.customer_id}`}>{o.full_name}</Link> : o.full_name}</dd><dt>Mobile</dt><dd>{o.mobile}</dd><dt>Email</dt><dd>{o.email || "Not provided"}</dd></dl></section>
         <section className="card"><h2>Delivery information</h2>
           <dl className="kv"><dt>Street</dt><dd>{o.street}</dd><dt>Barangay</dt><dd>{o.barangay}</dd><dt>City or municipality</dt><dd>{o.city}</dd><dt>Province</dt><dd>{o.province}</dd><dt>Postal code</dt><dd>{o.postal}</dd></dl></section>
       </div>

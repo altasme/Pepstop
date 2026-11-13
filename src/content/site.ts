@@ -78,7 +78,7 @@ export const CHAT_HELPER = {
 
 export const NAV = [
   { label: "Home", to: "/" },
-  { label: "Explore Collection", to: "/shop" },
+  { label: "View Products", to: "/shop" },
   { label: "About Us", to: "/about" },
   { label: "Health & Beauty", to: "/health-beauty" },
   { label: "Wellness Journal", to: "/education" },
@@ -86,7 +86,7 @@ export const NAV = [
 ];
 
 /** Routes where the mobile sticky CTA bar is hidden (§9.8). */
-export const STICKY_CTA_HIDDEN_ON = ["/contact", "/privacy", "/404", "/cart", "/checkout", "/checkout/confirmation"];
+export const STICKY_CTA_HIDDEN_ON = ["/account", "/contact", "/privacy", "/404", "/cart", "/checkout", "/checkout/confirmation"];
 
 /* ------------------------------------------------------------------ */
 /* Image slots. No images are generated or bundled. Each slot renders  */
@@ -220,7 +220,7 @@ export const HOME = {
   heroTitle: "Your Wellness Journey, Beautifully Considered.",
   heroSupport:
     "Explore a thoughtfully presented selection of health, beauty, and wellness products. Discover product information, review available options, and get the guidance you need to make informed decisions.",
-  heroShop: { label: "Explore Our Collection", to: "/shop" },
+  heroShop: { label: "View Products", to: "/shop" },
   heroTalk: "Talk to Our Team",
   heroNote: "Wellness begins with understanding. We're here to make every detail clearer.",
   heroMatch: { lead: "Not sure where to start?", link: "Get matched" },
@@ -539,6 +539,7 @@ export const CHECKOUT = {
     fullName: "Full Name",
     mobile: "Mobile Number",
     mobileHint: "Please provide an active mobile number so we can contact you regarding your order.",
+    accountHint: "From your account. We will contact you on this number about your order.",
     email: "Email Address (Optional)",
     street: "House Number and Street",
     barangay: "Barangay",
@@ -581,6 +582,7 @@ export const CONFIRMATION = {
   none: "No Recent Order Found.",
   noneHint: "We couldn't find an order summary in this browser. You can return to the shop and start again.",
   messageIntro: "Hi The Pep Stop, I would like to place this order.",
+  payHow: "How to pay",
   payTitle: "Already sent your payment?",
   payBody: "Share your payment reference number or a screenshot so our team can match it to your order. We verify every payment manually, so your order is not confirmed until we reply.",
   payReference: "Payment reference number",
@@ -591,9 +593,60 @@ export const CONFIRMATION = {
   payNeed: "Enter a reference number or choose a file.",
 };
 
+export const ACCOUNT = {
+  title: "View Products",
+  intro: "Our product catalog is private. Log in to your account, or create one and we will review it.",
+  loginTab: "Login",
+  registerTab: "Create an Account",
+  phone: "Phone Number",
+  phoneHint: "An active Philippine mobile number, for example 0917 123 4567.",
+  password: "Password",
+  fullName: "Full Name",
+  createPassword: "Create Password",
+  confirmPassword: "Confirm Password",
+  show: "Show",
+  hide: "Hide",
+  loginButton: "Log In",
+  registerButton: "Create Account",
+  working: "Please wait...",
+  privacyLead: "Privacy notice: we use your name and mobile number to review your account request and to contact you about your orders. Your password is stored in a form we cannot read. See our",
+  privacyLink: "Privacy Policy",
+  consent: "I understand how my information will be used.",
+  doneTitle: "Your account has been created!",
+  contactLead: "Let us know you have registered:",
+  contactMessenger: "Message us on Messenger",
+  contactWhatsapp: "Message us on WhatsApp",
+  contactPhone: "Call us",
+  backToLogin: "Back to Login",
+  pendingTitle: "Your account is awaiting approval",
+  pendingBody: "Please contact The Pep Stop and let our team know that you have created an account and are waiting for approval. You can log in once it has been approved.",
+  rejectedTitle: "Your registration was not approved",
+  rejectedBody: "We were not able to approve this account. Please contact The Pep Stop if you have questions.",
+  suspendedTitle: "Your access has been suspended",
+  suspendedBody: "Access to the product catalog is currently turned off for this account. Please contact The Pep Stop.",
+  reasonLabel: "Note from The Pep Stop",
+  errors: {
+    invalid_credentials: "That phone number or password is not correct.",
+    locked: "Too many incorrect attempts. Please wait 15 minutes and try again.",
+    too_many_attempts: "Too many attempts. Please wait a few minutes and try again.",
+    too_many_requests: "Too many attempts. Please wait a few minutes and try again.",
+    phone_in_use: "An account with that phone number already exists. Try logging in instead.",
+    invalid_phone: "Enter a valid Philippine mobile number, for example 0917 123 4567.",
+    name_required: "Please enter your full name.",
+    password_mismatch: "The two passwords do not match.",
+    weak_password: "Use at least 8 characters, with letters and numbers.",
+    consent_required: "Please confirm that you understand how your information will be used.",
+    generic: "Something went wrong. Please check your details and try again.",
+  } as Record<string, string>,
+  logout: "Log Out",
+  login: "Log In",
+  checking: "Checking your account...",
+  accountLink: "Account",
+};
+
 export const COA = {
   title: "Certificates of Analysis",
-  body: "Search published certificates of analysis by product name or batch or lot number. Open a document to view or download the PDF.",
+  body: "Search the certificates of analysis available to approved customers by product name or batch or lot number. Open a document to view or download the PDF.",
   searchLabel: "Search by product or batch number",
   searchPlaceholder: "Product name or batch number",
   results: (n: number) => `${n} ${n === 1 ? "document" : "documents"}`,
@@ -675,7 +728,9 @@ export const PRIVACY = {
       id: "collect",
       title: "What we collect",
       body: [
-        "This website does not set advertising cookies. When you shop, your cart is kept in your own browser. When you check out, the details you type (name, mobile number, address, notes, and payment method choice) stay in your browser until you choose to send your order to us by message or phone.",
+        "This website does not set advertising cookies. We use one sign-in cookie, only after you log in to your customer account, to keep you signed in.",
+        "To view our private product catalog you create an account with your full name, mobile number, and a password. We keep your password only in a scrambled form that we cannot read. We use your name and mobile number to decide whether to approve your account and to contact you about your orders. We have not verified that the mobile number belongs to you.",
+        "When you place an order, we save your order, the delivery address and notes you type, your chosen payment method, and any payment reference or payment screenshot you choose to send. Your cart is kept in your own browser until you submit it.",
         "If you message or call us, we receive what you choose to send, such as your name, your phone number or messaging profile, and the content of your message.",
         "We use Cloudflare Web Analytics, which is cookieless. It records aggregate page views and clicks on our contact buttons. It does not identify you personally.",
       ],
@@ -691,7 +746,7 @@ export const PRIVACY = {
       id: "access",
       title: "Who can access it",
       body: [
-        "Your messages are visible to The Pep Stop staff who answer them, and to the messaging or phone provider you use to contact us. We do not sell your personal information.",
+        "Your messages, account details, and orders are visible to The Pep Stop staff who handle them, and to the messaging or phone provider you use to contact us. Our website is hosted on Cloudflare. We do not sell your personal information.",
       ],
     },
     {
@@ -757,6 +812,7 @@ export const SEO = {
     "/cart": { title: "Your Cart | The Pep Stop", description: "Review the items in your cart." },
     "/checkout": { title: "Checkout | The Pep Stop", description: "Enter your delivery details to place your order." },
     "/checkout/confirmation": { title: "Order Summary | The Pep Stop", description: "Send your order summary to The Pep Stop." },
+    "/account": { title: "View Products | The Pep Stop", description: "Log in or create an account to view the private product catalog." },
     "/coa": { title: "Certificates of Analysis | The Pep Stop", description: "Search published certificates of analysis by product name or batch number." },
     "/privacy": {
       title: "Privacy Policy | The Pep Stop",

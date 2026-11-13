@@ -12,11 +12,12 @@ import { CoaLibrary, ProductInformation } from "./pages/Documents";
 import { Orders, OrderDetail } from "./pages/Orders";
 import { Inquiries, Logs, Settings } from "./pages/Operations";
 import { WebsiteContent } from "./pages/Content";
+import { CustomerList, CustomerProfile } from "./pages/Customers";
 
 type Me = { username: string; mustChange: boolean };
 
 const NAV: [string, string][] = [
-  ["/", "Dashboard"], ["/products", "Products"], ["/categories", "Categories"], ["/variants", "Product Variants"],
+  ["/", "Dashboard"], ["/customers", "Customers"], ["/products", "Products"], ["/categories", "Categories"], ["/variants", "Product Variants"],
   ["/coa", "COA Library"], ["/information", "Product Information"], ["/orders", "Orders"], ["/inquiries", "Customer Inquiries"],
   ["/content", "Website Content"], ["/logs", "Activity Logs"], ["/settings", "Settings"],
 ];
@@ -37,6 +38,8 @@ function Shell({ me, onLogout }: { me: Me; onLogout: () => void }) {
       <main className="main">
         <Routes>
           <Route path="/" element={<Dashboard />} />
+          <Route path="/customers" element={<CustomerList />} />
+          <Route path="/customers/:id" element={<CustomerProfile />} />
           <Route path="/products" element={<ProductsList />} />
           <Route path="/products/:id" element={<ProductForm />} />
           <Route path="/categories" element={<Categories />} />

@@ -1,5 +1,6 @@
 import { serveStatic } from "@static";
 import { handleAdmin } from "./admin";
+import { handleCustomer } from "./customer";
 import { handleFiles, handlePublic } from "./public";
 import { err, getSettings, json } from "./lib";
 import type { Env } from "./types";
@@ -38,6 +39,7 @@ export default {
     const isAdmin = p === "/admin" || p.startsWith("/admin/");
     try {
       if (p.startsWith("/api/admin/")) res = await handleAdmin(req, env, url);
+      else if (p.startsWith("/api/customer/")) res = await handleCustomer(req, env, url);
       else if (p.startsWith("/api/public/")) res = await handlePublic(req, env, url);
       else if (p.startsWith("/files/")) res = await handleFiles(req, env, url);
       else if (p.startsWith("/api/")) res = err(404, "not_found");
@@ -50,7 +52,9 @@ export default {
     out.headers.set("x-content-type-options", "nosniff");
     out.headers.set("referrer-policy", "strict-origin-when-cross-origin");
     const html = (out.headers.get("content-type") ?? "").includes("text/html");
-    if (isApi || isAdmin || (html && (await searchHidden(env)))) out.headers.set("x-robots-tag", "noindex, nofollow");
+    // Private catalog pages are always noindex, whatever the site-wide visibility setting says.
+    const isPrivatePage = /^\/(shop|cart|checkout|coa|account)(\/|$)/.test(p);
+    if (isApi || isAdmin || isPrivatePage || (html && (await searchHidden(env)))) out.headers.set("x-robots-tag", "noindex, nofollow");
     if (isAdmin) { out.headers.set("x-frame-options", "DENY"); out.headers.set("cache-control", "no-store"); }
     return out;
   },

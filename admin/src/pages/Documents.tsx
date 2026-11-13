@@ -5,8 +5,8 @@ import { Badge, ConfirmButton, Empty, ErrorNote, Field, Loading, PageHead, Pager
 
 const SECTIONS: [string, string][] = [
   ["overview", "Product overview"], ["general", "General product information"], ["specifications", "Technical specifications"],
-  ["guidelines", "Client-provided product guidelines"], ["storage", "Storage information"], ["handling", "Handling information"],
-  ["supporting", "Supporting documents"], ["notes", "Additional notes"],
+  ["manufacturer", "Manufacturer information"], ["guidelines", "Client-provided product guidelines"], ["storage", "Storage information"], ["handling", "Handling information"],
+  ["supporting", "Supporting documents"], ["notices", "Important notices"], ["notes", "Additional notes"],
 ];
 
 export function CoaLibrary() {

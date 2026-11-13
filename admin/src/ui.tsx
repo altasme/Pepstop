@@ -44,9 +44,9 @@ export const ErrorNote = ({ text }: { text: string | null }) => (text ? <p class
 
 /* ---- small parts ---- */
 export function Badge({ value }: { value: string }) {
-  const tone = ["published", "available", "verified", "completed", "responded", "reviewed"].includes(value) ? "good"
-    : ["draft", "new", "new_order", "pending", "ask", "in_review", "not_reviewed", "submitted", "in_progress"].includes(value) ? "warn"
-    : ["archived", "unavailable", "rejected", "cancelled", "closed"].includes(value) ? "bad" : "info";
+  const tone = ["published", "available", "verified", "completed", "responded", "reviewed", "approved"].includes(value) ? "good"
+    : ["draft", "new", "new_order", "pending", "ask", "in_review", "not_reviewed", "submitted", "in_progress", "pending_review", "unpublished"].includes(value) ? "warn"
+    : ["archived", "unavailable", "rejected", "cancelled", "closed", "suspended", "not_cleared"].includes(value) ? "bad" : "info";
   return <span className={`badge ${tone}`}>{label(value)}</span>;
 }
 
@@ -103,7 +103,8 @@ export function useUnsavedWarning(dirty: boolean) {
 }
 
 /* ---- image upload ---- */
-export function ImageField({ value, onChange, label: l }: { value: string | null; onChange: (url: string | null) => void; label: string }) {
+/** kind "catalog" stores private product images (approved customers only); "image" stores public site images. */
+export function ImageField({ value, onChange, label: l, kind = "image" }: { value: string | null; onChange: (url: string | null) => void; label: string; kind?: "image" | "catalog" }) {
   const toast = useToast();
   const [busy, setBusy] = useState(false);
   const ref = useRef<HTMLInputElement>(null);
@@ -116,7 +117,7 @@ export function ImageField({ value, onChange, label: l }: { value: string | null
           <input ref={ref} type="file" accept="image/png,image/jpeg,image/webp" hidden onChange={async (e) => {
             const f = e.target.files?.[0]; if (!f) return;
             setBusy(true);
-            try { const r = await uploadFile("image", f); onChange(r.url); } catch (x) { toast("error", errorText(x)); }
+            try { const r = await uploadFile(kind, f); onChange(r.url); } catch (x) { toast("error", errorText(x)); }
             setBusy(false); if (ref.current) ref.current.value = "";
           }} />
           <button type="button" className="btn ghost" disabled={busy} onClick={() => ref.current?.click()}>{busy ? "Uploading..." : value ? "Replace" : "Upload"}</button>

@@ -1,7 +1,7 @@
 # HANDOVER: The Pep Stop · Phase 1 (Public Website)
 
 **Built by:** Altaventures Business Development Services
-**Handover date:** 2026-11-11 · **Spec version built:** v1.20 (storefront added per client direction; logo and palette applied)
+**Handover date:** 2026-11-11 · **Spec version built:** v1.21 (storefront added per client direction; logo and palette applied)
 **Preview URL:** https://pepstop.altasmeworks.workers.dev (moved to the dedicated account 2026-11-13, noindex) · **Live URL:** not live: gates open · **Repo:** altasme/pepstop
 
 ## 1. What was delivered
@@ -70,14 +70,15 @@
 - Copy and config: `src/content/site.ts`. Articles: `src/content/articles.ts`. Read through `src/content/getContent.ts`.
 - Dev server shows unpublished article drafts at `/education/:slug` (marked Draft). Production builds never do.
 
-## 4. Activation map (admin build, v1.20)
+## 4. Activation map (v1.21, private catalog)
 | Constant or switch | Now | Notes |
 |---|---|---|
 | INQUIRY_MODE | form | Contact page form posts to `/api/public/inquiries` (honeypot, rate limit, no medical history) |
 | CONTENT_SOURCE | store | Published website text overrides built-in copy field by field (`src/lib/remote.ts`) |
 | CATALOGUE_SOURCE | db | Published products replace the sample slots; with none published, samples stay |
 | ADMIN_ENABLED | on | `/admin` and `/api/admin/*` are live; remove the Worker route or secret to switch off |
-| COA directory | on | `/coa`, published documents only, never labeled verified |
+| COA library | on, private | `/coa` and `/files/coa/*` open only to approved customers (and administrators); published documents only, never labeled verified |
+| Catalog access | approved customers only | Registration, manual approval, backend checks on every request (see section 9) |
 | COMMERCE_MODE | database orders, manual payment | Orders are saved by the Worker; no payment is collected or verified automatically |
 
 ## 5. Draft and withheld content
@@ -112,13 +113,19 @@
 - **Password hashing is PBKDF2-SHA256 (100,000 iterations), not Argon2id or bcrypt.** Neither is available in the Workers runtime and 100,000 is the platform maximum. Passwords are salted, never returned by the API, never in local storage. Sessions are random 256-bit tokens, stored hashed, in HttpOnly Secure SameSite=Strict cookies.
 - **Temporary password.** The specification contains the initial password in plain text. It is stored only as the Worker secret `ADMIN_BOOTSTRAP_PASSWORD`, never in source (the audit fails the build if it appears), and must be changed at first login. Because it travelled in a document and a chat, treat it as exposed and change it immediately.
 - **Categories.** The specification names four categories (Weight & Metabolic Research and others). The client's five categories (Weight & Wellness and others) were already live, and the specification says to preserve existing assignments, so the five are seeded and remain editable. The "Research" wording is not used on the site.
-- **Search visibility.** The specification asks for noindex. The setting defaults to Hidden, which adds `X-Robots-Tag: noindex, nofollow` to public pages and withholds `sitemap.xml`. Admin, API and files are always noindex. This is a request to search engines, not access control; published COAs and product pages open for anyone with the link.
+- **Search visibility.** The specification asks for noindex. The setting defaults to Hidden, which adds `X-Robots-Tag: noindex, nofollow` to public pages and withholds `sitemap.xml`. Admin, API and files are always noindex. This is a request to search engines, not access control. Private pages (`/shop`, `/cart`, `/checkout`, `/coa`, `/account`) are always noindex and are never in the sitemap; real protection is the login described below.
 - **Product information and guidelines** share one table (`product_information`, section `guidelines`). A guideline cannot be published until a person marks it Reviewed. The system generates no dosing, claims or recommendations.
 - **Payments.** Customers can submit a reference number and optional proof; proof files are private (admin only). Nothing is verified automatically; an administrator marks each payment verified or rejected.
 - **Backups.** D1 Time Travel gives point-in-time restore for 30 days. A restore test and scheduled exports to R2 are not set up and are listed under next steps.
 - **Not built:** email or SMS notifications, image resizing, multiple roles, scheduled backups, automated end-to-end tests in CI. The rich-text editor is a lightweight toolbar; output is sanitized to a short allow-list on the server.
-- **Public JS** is now about 113 KB gzipped (budget 120 KB); the admin app is a separate 70 KB bundle that public visitors never load.
-- The shop is publicly linked and indexable. If the client wants it unlisted, add noindex to the shop pages and remove it from nav and sitemap.
+- **Public JS** is now about 116.6 KB gzipped (budget 120 KB), so little headroom remains; the admin app is a separate 73 KB bundle that public visitors never load.
+- **Private catalog (v1.21).** The public shop and public COA directory were replaced by a login-gated catalog. Visitors see brand pages only. The Worker returns 401 or 403 to visitors and to pending, rejected and suspended accounts for the catalog API, product images, certificates, cart and orders, and re-reads the account status on every request, so a suspension takes effect on open sessions at once. This was tested end to end (63 API checks and a browser run). Frontend redirects are only the friendly layer.
+- **Phone OTP is not built.** It needs an SMS provider and the client has not confirmed it. Registered phone numbers are therefore unverified; the admin profile says so. Approval is the only gate.
+- **No customer password recovery yet.** A customer who forgets a password cannot reset it themselves, and the admin panel has no "set a new password" action for customers. This is a gap to close next (an administrator-issued temporary password is the simplest fit).
+- **Regulatory gate.** A product must be marked Verified for Intended Sale before it can be published; the server enforces this on every save and status change, and moving a product out of Verified unpublishes it immediately. The administrator sets the review status; the system cannot judge legality and does not. The client remains responsible for each product's authorization (Appendix B.1). Existing products were set to Unpublished and Pending Review by the migration.
+- **"Unpublished" status** is stored as a draft flag (`unpublished = 1`) because SQLite cannot alter the status constraint and D1 blocks the table rebuild; the API presents it as its own status.
+- **Product images are private.** Product photos upload to `catalog/` and are served only to approved customers and administrators. Site images (hero, journal, category) stay public. A product image URL copied out of the admin panel will not load for the public.
+- **Order identity.** Orders take the customer's name and phone from the approved account; the checkout form no longer asks for them.
 - The cart cannot verify stock or compute shipping; both are confirmed by The Pep Stop after the order is sent.
 - Nav button label: spec says "Message Us". While Messenger is hidden the primary CTA is the phone, so the button reads "Call Us" to stay truthful. It switches to "Message Us" when ★C3 is supplied.
 - `ORG.intro` is a two-item array instead of one string, to render the two paragraphs.

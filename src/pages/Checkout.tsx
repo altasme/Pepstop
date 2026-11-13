@@ -4,8 +4,8 @@ import { CART, CHECKOUT, PAYMENT_METHODS, UI } from "../content/site";
 import { Seo } from "../lib/seo";
 import { useCart } from "../lib/cart";
 import { amountLabel } from "../lib/format";
-import { buildOrder, submitOrder, submitOrderRemote, type Customer } from "../lib/orders";
-import { getState } from "../lib/remote";
+import { buildOrder, submitOrderRemote, type Customer } from "../lib/orders";
+import { useRemote } from "../lib/remote";
 import { SectionHeading } from "../components/ui/SectionHeading";
 import { Button } from "../components/ui/Button";
 import { SlotImage } from "../components/ui/SlotImage";
@@ -25,16 +25,16 @@ function validate(c: Customer, consent: boolean): Errors {
   return e;
 }
 
-type FieldExtra = { label: string; hint?: string; type?: string; autoComplete?: string; multiline?: boolean };
+type FieldExtra = { label: string; hint?: string; type?: string; autoComplete?: string; multiline?: boolean; readOnly?: boolean };
 
-function Field({ id, value, error, onChange, label, hint, type = "text", autoComplete, multiline }: FieldExtra & { id: keyof Customer; value: string; error?: string; onChange: (v: string) => void }) {
+function Field({ id, value, error, onChange, label, hint, type = "text", autoComplete, multiline, readOnly }: FieldExtra & { id: keyof Customer; value: string; error?: string; onChange: (v: string) => void; readOnly?: boolean }) {
   const common = {
-    id, name: id, value, autoComplete,
+    id, name: id, value, autoComplete, readOnly,
     onChange: (e: { target: { value: string } }) => onChange(e.target.value),
     "aria-invalid": error ? true : undefined,
     "aria-describedby": [hint ? `${id}-hint` : "", error ? `${id}-err` : ""].filter(Boolean).join(" ") || undefined,
   };
-  const cls = `w-full rounded-xl border bg-white px-4 py-3 text-base text-ink ${error ? "border-raspberry" : "border-edge"}`;
+  const cls = `w-full rounded-xl border px-4 py-3 text-base text-ink ${readOnly ? "bg-petal" : "bg-white"} ${error ? "border-raspberry" : "border-edge"}`;
   return (
     <div>
       <label htmlFor={id} className="mb-1 block text-sm font-semibold text-ink">{label}</label>
@@ -48,7 +48,10 @@ function Field({ id, value, error, onChange, label, hint, type = "text", autoCom
 export default function Checkout() {
   const { lines, subtotal, hasUnpriced, clear } = useCart();
   const navigate = useNavigate();
-  const [c, setC] = useState<Customer>(empty);
+  const { customer } = useRemote();
+  const [c0, setC] = useState<Customer>(empty);
+  // Name and phone come from the approved account and cannot be edited here.
+  const c: Customer = { ...c0, fullName: customer?.name ?? "", mobile: customer?.phone ?? "" };
   const [consent, setConsent] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
   const [sending, setSending] = useState(false);
@@ -65,12 +68,10 @@ export default function Checkout() {
       return;
     }
     const order = buildOrder({ ...c, mobile: c.mobile.replace(/\s+/g, " ").trim() }, lines, subtotal, hasUnpriced);
-    if (getState().live) {
-      setSending(true);
-      setServerError("");
-      try { await submitOrderRemote(order, lines); } catch (e) { setServerError(e instanceof Error && e.message === "rate" ? CHECKOUT.errors.rate : CHECKOUT.errors.server); setSending(false); return; }
-      setSending(false);
-    } else submitOrder(order);
+    setSending(true);
+    setServerError("");
+    try { await submitOrderRemote(order, lines); } catch (e) { setServerError(e instanceof Error && e.message === "rate" ? CHECKOUT.errors.rate : CHECKOUT.errors.server); setSending(false); return; }
+    setSending(false);
     clear();
     navigate("/checkout/confirmation");
   };
@@ -103,9 +104,9 @@ export default function Checkout() {
             {errCount > 0 && <p role="alert" className="rounded-lg bg-raspberry px-4 py-3 text-sm font-semibold text-white">{CHECKOUT.errors.summary}</p>}
             <fieldset className="space-y-4">
               <legend className="mb-2 text-h3 font-semibold text-ink"><span className="mr-2 font-display text-raspberry">1</span>{CHECKOUT.contactTitle}</legend>
-              {F("fullName", { label: CHECKOUT.fields.fullName, autoComplete: "name" })}
+              {F("fullName", { label: CHECKOUT.fields.fullName, autoComplete: "name", readOnly: true })}
               <div className="grid gap-4 sm:grid-cols-2">
-                {F("mobile", { label: CHECKOUT.fields.mobile, hint: CHECKOUT.fields.mobileHint, type: "tel", autoComplete: "tel" })}
+                {F("mobile", { label: CHECKOUT.fields.mobile, hint: CHECKOUT.fields.accountHint, type: "tel", autoComplete: "tel", readOnly: true })}
                 {F("email", { label: CHECKOUT.fields.email, type: "email", autoComplete: "email" })}
               </div>
             </fieldset>

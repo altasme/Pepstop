@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useRemote } from "../../lib/remote";
 import { COA, CONTACT, CONTACT_PAGE, CTA, NAV, ORG, PAYMENT_METHODS, UI } from "../../content/site";
 import { getFocusAreas } from "../../content/getContent";
 import { phone } from "../../lib/phone";
@@ -13,6 +14,7 @@ const link = "inline-flex min-h-11 items-center text-white/80 hover:text-white h
 const company = NAV.filter((n) => ["/about", "/health-beauty", "/education"].includes(n.to));
 
 export function Footer() {
+  const { customer } = useRemote();
   const legal = ORG.legalName && ORG.registration ? `${ORG.legalName} · ${ORG.registration}` : null; // PH-06
   const areas = getFocusAreas();
   return (
@@ -41,7 +43,7 @@ export function Footer() {
                 <li key={n.to}><Link to={n.to} className={link}>{n.label}</Link></li>
               ))}
               <li><Link to="/contact" className={link}>Contact</Link></li>
-              <li><Link to="/coa" className={link}>{COA.link}</Link></li>
+              {customer && <li><Link to="/coa" className={link}>{COA.link}</Link></li>}
               <li><Link to="/privacy" className={link}>{UI.privacyLink}</Link></li>
               {UI.socials.map((s) => <li key={s.label}><a href={s.href} className={link} target="_blank" rel="noopener noreferrer">{s.label}</a></li>)}
             </ul>

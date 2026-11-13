@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { COA } from "../content/site";
 import { Seo } from "../lib/seo";
-import type { Coa } from "../lib/remote";
+import { getCoaList, type Coa } from "../lib/remote";
 import { PageBanner } from "../components/sections/PageBanner";
 import { ContactBlock } from "../components/sections/ContactBlock";
 import { Disclaimer } from "../components/ui/Disclaimer";
@@ -13,13 +13,13 @@ export default function CoaDirectory() {
   const [failed, setFailed] = useState(false);
   useEffect(() => {
     const t = setTimeout(() => {
-      fetch(`/api/public/coa?q=${encodeURIComponent(q.trim())}`).then((r) => r.json()).then((d) => { setRows(d.rows); setFailed(false); }).catch(() => setFailed(true));
+      getCoaList(q.trim()).then((d) => { if (d) { setRows(d.rows); setFailed(false); } else setFailed(true); });
     }, 250);
     return () => clearTimeout(t);
   }, [q]);
   return (
     <>
-      <Seo path="/coa" />
+      <Seo path="/coa" noindex />
       <PageBanner title={COA.title} body={COA.body} />
       <section className="mx-auto max-w-page px-4 py-10 sm:px-6 md:py-14 lg:px-8">
         <label htmlFor="coa-search" className="mb-1.5 block text-sm font-semibold text-ink">{COA.searchLabel}</label>

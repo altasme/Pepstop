@@ -17,6 +17,15 @@ import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import OrderConfirmation from "./pages/OrderConfirmation";
 import CoaDirectory from "./pages/Coa";
+import Account from "./pages/Account";
+import { requireCustomer } from "./components/ui/RequireCustomer";
+
+// Private pages: visitors without an approved account are sent to /account.
+const PrivateShop = requireCustomer(Shop);
+const PrivateProduct = requireCustomer(Product);
+const PrivateCart = requireCustomer(Cart);
+const PrivateCheckout = requireCustomer(Checkout);
+const PrivateCoa = requireCustomer(CoaDirectory);
 import NotFound from "./pages/NotFound";
 
 export const routes: RouteRecord[] = [
@@ -34,11 +43,12 @@ export const routes: RouteRecord[] = [
         Component: Article,
         getStaticPaths: () => ["education/_"], // shell; the Worker serves it for any article slug
       },
-      { path: "shop", Component: Shop },
-      { path: "shop/:slug", Component: Product, getStaticPaths: () => ["shop/_"] }, // shell; products come from the database
-      { path: "coa", Component: CoaDirectory },
-      { path: "cart", Component: Cart },
-      { path: "checkout", Component: Checkout },
+      { path: "shop", Component: PrivateShop },
+      { path: "account", Component: Account },
+      { path: "shop/:slug", Component: PrivateProduct, getStaticPaths: () => ["shop/_"] }, // shell; products come from the database
+      { path: "coa", Component: PrivateCoa },
+      { path: "cart", Component: PrivateCart },
+      { path: "checkout", Component: PrivateCheckout },
       { path: "checkout/confirmation", Component: OrderConfirmation },
       { path: "contact", Component: Contact },
       { path: "privacy", Component: Privacy },

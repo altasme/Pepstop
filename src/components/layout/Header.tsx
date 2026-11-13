@@ -9,6 +9,7 @@ import { Sparkle } from "../ui/Sparkle";
 import { getFocusAreas } from "../../content/getContent";
 import { MobileNav } from "./MobileNav";
 import { CartButton } from "./CartButton";
+import { AccountLink } from "./AccountLink";
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -49,6 +50,7 @@ export function Header() {
             </ul>
           </nav>
           <div className="flex items-center gap-1 sm:gap-2">
+            <AccountLink className="hidden min-h-11 items-center whitespace-nowrap rounded-full px-3 text-base font-semibold text-ink hover:text-raspberry sm:inline-flex" />
             <CartButton />
             <a
               href={primaryCta.href}

@@ -1,29 +1,32 @@
 /**
- * Remote content store. The admin panel publishes products, categories, articles and website text to the
- * Worker API. After hydration this store loads them, so the prerendered HTML and the first client render match.
- * While loading, product areas render a skeleton. If the database has no published products the built-in
- * sample slots stay in place; otherwise database products replace them.
+ * Remote store. Public website text and journal articles load for everyone. The product catalog is private:
+ * it loads only for a signed-in customer whose account an administrator has approved, and the Worker re-checks
+ * that status on every request. The first client render matches the prerendered HTML (nothing private in it).
  */
 import { useSyncExternalStore } from "react";
 import { CONTACT, CTA, HOME, IMAGE_SLOTS, ORG, PAYMENT_METHODS, UI, VALUES } from "../content/site";
-import { PRODUCTS, PRODUCT_CATEGORIES, type Product, type ProductCategory } from "../content/products";
+import { PRODUCT_CATEGORIES, type Product, type ProductCategory } from "../content/products";
 import { ARTICLES, type Article } from "../content/articles";
 
 export type RemoteArticle = { slug: string; title: string; summary: string; thumbnail?: string | null; content_html?: string; published_at: string | null; updated_at: string };
 export type Coa = { id: string; title: string; batch: string; doc_date: string | null; product_name: string; product_slug: string };
+export type Me = { authenticated: boolean; status?: "pending" | "approved" | "rejected" | "suspended"; name?: string; phone?: string };
+export type RegistrationInfo = { message: string; messenger: string; whatsapp: string; phone: string };
 
 type State = {
   status: "loading" | "ready";
-  live: boolean;
+  /** The signed-in, approved customer, or null. */
+  customer: { name: string; phone: string } | null;
   products: Product[];
   categories: ProductCategory[];
   categoryImages: Record<string, string>;
+  paymentInstructions: string;
   articles: RemoteArticle[] | null; // null = use built-in articles
   featuredSlugs: string[];
   version: number; // bumps when website text overrides are applied
 };
 
-const initial: State = { status: "loading", live: false, products: [], categories: PRODUCT_CATEGORIES, categoryImages: {}, articles: null, featuredSlugs: [], version: 0 };
+const initial: State = { status: "loading", customer: null, products: [], categories: PRODUCT_CATEGORIES, categoryImages: {}, paymentInstructions: "", articles: null, featuredSlugs: [], version: 0 };
 let state: State = initial;
 const subs = new Set<() => void>();
 const set = (patch: Partial<State>) => { state = { ...state, ...patch }; subs.forEach((f) => f()); };
@@ -33,11 +36,10 @@ export function useRemote(): State {
   return useSyncExternalStore((cb) => { subs.add(cb); return () => { subs.delete(cb); }; }, () => state, () => initial);
 }
 
-const samples = () => PRODUCTS.map((p) => ({ ...p }));
-
+const H = { "x-pepstop": "1" };
 async function getJson<T>(url: string): Promise<T | null> {
   try {
-    const r = await fetch(url, { headers: { accept: "application/json" } });
+    const r = await fetch(url, { headers: { accept: "application/json" }, credentials: "same-origin" });
     return r.ok ? ((await r.json()) as T) : null;
   } catch {
     return null;
@@ -79,31 +81,62 @@ function applyContent(c: Record<string, Record<string, string>>) {
   return h.featuredSlugs ? h.featuredSlugs.split(",").map((s) => s.trim()).filter(Boolean) : [];
 }
 
+type CatalogResponse = { codEnabled: boolean; paymentInstructions: string; categories: { id: string; slug: string; name: string; sort: number; image: string | null }[]; products: Product[] };
+
+/** Loads the private catalog. Only called once the Worker has confirmed an approved customer. */
+async function loadCatalog() {
+  const cat = await getJson<CatalogResponse>("/api/customer/catalog");
+  if (!cat) return { products: [] as Product[], categories: PRODUCT_CATEGORIES, categoryImages: {}, paymentInstructions: "" };
+  PAYMENT_METHODS.forEach((m) => { if (m.id === "cod") m.enabled = !!cat.codEnabled; });
+  return {
+    products: cat.products.map((p) => ({ ...p, image: p.image || "" })), // no photo: honest placeholder
+    categories: cat.categories.length ? cat.categories.map((c) => ({ id: c.id, name: c.name, slug: c.slug, sort: c.sort })) : PRODUCT_CATEGORIES,
+    categoryImages: Object.fromEntries(cat.categories.filter((c) => c.image).map((c) => [c.id, c.image as string])),
+    paymentInstructions: cat.paymentInstructions ?? "",
+  };
+}
+
+async function resolveAccount(): Promise<Pick<State, "customer" | "products" | "categories" | "categoryImages" | "paymentInstructions">> {
+  const me = await getJson<Me>("/api/customer/me");
+  if (!me?.authenticated || me.status !== "approved") return { customer: null, products: [], categories: PRODUCT_CATEGORIES, categoryImages: {}, paymentInstructions: "" };
+  return { customer: { name: me.name ?? "", phone: me.phone ?? "" }, ...(await loadCatalog()) };
+}
+
 let started = false;
 export async function startRemote() {
   if (started || typeof window === "undefined") return;
   started = true;
-  const [cat, content, articles] = await Promise.all([
-    getJson<{ live: boolean; codEnabled: boolean; categories: { id: string; slug: string; name: string; sort: number; image: string | null }[]; products: Product[] }>("/api/public/catalog"),
-    getJson<Record<string, Record<string, string>>>("/api/public/content"),
-    getJson<RemoteArticle[]>("/api/public/articles"),
-  ]);
+  const [account, content, articles] = await Promise.all([resolveAccount(), getJson<Record<string, Record<string, string>>>("/api/public/content"), getJson<RemoteArticle[]>("/api/public/articles")]);
   const featured = content ? applyContent(content) : [];
-  const live = !!cat?.live;
-  if (live) {
-    PAYMENT_METHODS.forEach((m) => { if (m.id === "cod") m.enabled = !!cat!.codEnabled; });
-  }
-  set({
-    status: "ready",
-    live,
-    // A database product without a photo shows the honest placeholder, not the default slot image.
-    products: live ? cat!.products.map((p) => ({ ...p, image: p.image || "" })) : samples(),
-    categories: live && cat!.categories.length ? cat!.categories.map((c) => ({ id: c.id, name: c.name, slug: c.slug, sort: c.sort })) : PRODUCT_CATEGORIES,
-    categoryImages: Object.fromEntries((cat?.categories ?? []).filter((c) => c.image).map((c) => [c.id, c.image as string])),
-    articles: articles && articles.length ? articles : null,
-    featuredSlugs: featured,
-    version: state.version + 1,
-  });
+  set({ ...account, status: "ready", articles: articles && articles.length ? articles : null, featuredSlugs: featured, version: state.version + 1 });
 }
+
+/** Re-reads the account and catalog after logging in or out. */
+export async function refreshAccount() {
+  set({ ...(await resolveAccount()), status: "ready" });
+}
+
+export type AuthResult = { ok: true } | { ok: false; code: string; reason?: string };
+async function post(path: string, body: unknown): Promise<AuthResult> {
+  try {
+    const r = await fetch(path, { method: "POST", credentials: "same-origin", headers: { ...H, "content-type": "application/json" }, body: JSON.stringify(body) });
+    const d = await r.json().catch(() => ({}));
+    return r.ok ? { ok: true } : { ok: false, code: d.error ?? "generic", reason: d.reason };
+  } catch {
+    return { ok: false, code: "generic" };
+  }
+}
+export const registerCustomer = (b: { fullName: string; phone: string; password: string; confirm: string; consent: boolean; website: string }) => post("/api/customer/register", b);
+export async function loginCustomer(b: { phone: string; password: string }): Promise<AuthResult> {
+  const r = await post("/api/customer/login", b);
+  if (r.ok) await refreshAccount();
+  return r;
+}
+export async function logoutCustomer() {
+  await post("/api/customer/logout", {});
+  await refreshAccount();
+}
+export const getRegistrationInfo = () => getJson<RegistrationInfo>("/api/public/registration-info");
+export const getCoaList = (q: string) => getJson<{ rows: Coa[] }>(`/api/customer/coa?q=${encodeURIComponent(q)}`);
 
 export const builtInArticles = (): Article[] => ARTICLES;

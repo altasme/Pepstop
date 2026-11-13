@@ -6,12 +6,12 @@ import { Badge, ConfirmButton, Empty, ErrorNote, Field, ImageField, Loading, Pag
 export function ProductsList() {
   const toast = useToast();
   const [q, setQ] = useState(""); const [category, setCategory] = useState(""); const [status, setStatus] = useState("");
-  const [availability, setAvail] = useState(""); const [sort, setSort] = useState("updated"); const [page, setPage] = useState(1);
+  const [availability, setAvail] = useState(""); const [regulatory, setReg] = useState(""); const [sort, setSort] = useState("updated"); const [page, setPage] = useState(1);
   const cats = useLoad(() => api<any[]>("GET", "/categories"), []);
   const { data, error, loading, reload } = useLoad(() => {
-    const p = new URLSearchParams({ q, category, status, availability, sort, page: String(page), per: "20" });
+    const p = new URLSearchParams({ q, category, status, availability, regulatory, sort, page: String(page), per: "20" });
     return api<{ total: number; rows: any[] }>("GET", `/products?${p}`);
-  }, [q, category, status, availability, sort, page]);
+  }, [q, category, status, availability, regulatory, sort, page]);
   const nav = useNavigate();
   const act = async (fn: () => Promise<unknown>, ok: string) => { try { await fn(); toast("ok", ok); reload(); } catch (e) { toast("error", errorText(e)); } };
   return (
@@ -20,7 +20,8 @@ export function ProductsList() {
       <div className="filters">
         <input aria-label="Search by product name" placeholder="Search by product name" value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }} />
         <select aria-label="Category" value={category} onChange={(e) => { setCategory(e.target.value); setPage(1); }}><option value="">All categories</option>{cats.data?.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select>
-        <select aria-label="Publication status" value={status} onChange={(e) => { setStatus(e.target.value); setPage(1); }}><option value="">Draft and published</option><option value="published">Published</option><option value="draft">Draft</option><option value="archived">Archived</option></select>
+        <select aria-label="Publication status" value={status} onChange={(e) => { setStatus(e.target.value); setPage(1); }}><option value="">All except archived</option><option value="published">Published</option><option value="draft">Draft</option><option value="unpublished">Unpublished</option><option value="archived">Archived</option></select>
+        <select aria-label="Regulatory review" value={regulatory} onChange={(e) => { setReg(e.target.value); setPage(1); }}><option value="">Any regulatory status</option><option value="verified">Verified for intended sale</option><option value="pending_review">Pending review</option><option value="not_cleared">Not cleared</option></select>
         <select aria-label="Availability" value={availability} onChange={(e) => { setAvail(e.target.value); setPage(1); }}><option value="">Any availability</option><option value="available">Available</option><option value="ask">Inquire</option><option value="unavailable">Unavailable</option></select>
         <select aria-label="Sort" value={sort} onChange={(e) => setSort(e.target.value)}><option value="updated">Latest update</option><option value="name">Name</option></select>
       </div>
@@ -28,7 +29,7 @@ export function ProductsList() {
       {loading && !data ? <Loading /> : data && data.rows.length === 0 ? <Empty>No products match. Add your first product to get started.</Empty> : data && (
         <>
           <div className="tablewrap"><table>
-            <thead><tr><th>Image</th><th>Product</th><th>Category</th><th className="num">Price</th><th className="num">Variants</th><th>Availability</th><th>Status</th><th>Last updated</th><th>Actions</th></tr></thead>
+            <thead><tr><th>Image</th><th>Product</th><th>Category</th><th className="num">Price</th><th className="num">Variants</th><th>Availability</th><th>Regulatory review</th><th>Status</th><th>Last updated</th><th>Actions</th></tr></thead>
             <tbody>{data.rows.map((p) => (
               <tr key={p.id}>
                 <td>{p.main_image ? <img className="thumb" src={p.main_image} alt="" /> : <span className="thumb" />}</td>
@@ -37,6 +38,7 @@ export function ProductsList() {
                 <td className="num">{peso(p.base_price)}</td>
                 <td className="num">{p.variants}</td>
                 <td><Badge value={p.availability} /></td>
+                <td><Badge value={p.regulatory_status} /></td>
                 <td><Badge value={p.status} /></td>
                 <td>{when(p.updated_at)}</td>
                 <td><div className="actions">
@@ -59,7 +61,7 @@ export function ProductsList() {
 
 const blank = () => ({ name: "", slug: "", short_description: "", full_description: "", category_id: "", main_image: null as string | null, sort: 0,
   overview: "", specifications: "", composition: "", packaging: "", storage: "", notes: "", reg_type: "", reg_number: "", reg_holder: "",
-  base_price: "" as string | number | null, availability: "ask", show_price: false, inquire_price: true, status: "draft", variants: [] as any[], images: [] as string[] });
+  base_price: "" as string | number | null, regulatory_status: "pending_review", availability: "ask", show_price: false, inquire_price: true, status: "draft", variants: [] as any[], images: [] as string[] });
 
 export function ProductForm() {
   const { id = "new" } = useParams();
@@ -90,7 +92,7 @@ export function ProductForm() {
     try {
       const body = { ...f, status: status ?? f.status, base_price: f.base_price === "" ? null : f.base_price };
       const r = await api<{ id: string }>(isNew ? "POST" : "PUT", isNew ? "/products" : `/products/${id}`, body);
-      toast("ok", status === "published" ? "Product published." : status === "draft" ? "Saved as draft." : "Product saved.");
+      toast("ok", status === "published" ? "Product published." : status === "unpublished" ? "Product unpublished." : status === "draft" ? "Saved as draft." : "Product saved.");
       setDirty(false);
       if (isNew) nav(`/products/${r.id}`, { replace: true });
       else setF((x: any) => ({ ...x, status: body.status }));
@@ -115,13 +117,13 @@ export function ProductForm() {
           <Field label="Display order" hint="Lower numbers appear first."><input type="number" value={f.sort} onChange={(e) => set("sort", e.target.value)} /></Field>
           <Field label="Short description" wide><input value={f.short_description} maxLength={400} onChange={(e) => set("short_description", e.target.value)} /></Field>
           <Field label="Full description" wide hint="Plain text. Only supply content verified by the client."><textarea value={f.full_description} onChange={(e) => set("full_description", e.target.value)} /></Field>
-          <ImageField label="Main product image" value={f.main_image} onChange={(u) => set("main_image", u)} />
+          <ImageField kind="catalog" label="Main product image (private, shown only to approved customers)" value={f.main_image} onChange={(u) => set("main_image", u)} />
         </div>
         <div style={{ marginTop: "1rem" }}>
           <span className="lbl">Additional product images</span>
           <div className="imgrow" style={{ flexWrap: "wrap", marginTop: ".4rem" }}>
             {f.images.map((u: string, i: number) => <div key={u + i}><img src={u} alt="" /><button type="button" className="btn ghost sm" onClick={() => set("images", f.images.filter((_: string, j: number) => j !== i))}>Remove</button></div>)}
-            <ImageField label="" value={null} onChange={(u) => u && set("images", [...f.images, u])} />
+            <ImageField kind="catalog" label="" value={null} onChange={(u) => u && set("images", [...f.images, u])} />
           </div>
         </div>
       </section>
@@ -159,9 +161,10 @@ export function ProductForm() {
           <div className="variant" key={v.id ?? i}>
             <Field label="Variant name"><input value={v.name ?? ""} onChange={(e) => setVar(i, "name", e.target.value)} /></Field>
             <Field label="Strength or specification"><input value={v.strength ?? ""} onChange={(e) => setVar(i, "strength", e.target.value)} /></Field>
+            <Field label="SKU or internal reference"><input value={v.sku ?? ""} onChange={(e) => setVar(i, "sku", e.target.value)} /></Field>
             <Field label="Price (PHP)"><input type="number" min={0} value={v.price ?? ""} onChange={(e) => setVar(i, "price", e.target.value)} /></Field>
             <Field label="Availability"><select value={v.availability ?? "available"} onChange={(e) => setVar(i, "availability", e.target.value)}><option value="available">Available</option><option value="ask">Inquire</option><option value="unavailable">Unavailable</option></select></Field>
-            <Field label="Publication"><select value={v.status ?? "published"} onChange={(e) => setVar(i, "status", e.target.value)}><option value="published">Published</option><option value="draft">Draft</option></select></Field>
+            <Field label="Variant"><select value={v.status ?? "published"} onChange={(e) => setVar(i, "status", e.target.value)}><option value="published">Enabled</option><option value="draft">Disabled</option></select></Field>
             <div className="actions">
               <button type="button" className="btn ghost sm" aria-label="Move up" onClick={() => move(i, -1)}>Up</button>
               <button type="button" className="btn ghost sm" aria-label="Move down" onClick={() => move(i, 1)}>Down</button>
@@ -172,13 +175,23 @@ export function ProductForm() {
         <p><button type="button" className="btn ghost" onClick={() => set("variants", [...f.variants, { name: "", strength: "", price: "", availability: "available", status: "published" }])}>Add variant</button></p>
       </section>
 
+      <section className="card"><h2>Regulatory review</h2>
+        <p className="muted">Only products verified as legally authorized for their intended sale and promotion in the Philippines may be published. Account approval for a customer never makes a product available. Moving a product out of Verified takes it off the catalog immediately.</p>
+        <div className="form">
+          <Field label="Regulatory review status"><select value={f.regulatory_status} onChange={(e) => set("regulatory_status", e.target.value)}>
+            <option value="pending_review">Pending review</option><option value="verified">Verified for intended sale</option><option value="not_cleared">Not cleared</option></select></Field>
+          <div><span className="lbl">Current</span><p><Badge value={f.regulatory_status} /></p></div>
+        </div>
+        {f.regulatory_status !== "verified" && <p className="note">This product cannot be published until it is marked Verified for intended sale.</p>}
+      </section>
+
       <section className="card"><h2>D. Publication controls</h2>
-        <p className="muted">A draft never appears on the public website. Current status: <Badge value={f.status} /></p>
+        <p className="muted">Draft, unpublished and archived products are never visible to customers. Current status: <Badge value={f.status} /></p>
         <div className="actions">
           <button className="btn ghost" disabled={busy} onClick={() => save("draft")}>Save as Draft</button>
-          <button className="btn pink" disabled={busy} onClick={() => save("published")}>{f.status === "published" ? "Save and Keep Published" : "Publish Product"}</button>
-          {f.status === "published" && <button className="btn ghost" disabled={busy} onClick={() => save("draft")}>Unpublish Product</button>}
-          {!isNew && f.status !== "archived" && <ConfirmButton className="btn danger" message="Archive this product? It will be removed from the public catalog." onConfirm={() => save("archived")}>Archive Product</ConfirmButton>}
+          <button className="btn pink" disabled={busy || f.regulatory_status !== "verified"} title={f.regulatory_status !== "verified" ? "Mark the product Verified for intended sale first" : ""} onClick={() => save("published")}>{f.status === "published" ? "Save and Keep Published" : "Publish Product"}</button>
+          {f.status === "published" && <button className="btn ghost" disabled={busy} onClick={() => save("unpublished")}>Unpublish Product</button>}
+          {!isNew && f.status !== "archived" && <ConfirmButton className="btn danger" message="Archive this product? It will be removed from the private catalog." onConfirm={() => save("archived")}>Archive Product</ConfirmButton>}
           {f.status === "archived" && <button className="btn ghost" disabled={busy} onClick={() => save("draft")}>Restore as Draft</button>}
           {dirty && <span className="muted">Unsaved changes</span>}
         </div>

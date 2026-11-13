@@ -43,9 +43,10 @@ export function buildOrder(customer: Customer, lines: ResolvedLine[], subtotal: 
 
 /** Sends the order to the Worker. Returns the saved order (with the server reference) or throws a short message. */
 export async function submitOrderRemote(order: Order, lines: ResolvedLine[]): Promise<Order> {
-  const res = await fetch("/api/public/orders", {
+  const res = await fetch("/api/customer/orders", {
     method: "POST",
-    headers: { "content-type": "application/json" },
+    credentials: "same-origin",
+    headers: { "content-type": "application/json", "x-pepstop": "1" },
     body: JSON.stringify({ customer: order.customer, items: lines.map((l) => ({ productId: l.productId, variantId: l.variantId, qty: l.qty })) }),
   });
   const data = await res.json().catch(() => ({}));

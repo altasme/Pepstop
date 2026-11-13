@@ -41,7 +41,7 @@ export default function Shop() {
 
   return (
     <>
-      <Seo path="/shop" />
+      <Seo path="/shop" noindex />
       <PageBanner title={SHOP.bannerTitle} body={SHOP.bannerBody} />
       <section className="mx-auto max-w-page px-4 py-10 sm:px-6 md:py-14 lg:px-8">
         {remote.status === "loading" ? (

@@ -3,8 +3,9 @@ import { api, label, peso, when } from "../api";
 import { Badge, Empty, ErrorNote, Loading, PageHead, useLoad } from "../ui";
 
 const CARDS: [string, string][] = [
-  ["totalProducts", "Total products"], ["published", "Published products"], ["draft", "Draft products"], ["pendingOrders", "Pending orders"],
-  ["processingOrders", "Processing orders"], ["completedOrders", "Completed orders"], ["pendingPayments", "Payments awaiting verification"], ["inquiries", "Customer inquiries"],
+  ["customers", "Registered customers"], ["pendingCustomers", "Pending registrations"], ["approvedCustomers", "Approved customers"], ["rejectedCustomers", "Rejected customers"], ["suspendedCustomers", "Suspended customers"],
+  ["totalProducts", "Total products"], ["published", "Published products"], ["unpublished", "Unpublished products"],
+  ["newOrders", "New orders"], ["reviewOrders", "Orders awaiting review"], ["pendingPayments", "Payments awaiting verification"], ["inquiries", "Customer inquiries"],
 ];
 
 export default function Dashboard() {
@@ -12,7 +13,8 @@ export default function Dashboard() {
   return (
     <>
       <PageHead title="Dashboard" crumbs={["Dashboard"]}>
-        <Link className="btn pink" to="/products/new">Add New Product</Link>
+        <Link className="btn pink" to="/customers">Review Registrations</Link>
+        <Link className="btn ghost" to="/products/new">Add New Product</Link>
         <Link className="btn ghost" to="/coa">Upload COA</Link>
         <Link className="btn ghost" to="/orders?status=new_order">View Pending Orders</Link>
         <Link className="btn ghost" to="/products">Manage Products</Link>
@@ -28,8 +30,8 @@ export default function Dashboard() {
                 <p key={o.id}><Link to={`/orders/${o.id}`}>{o.ref}</Link> {o.full_name} <Badge value={o.order_status} /> <span className="muted">{peso(o.total)} · {when(o.created_at)}</span></p>
               ))}
             </section>
-            <section className="card"><h2>Recently added products</h2>
-              {data.newProducts.length === 0 ? <Empty>No products yet.</Empty> : data.newProducts.map((p: any) => <p key={p.id}><Link to={`/products/${p.id}`}>{p.name}</Link> <Badge value={p.status} /> <span className="muted">{when(p.created_at)}</span></p>)}
+            <section className="card"><h2>Registrations waiting for approval</h2>
+              {data.pendingList.length === 0 ? <Empty>No registrations are waiting.</Empty> : data.pendingList.map((c: any) => <p key={c.id}><Link to={`/customers/${c.id}`}>{c.full_name}</Link> {c.phone} <span className="muted">{when(c.created_at)}</span></p>)}
             </section>
             <section className="card"><h2>Recently updated products</h2>
               {data.updatedProducts.length === 0 ? <Empty>No products yet.</Empty> : data.updatedProducts.map((p: any) => <p key={p.id}><Link to={`/products/${p.id}`}>{p.name}</Link> <span className="muted">{when(p.updated_at)}</span></p>)}

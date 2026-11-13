@@ -15,6 +15,8 @@ function walk(dir) {
 const routes = walk(dist)
   .filter((f) => f.endsWith(".html"))
   .map((f) => "/" + relative(dist, f).replace(/index\.html$/, "").replace(/\.html$/, "").replace(/\/$/, ""))
+  // Private catalog pages (login required) and the account page never belong in a sitemap.
+  .filter((r) => !/^\/(shop|cart|checkout|coa|account)(\/|$)/.test(r))
   .filter((r) => r !== "/404" && !r.endsWith("/_") && !readFileSync(join(dist, r === "/" ? "index.html" : `${r}/index.html`), "utf8").includes('content="noindex"'))
   .sort();
 
