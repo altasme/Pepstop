@@ -269,6 +269,7 @@ A petal-and-plum palette on white, measured from the logo. Raspberry is saturate
 - **Title** (Bodoni 500, 1.5rem): Category names, value titles, why-us reasons, About columns, article cards. How-it-works numerals are Bodoni 500 at 3rem in raspberry. The collections ticker sets collection names in Bodoni 500 at 1.5rem (2rem from md).
 - **Statement** (Bodoni 500, 1.5rem to 1.875rem, snug leading, claret): About mission and vision.
 - **Body** (Hanken 400, 16px, 1.5): Running text, never below 14px; lead text 18 to 20px at 80% ink, prose capped at 40rem. Product titles are Hanken 600 at 16 to 18px.
+- **Wordmark** (Bodoni 600, header only): 1.5625rem on phones, 2.1875rem on desktop (1.875rem once scrolled); descriptor 1.0938rem. The footer and mobile menu keep the smaller 1.25rem to 1.75rem lockup.
 - **Label** (Hanken 500 to 600, 14 to 16px): Buttons, nav (15px), badges (12px 600), product meta (14px). Mobile menu links are Hanken 600 at 1.875rem.
 
 ### Named Rules

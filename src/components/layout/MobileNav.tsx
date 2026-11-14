@@ -86,7 +86,7 @@ export function MobileNav({ open, onClose }: { open: boolean; onClose: () => voi
           ))}
         </ul>
       </nav>
-      <div className="mt-6"><AccountLink onNavigate={onClose} className="inline-flex min-h-12 items-center rounded-full border border-white/40 px-6 text-lg font-semibold text-white hover:bg-surface/10" /></div>
+      <div className="mt-6 flex flex-wrap gap-3"><AccountLink onNavigate={onClose} className="inline-flex min-h-12 items-center rounded-full border border-white/40 px-6 text-lg font-semibold text-white hover:bg-surface/10" /></div>
       <div className="mt-8">
         <p className="mb-3 text-sm text-white/85">{hasChatChannel() ? CHAT_HELPER.withChat : CHAT_HELPER.phoneOnly}</p>
         <div className="flex flex-col gap-3">

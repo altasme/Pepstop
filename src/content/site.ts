@@ -86,7 +86,7 @@ export const NAV = [
 ];
 
 /** Routes where the mobile sticky CTA bar is hidden (§9.8). */
-export const STICKY_CTA_HIDDEN_ON = ["/account", "/contact", "/privacy", "/404", "/cart", "/checkout", "/checkout/confirmation", "/checkout/thank-you"];
+export const STICKY_CTA_HIDDEN_ON = ["/account", "/contact", "/privacy", "/404", "/cart", "/checkout", "/checkout/confirmation", "/checkout/thank-you", "/account/orders"];
 
 /* ------------------------------------------------------------------ */
 /* Image slots. No images are generated or bundled. Each slot renders  */
@@ -508,6 +508,48 @@ export const SHOP = {
   relatedTitle: "You may also like",
 };
 
+export const MY_ORDERS = {
+  nav: "My Orders",
+  title: "My Orders",
+  lead: "Every order you have placed, with its status and history.",
+  empty: "You have not placed an order yet.",
+  emptyCta: "Browse products",
+  loadError: "We could not load your orders. Please try again.",
+  retry: "Try again",
+  orderLabel: "Order",
+  placed: "Placed",
+  items: (n: number) => `${n} ${n === 1 ? "item" : "items"}`,
+  view: "View details",
+  back: "All orders",
+  itemsTitle: "Items",
+  deliveryTitle: "Delivery",
+  paymentTitle: "Payment",
+  historyTitle: "Order history",
+  subtotal: "Subtotal",
+  delivery: "Delivery",
+  deliveryTbc: "Confirmed by The Pep Stop",
+  total: "Total",
+  notFound: "We could not find that order.",
+  payNow: "Upload proof of payment",
+  help: "Questions about an order? Message us and quote the order number.",
+  /** Customer wording for each order status. */
+  status: {
+    new_order: "Order received",
+    under_review: "Being reviewed",
+    awaiting_payment: "Waiting for payment",
+    payment_submitted: "Payment received, being checked",
+    payment_verified: "Payment confirmed",
+    processing: "Preparing your order",
+    ready_for_dispatch: "Ready to ship",
+    shipped: "Shipped",
+    completed: "Completed",
+    cancelled: "Cancelled",
+    payment_rejected: "Payment could not be confirmed",
+  } as Record<string, string>,
+  awaitingProof: "Waiting for your proof of payment",
+  cod: "Pay in cash on delivery",
+};
+
 export const CART = {
   title: "Your Cart",
   empty: "Your cart is empty.",
@@ -862,6 +904,7 @@ export const SEO = {
     },
     "/cart": { title: "Your Cart | The Pep Stop", description: "Review the items in your cart." },
     "/checkout": { title: "Checkout | The Pep Stop", description: "Enter your delivery details to place your order." },
+    "/account/orders": { title: "My Orders | The Pep Stop", description: "Your orders and their status." },
     "/checkout/thank-you": { title: "Thank You | The Pep Stop", description: "Your order has been received." },
     "/checkout/confirmation": { title: "Order Summary | The Pep Stop", description: "Send your order summary to The Pep Stop." },
     "/account": { title: "View Products | The Pep Stop", description: "Log in or create an account to see products and prices." },

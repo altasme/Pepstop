@@ -76,6 +76,8 @@ export async function handleCustomer(req: Request, env: Env, url: URL): Promise<
   if (m === "GET" && seg[0] === "catalog") return catalog(env);
   if (m === "GET" && seg[0] === "coa") return coa(env, url);
   if (m === "GET" && seg[0] === "orders" && seg[1] === "awaiting-payment") return awaitingPayment(env, customer);
+  if (m === "GET" && seg[0] === "orders" && !seg[1]) return myOrders(env, customer);
+  if (m === "GET" && seg[0] === "orders" && seg[1] && !seg[2]) return myOrder(env, customer, seg[1]);
   if (m === "POST" && seg[0] === "orders" && !seg[1]) return placeOrder(req, env, customer);
   if (m === "POST" && seg[0] === "orders" && seg[2] === "payment") return submitPayment(req, env, customer, seg[1]);
   return err(404, "not_found");
@@ -232,6 +234,34 @@ async function placeOrder(req: Request, env: Env, customer: Customer) {
     env.DB.prepare("INSERT INTO order_history (id,order_id,at,status,note,by_user) VALUES (?,?,?,?,?,?)").bind(uid(), id, t, "new_order", "Order submitted from the website", "customer"),
   ]);
   return json({ ok: true, ref, cod: isCod, subtotal, deliveryFee: fee, deliveryLabel: chosen?.label ?? null, total, hasUnpriced }, 201);
+}
+
+/** The signed-in customer's own orders, newest first. Internal notes and staff names are never included. */
+async function myOrders(env: Env, customer: Customer) {
+  const rows = (await env.DB.prepare(
+    "SELECT o.ref,o.created_at,o.order_status,o.payment_status,o.total,o.has_unpriced,(SELECT COUNT(*) FROM payments p WHERE p.order_id=o.id) AS proofs,(SELECT COALESCE(SUM(qty),0) FROM order_items i WHERE i.order_id=o.id) AS items FROM orders o WHERE o.customer_id=? ORDER BY o.created_at DESC LIMIT 100",
+  ).bind(customer.id).all<any>()).results;
+  return json({ orders: rows.map((o) => ({ ref: o.ref, placedAt: o.created_at, status: o.order_status, paymentStatus: o.payment_status, awaitingProof: o.payment_status === "pending" && !o.proofs && o.order_status === "new_order", total: o.total, hasUnpriced: !!o.has_unpriced, items: o.items })) }, 200, { "cache-control": "private, no-store" });
+}
+
+/** One of the customer's own orders with its items and status history. Another customer's reference reads as not found. */
+async function myOrder(env: Env, customer: Customer, ref: string) {
+  const o = await env.DB.prepare("SELECT o.*, (SELECT label FROM payment_methods m WHERE m.id=o.payment_method) AS pay_label, (SELECT COUNT(*) FROM payments p WHERE p.order_id=o.id) AS proofs FROM orders o WHERE o.ref=? AND o.customer_id=?").bind(clip(ref, 20), customer.id).first<any>();
+  if (!o) return err(404, "order_not_found");
+  const [items, history] = await Promise.all([
+    env.DB.prepare("SELECT product_name,variant_name,qty,unit_price,line_total FROM order_items WHERE order_id=?").bind(o.id).all<any>(),
+    env.DB.prepare("SELECT at,status FROM order_history WHERE order_id=? ORDER BY at ASC").bind(o.id).all<any>(),
+  ]);
+  return json({
+    order: {
+      ref: o.ref, placedAt: o.created_at, updatedAt: o.updated_at, status: o.order_status, paymentStatus: o.payment_status,
+      awaitingProof: o.payment_status === "pending" && !o.proofs && o.order_status === "new_order",
+      paymentName: o.pay_label ?? null, deliveryLabel: o.delivery_option, deliveryFee: o.delivery_fee, subtotal: o.subtotal, total: o.total, hasUnpriced: !!o.has_unpriced,
+      address: { street: o.street, barangay: o.barangay, city: o.city, province: o.province, postal: o.postal },
+      lines: items.results.map((i) => ({ name: i.product_name, variant: i.variant_name, qty: i.qty, unitPrice: i.unit_price, lineTotal: i.line_total })),
+      history: history.results.map((h) => ({ at: h.at, status: h.status })),
+    },
+  }, 200, { "cache-control": "private, no-store" });
 }
 
 /** The customer's latest order that has no proof of payment yet, so they can come back and finish paying. */

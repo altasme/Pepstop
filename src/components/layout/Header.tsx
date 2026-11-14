@@ -6,6 +6,7 @@ import { primaryCta } from "../../lib/cta";
 import { trackCta } from "../../lib/analytics";
 import { Logo } from "../ui/Logo";
 import { Sparkle } from "../ui/Sparkle";
+import { useRemote } from "../../lib/remote";
 import { MobileNav } from "./MobileNav";
 import { CartButton } from "./CartButton";
 import { AccountLink } from "./AccountLink";
@@ -14,6 +15,7 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
+  const { customer } = useRemote();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -54,7 +56,7 @@ export function Header() {
               href={primaryCta.href}
               {...(primaryCta.kind === "messenger" ? { target: "_blank", rel: "noopener noreferrer" } : {})}
               onClick={() => trackCta(primaryCta.kind, pathname)}
-              className="hidden min-h-11 items-center whitespace-nowrap rounded-full bg-raspberry px-5 text-base font-semibold text-white transition-colors hover:bg-raspberry-deep sm:inline-flex"
+              className={`hidden min-h-11 items-center whitespace-nowrap rounded-full bg-raspberry px-5 text-base font-semibold text-white transition-colors hover:bg-raspberry-deep ${customer ? "2xl:inline-flex" : "sm:inline-flex"}`}
             >
               {primaryCta.navLabel}
             </a>

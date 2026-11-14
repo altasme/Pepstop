@@ -34,6 +34,7 @@ export const routes: RouteRecord[] = [
       },
       { path: "shop", ...privatePage(() => import("./pages/Shop")) },
       { path: "account", ...page(() => import("./pages/Account")) },
+      { path: "account/orders", ...privatePage(() => import("./pages/MyOrders")) },
       { path: "shop/:slug", ...privatePage(() => import("./pages/Product")), getStaticPaths: () => ["shop/_"] }, // shell; products come from the database
       { path: "coa", ...privatePage(() => import("./pages/Coa")) },
       { path: "cart", ...privatePage(() => import("./pages/Cart")) },
