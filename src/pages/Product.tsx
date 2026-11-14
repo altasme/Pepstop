@@ -13,7 +13,6 @@ import { ProductImage } from "../components/ui/ProductImage";
 import { QuantityStepper } from "../components/ui/QuantityStepper";
 import { Button } from "../components/ui/Button";
 import { CtaButton } from "../components/ui/CtaButton";
-import { Disclaimer } from "../components/ui/Disclaimer";
 import { ProductCard } from "../components/ui/ProductCard";
 import { SectionHeading } from "../components/ui/SectionHeading";
 import NotFound from "./NotFound";
@@ -147,11 +146,9 @@ export default function Product() {
                 <details className="group border-b border-line">
                   <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 text-base font-semibold text-ink [&::-webkit-details-marker]:hidden">{SHOP.coaTitle}<ChevronDown className="h-5 w-5 shrink-0 transition-transform duration-200 ease-out group-open:rotate-180" strokeWidth={1.75} aria-hidden="true" /></summary>
                   <ul className="space-y-2 pb-5 text-ink/80">{product.coas.map((c) => <li key={c.id}>{c.title} ({SHOP.batchLabel}: {c.batch}) <a className="font-semibold text-raspberry underline" href={`/files/coa/${c.id}`} target="_blank" rel="noreferrer">{SHOP.coaOpen}</a></li>)}</ul>
-                  <p className="pb-5 text-sm text-mute">{SHOP.coaNote}</p>
                 </details>
               ) : null}
             </div>
-            <Disclaimer text={SHOP.productDisclaimer} className="mt-6 text-sm" />
           </div>
         </div>
       </div>

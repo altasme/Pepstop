@@ -470,7 +470,6 @@ export const SHOP = {
   compositionTitle: "Contents",
   notesTitle: "Notes",
   coaOpen: "Open document",
-  coaNote: "A certificate of analysis is a supplier document. It is not proof of product approval, safety, effectiveness, or authorization for sale.",
   batchLabel: "Batch or lot",
   regLabel: "Reg. No.",
   notProvided: "Details to follow.",
@@ -483,8 +482,6 @@ export const SHOP = {
   ],
   payWith: "Pay with",
   relatedTitle: "You may also like",
-  productDisclaimer:
-    "Product information is provided for general informational purposes and should not be interpreted as medical advice, diagnosis, or treatment guidance. Product availability and permitted use depend on the applicable product classification and regulatory requirements. Consult a qualified healthcare professional for personal health concerns.",
 };
 
 export const CART = {
@@ -673,7 +670,6 @@ export const COA = {
   product: "Product",
   batch: "Batch or lot",
   open: "Open PDF",
-  note: "A certificate of analysis is a supplier document. It is not proof of product approval, safety, effectiveness, or authorization for sale, and it does not replace advice from a qualified healthcare professional.",
   link: "Certificates of Analysis",
 };
 
