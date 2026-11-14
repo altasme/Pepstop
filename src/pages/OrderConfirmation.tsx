@@ -11,12 +11,11 @@ import { Button } from "../components/ui/Button";
 import { Card } from "../components/ui/Card";
 import { CtaButton } from "../components/ui/CtaButton";
 
-function PaymentDetails({ order }: { order: Order }) {
+function PaymentDetails({ order, paid }: { order: Order; paid: boolean }) {
   const { paymentMethods } = useRemote();
   const method = paymentMethods.find((m) => m.id === order.customer.payment);
   const due = order.total !== undefined && !order.hasUnpriced ? formatPhp(order.total) : null;
-  const [reference, setReference] = useState("");
-  const [state, setState] = useState<"idle" | "sending" | "sent" | "error" | "need">("idle");
+  const [state, setState] = useState<"idle" | "sending" | "sent" | "error" | "need">(paid ? "sent" : "idle");
   const input = "mt-1 min-h-12 w-full rounded-xl border border-edge bg-white px-4 text-base text-ink";
   return (
     <Card>
@@ -36,15 +35,13 @@ function PaymentDetails({ order }: { order: Order }) {
         <form className="mt-4 grid gap-3" onSubmit={async (e) => {
           e.preventDefault();
           const file = (e.currentTarget.elements.namedItem("proof") as HTMLInputElement).files?.[0];
-          if (!reference.trim() && !file) { setState("need"); return; }
+          if (!file) { setState("need"); return; }
           setState("sending");
           const fd = new FormData();
-          fd.set("reference", reference.trim());
-          if (file) fd.set("proof", file);
+          fd.set("proof", file);
           try { const r = await fetch(`/api/customer/orders/${encodeURIComponent(order.ref)}/payment`, { method: "POST", credentials: "same-origin", headers: { "x-pepstop": "1" }, body: fd }); setState(r.ok ? "sent" : "error"); } catch { setState("error"); }
         }}>
-          <label className="text-sm font-semibold text-ink">{CONFIRMATION.payReference}<input className={input} value={reference} onChange={(e) => setReference(e.target.value)} maxLength={120} autoComplete="off" /></label>
-          <label className="text-sm font-semibold text-ink">{CONFIRMATION.payProof}<input name="proof" type="file" accept="image/png,image/jpeg,image/webp,application/pdf" className={input} /></label>
+          <label className="text-sm font-semibold text-ink">{CONFIRMATION.payProof}<input name="proof" type="file" required accept="image/png,image/jpeg,image/webp" className={input} /></label>
           {(state === "error" || state === "need") && <p role="alert" className="text-sm font-medium text-raspberry-deep">{state === "need" ? CONFIRMATION.payNeed : CONFIRMATION.payError}</p>}
           <Button submit disabled={state === "sending"}>{CONFIRMATION.paySubmit}</Button>
         </form>
@@ -56,7 +53,19 @@ function PaymentDetails({ order }: { order: Order }) {
 export default function OrderConfirmation() {
   const [order, setOrder] = useState<Order | null | undefined>(undefined);
   const [copied, setCopied] = useState(false);
-  useEffect(() => setOrder(loadLastOrder()), []);
+  const [paid, setPaid] = useState(false);
+  useEffect(() => {
+    // The server knows which order still needs its proof of payment, even after the tab was closed.
+    const stored = loadLastOrder();
+    fetch("/api/customer/orders/awaiting-payment", { credentials: "same-origin", headers: { "x-pepstop": "1" } })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d: { order: Order | null } | null) => {
+        if (d?.order) { setOrder(d.order); return; }
+        setPaid(!!stored?.remote);
+        setOrder(stored);
+      })
+      .catch(() => setOrder(stored));
+  }, []);
 
   if (order === undefined) return <><Seo path="/checkout/confirmation" noindex /><PageBanner title={CONFIRMATION.title} /></>;
   if (order === null) {
@@ -127,7 +136,7 @@ export default function OrderConfirmation() {
             {channels.map((c, i) => <CtaButton key={c.kind} channel={c} label={c.label} variant={i === 0 ? "primary" : "secondary"} />)}
           </div>
         </Card>
-        {order.remote && <PaymentDetails order={order} />}
+        {order.remote && <PaymentDetails order={order} paid={paid} />}
       </section>
     </>
   );

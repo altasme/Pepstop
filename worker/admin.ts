@@ -199,10 +199,14 @@ async function resetPassword(c: Ctx): Promise<Response> {
 
 /* ---------------- dashboard, settings, logs ---------------- */
 
+/** An order reaches the administrator only once the customer has uploaded proof of payment (or it is already paid). Alias: o. */
+const PAID = "(EXISTS (SELECT 1 FROM payments pm WHERE pm.order_id=o.id) OR o.payment_status IN ('submitted','verified','paid'))";
+
 /** Work waiting for the administrator. One cheap read, polled by the admin menu badges. */
 async function counts(c: Ctx) {
+  // Orders and their payment proofs arrive together, so one count covers both (payments stays 0 to avoid a double notice).
   const row = await c.env.DB.prepare(
-    "SELECT (SELECT COUNT(*) FROM customers WHERE status='pending') AS customers, (SELECT COUNT(*) FROM orders WHERE order_status='new_order') AS orders, (SELECT COUNT(*) FROM payments WHERE status='submitted') AS payments, (SELECT COUNT(*) FROM customer_inquiries WHERE status='new' AND archived=0) AS inquiries",
+    `SELECT (SELECT COUNT(*) FROM customers WHERE status='pending') AS customers, (SELECT COUNT(*) FROM orders o WHERE ${PAID} AND o.order_status IN ('new_order','payment_submitted')) AS orders, 0 AS payments, (SELECT COUNT(*) FROM customer_inquiries WHERE status='new' AND archived=0) AS inquiries`,
   ).first<{ customers: number; orders: number; payments: number; inquiries: number }>();
   return json(row ?? { customers: 0, orders: 0, payments: 0, inquiries: 0 });
 }
@@ -220,12 +224,12 @@ async function dashboard(c: Ctx) {
     count("SELECT COUNT(*) n FROM products WHERE status!='archived'"),
     count("SELECT COUNT(*) n FROM products WHERE status='published'"),
     count("SELECT COUNT(*) n FROM products WHERE status IN ('draft') AND status!='archived'"),
-    count("SELECT COUNT(*) n FROM orders WHERE order_status='new_order'"),
-    count("SELECT COUNT(*) n FROM orders WHERE order_status IN ('under_review','awaiting_payment','payment_submitted')"),
+    count(`SELECT COUNT(*) n FROM orders o WHERE ${PAID} AND o.order_status IN ('new_order','payment_submitted')`),
+    count(`SELECT COUNT(*) n FROM orders o WHERE ${PAID} AND o.order_status IN ('under_review','awaiting_payment')`),
     count("SELECT COUNT(*) n FROM payments WHERE status='submitted'"),
     count("SELECT COUNT(*) n FROM customer_inquiries WHERE archived=0"),
     list("SELECT id,full_name,phone,created_at FROM customers WHERE status='pending' ORDER BY created_at DESC LIMIT 5"),
-    list("SELECT id,ref,full_name,total,order_status,created_at FROM orders ORDER BY created_at DESC LIMIT 5"),
+    list(`SELECT o.id,o.ref,o.full_name,o.total,o.order_status,o.created_at FROM orders o WHERE ${PAID} ORDER BY o.created_at DESC LIMIT 5`),
     list("SELECT id,name,status,updated_at FROM products ORDER BY updated_at DESC LIMIT 5"),
     list("SELECT id,title,batch,uploaded_at FROM coa_documents ORDER BY uploaded_at DESC LIMIT 5"),
     list("SELECT at,username,action,entity FROM admin_activity_logs WHERE action NOT IN ('login','logout','login_failed') ORDER BY at DESC LIMIT 8"),
@@ -533,7 +537,7 @@ async function coaStatus(c: Ctx, id: string) {
 async function listOrders(c: Ctx) {
   const { per, offset } = pageOf(c.url);
   const p = c.url.searchParams;
-  const where: string[] = []; const args: unknown[] = [];
+  const where: string[] = [PAID]; const args: unknown[] = [];
   if (p.get("q")) { where.push("(o.ref LIKE ? ESCAPE '\\' OR o.full_name LIKE ? ESCAPE '\\' OR o.mobile LIKE ? ESCAPE '\\')"); const q = likeEsc(p.get("q")!); args.push(q, q, q); }
   if (p.get("status")) { where.push("o.order_status=?"); args.push(p.get("status")); }
   if (p.get("payment")) { where.push("o.payment_status=?"); args.push(p.get("payment")); }
@@ -543,7 +547,7 @@ async function listOrders(c: Ctx) {
   return json({ total, rows });
 }
 async function getOrder(c: Ctx, id: string) {
-  const o = await c.env.DB.prepare("SELECT * FROM orders WHERE id=?").bind(id).first();
+  const o = await c.env.DB.prepare(`SELECT o.* FROM orders o WHERE o.id=? AND ${PAID}`).bind(id).first();
   if (!o) return err(404, "not_found");
   const q = async (sql: string) => (await c.env.DB.prepare(sql).bind(id).all()).results;
   const pm = await c.env.DB.prepare("SELECT label FROM payment_methods WHERE id=?").bind((o as { payment_method: string }).payment_method).first<{ label: string }>();
@@ -551,7 +555,7 @@ async function getOrder(c: Ctx, id: string) {
 }
 async function patchOrder(c: Ctx, id: string) {
   const d = await body<Record<string, any>>(c.req);
-  const o = await c.env.DB.prepare("SELECT order_status, subtotal, delivery_fee FROM orders WHERE id=?").bind(id).first<{ order_status: string; subtotal: number; delivery_fee: number | null }>();
+  const o = await c.env.DB.prepare(`SELECT o.order_status, o.subtotal, o.delivery_fee FROM orders o WHERE o.id=? AND ${PAID}`).bind(id).first<{ order_status: string; subtotal: number; delivery_fee: number | null }>();
   if (!d || !o) return err(o ? 400 : 404, o ? "bad_request" : "not_found");
   const sets: string[] = []; const args: unknown[] = [];
   const t = now();
@@ -714,7 +718,7 @@ async function customerProfile(c: Ctx, id: string) {
   const cu = await c.env.DB.prepare("SELECT id,full_name,phone,status,status_note,admin_notes,created_at,decided_at,last_login_at FROM customers WHERE id=?").bind(id).first();
   if (!cu) return err(404, "not_found");
   const history = (await c.env.DB.prepare("SELECT * FROM customer_status_history WHERE customer_id=? ORDER BY at DESC").bind(id).all()).results;
-  const orders = (await c.env.DB.prepare("SELECT id,ref,total,order_status,created_at FROM orders WHERE customer_id=? ORDER BY created_at DESC LIMIT 20").bind(id).all()).results;
+  const orders = (await c.env.DB.prepare(`SELECT o.id,o.ref,o.total,o.order_status,o.created_at FROM orders o WHERE o.customer_id=? AND ${PAID} ORDER BY o.created_at DESC LIMIT 20`).bind(id).all()).results;
   const activity = (await c.env.DB.prepare("SELECT at,username,action,detail FROM admin_activity_logs WHERE entity='customer' AND entity_id=? ORDER BY at DESC LIMIT 20").bind(id).all()).results;
   return json({ ...cu, history, orders, activity });
 }

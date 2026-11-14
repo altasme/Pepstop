@@ -537,9 +537,9 @@ export const CHECKOUT = {
     "Pick the one you prefer. We will send the payment instructions once we have reviewed and confirmed your order.",
   notesTitle: "Notes (optional)",
   summaryTitle: "Order summary",
-  place: "Send Order",
+  place: "Place Order",
   submitNote:
-    "You will not be charged here. Sending your order does not guarantee availability or confirm it. We will contact you to confirm the next steps.",
+    "You will not be charged here. After you place your order you will see how to pay, then upload a screenshot of your payment. Your order is confirmed once we have checked it.",
   consent:
     "I agree that The Pep Stop may use the information I provide to process my order, as described in its Privacy Policy.",
   privacyLinkLabel: "Privacy Policy",
@@ -574,13 +574,13 @@ export const CHECKOUT = {
 };
 
 export const CONFIRMATION = {
-  title: "Thank you for your order.",
+  title: "One more step: pay and upload your proof.",
   lead:
-    "We have your order details. Our team will check availability and confirm delivery and payment with you.",
+    "Your order is saved. Pay using the details below, then upload a screenshot of your payment. Your order goes to our team as soon as it is uploaded.",
   stubNote:
-    "Your order is not confirmed yet. To get things moving faster, send the summary to our team on your preferred channel and we will reply with the next steps.",
+    "Questions about your order? Contact us and quote your order reference.",
   reference: "Order Reference",
-  sendTitle: "Want a faster reply?",
+  sendTitle: "Need help?",
   copy: "Copy Order Summary",
   copied: "Copied.",
   sendMessenger: "Send via Messenger",
@@ -597,15 +597,16 @@ export const CONFIRMATION = {
   payAccountName: "Account name",
   payAccountNumber: "Account number",
   payTotal: "Amount to pay",
+  awaitingTitle: "You have an order waiting for payment.",
+  awaitingLink: "Pay and upload proof",
   deliveryLabel: "Delivery",
-  payTitle: "Already sent your payment?",
-  payBody: "Send your payment reference number or a screenshot so we can match it to your order. We check every payment by hand, so your order is confirmed only once we reply.",
-  payReference: "Payment reference number",
-  payProof: "Payment screenshot (optional, image or PDF up to 5 MB)",
-  paySubmit: "Submit payment details",
-  paySent: "Thank you. We received your payment details and will verify them with your order.",
+  payTitle: "Upload your proof of payment",
+  payBody: "Upload a screenshot of your payment. You need to do this for your order to reach our team. We check every payment by hand, and your order is confirmed once we have.",
+  payProof: "Screenshot of your payment (image, up to 5 MB)",
+  paySubmit: "Upload proof of payment",
+  paySent: "Thank you. We received your proof of payment. Our team will check it and confirm your order.",
   payError: "That did not go through. Check the details and try again, or message us instead.",
-  payNeed: "Enter a reference number or choose a file.",
+  payNeed: "Please choose a screenshot to upload.",
 };
 
 export const ACCOUNT = {

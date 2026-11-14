@@ -34,7 +34,6 @@ export function CoaLibrary() {
   return (
     <>
       <PageHead title="COA Library"><button className="btn pink" onClick={() => setEdit({ product_id: "", batch: "", title: "", doc_date: "", notes: "", status: "draft" })}>Upload COA</button></PageHead>
-      <p className="note">A Certificate of Analysis is not proof of product approval, safety, efficacy, or authorization for sale. Verify that each document is authentic and applies to the listed product and batch before publishing. Documents are never labeled verified automatically.</p>
       {edit && (
         <section className="card" style={{ marginTop: "1rem" }}><h2>{edit.id ? "Edit COA" : "Upload COA"}</h2>
           <div className="form">

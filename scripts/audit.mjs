@@ -26,9 +26,9 @@ for (const f of walk(join(root, "src/content"))) {
 }
 
 // 3. Boundary (CLAUDE.md v1.20). The admin panel and Worker API are built, but the public bundle may only
-// reach the network from four known files, and nothing may bring back the retired catalog routes or Pages Functions.
+// reach the network from a short list of known files, and nothing may bring back the retired catalog routes or Pages Functions.
 for (const d of ["functions", "catalog", "src/admin", "src/catalog", "src/pages/catalog", "src/pages/admin"]) if (existsSync(join(root, d))) fail(`forbidden directory: ${d}`);
-const NETWORK_OK = ["src/components/sections/InquiryForm.tsx", "src/lib/remote.ts", "src/lib/orders.ts", "src/pages/Coa.tsx", "src/pages/OrderConfirmation.tsx"];
+const NETWORK_OK = ["src/components/sections/InquiryForm.tsx", "src/lib/remote.ts", "src/lib/orders.ts", "src/pages/Coa.tsx", "src/pages/OrderConfirmation.tsx", "src/components/ui/AwaitingPayment.tsx"];
 for (const f of walk(join(root, "src"))) {
   const t = readFileSync(f, "utf8");
   const rel = f.replace(root, "");

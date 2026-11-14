@@ -5,6 +5,7 @@ import { useRemote } from "../lib/remote";
 import { getCategories, getProducts } from "../content/getContent";
 import { Seo } from "../lib/seo";
 import { PageBanner } from "../components/sections/PageBanner";
+import { AwaitingPayment } from "../components/ui/AwaitingPayment";
 import { ProductCard } from "../components/ui/ProductCard";
 import { Button } from "../components/ui/Button";
 
@@ -41,6 +42,7 @@ export default function Shop() {
     <>
       <Seo path="/shop" noindex />
       <PageBanner title={SHOP.bannerTitle} body={SHOP.bannerBody} />
+      <div className="mx-auto max-w-page px-4 pt-6 sm:px-6 lg:px-8 empty:hidden"><AwaitingPayment /></div>
       <section className="mx-auto max-w-page px-4 py-10 sm:px-6 md:py-14 lg:px-8">
         {remote.status === "loading" ? (
           <div aria-busy="true" className="mx-auto max-w-prose p-10 text-center text-mute">{UI.loading}</div>

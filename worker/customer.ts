@@ -75,6 +75,7 @@ export async function handleCustomer(req: Request, env: Env, url: URL): Promise<
   const customer = auth.customer;
   if (m === "GET" && seg[0] === "catalog") return catalog(env);
   if (m === "GET" && seg[0] === "coa") return coa(env, url);
+  if (m === "GET" && seg[0] === "orders" && seg[1] === "awaiting-payment") return awaitingPayment(env, customer);
   if (m === "POST" && seg[0] === "orders" && !seg[1]) return placeOrder(req, env, customer);
   if (m === "POST" && seg[0] === "orders" && seg[2] === "payment") return submitPayment(req, env, customer, seg[1]);
   return err(404, "not_found");
@@ -230,6 +231,20 @@ async function placeOrder(req: Request, env: Env, customer: Customer) {
   return json({ ok: true, ref, subtotal, deliveryFee: fee, deliveryLabel: chosen?.label ?? null, total, hasUnpriced }, 201);
 }
 
+/** The customer's latest order that has no proof of payment yet, so they can come back and finish paying. */
+async function awaitingPayment(env: Env, customer: Customer) {
+  const o = await env.DB.prepare("SELECT o.*, (SELECT label FROM payment_methods m WHERE m.id=o.payment_method) AS pay_label FROM orders o WHERE o.customer_id=? AND o.payment_status='pending' AND NOT EXISTS (SELECT 1 FROM payments p WHERE p.order_id=o.id) AND o.order_status='new_order' ORDER BY o.created_at DESC LIMIT 1").bind(customer.id).first<any>();
+  if (!o) return json({ order: null }, 200, { "cache-control": "private, no-store" });
+  const items = (await env.DB.prepare("SELECT product_name,variant_name,qty,unit_price,line_total FROM order_items WHERE order_id=?").bind(o.id).all<any>()).results;
+  return json({
+    order: {
+      ref: o.ref, placedAt: o.created_at, remote: true, subtotal: o.subtotal, hasUnpriced: !!o.has_unpriced, deliveryFee: o.delivery_fee, deliveryLabel: o.delivery_option, total: o.total, paymentName: o.pay_label ?? undefined,
+      customer: { fullName: o.full_name, mobile: o.mobile, email: o.email ?? "", street: o.street, barangay: o.barangay, city: o.city, province: o.province, postal: o.postal, notes: o.customer_notes, payment: o.payment_method, delivery: "" },
+      lines: items.map((i) => ({ name: i.product_name, variant: i.variant_name, qty: i.qty, unitPrice: i.unit_price ?? 0, lineTotal: i.line_total, isSample: false, unpriced: i.unit_price === null })),
+    },
+  }, 200, { "cache-control": "private, no-store" });
+}
+
 /** The customer submits a payment reference and optional proof for their own order. Never marks anything verified. */
 async function submitPayment(req: Request, env: Env, customer: Customer, ref: string) {
   if (!(await rateLimit(env, `pay:${customer.id}`, 10, 3600))) return err(429, "too_many_requests");
@@ -248,12 +263,12 @@ async function submitPayment(req: Request, env: Env, customer: Customer, ref: st
     proofKey = `proof/${uid()}.${type.ext}`;
     await env.FILES.put(proofKey, bytes, { httpMetadata: { contentType: type.mime } });
   }
-  if (!reference && !proofKey) return err(400, "reference_or_proof_required");
+  if (!proofKey) return err(400, "proof_required");
   const t = now();
   await env.DB.batch([
     env.DB.prepare("INSERT INTO payments (id,order_id,reference,proof_key,status,notes,created_at) VALUES (?,?,?,?, 'submitted','',?)").bind(uid(), order.id, reference, proofKey, t),
     env.DB.prepare("UPDATE orders SET payment_status='submitted', order_status=CASE WHEN order_status IN ('new_order','under_review','awaiting_payment') THEN 'payment_submitted' ELSE order_status END, updated_at=? WHERE id=?").bind(t, order.id),
-    env.DB.prepare("INSERT INTO order_history (id,order_id,at,status,note,by_user) VALUES (?,?,?,?,?,?)").bind(uid(), order.id, t, "payment_submitted", "Payment reference submitted by customer", "customer"),
+    env.DB.prepare("INSERT INTO order_history (id,order_id,at,status,note,by_user) VALUES (?,?,?,?,?,?)").bind(uid(), order.id, t, "payment_submitted", "Proof of payment uploaded by customer", "customer"),
   ]);
   return json({ ok: true });
 }
