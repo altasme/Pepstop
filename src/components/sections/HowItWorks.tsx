@@ -5,7 +5,7 @@ import { RuleItem } from "../ui/RuleItem";
 /** The sequence carries information, so the steps are numbered; the rule draws from step to step. */
 export function HowItWorks() {
   return (
-    <section className="bg-white">
+    <section className="bg-surface">
       <div className="mx-auto max-w-page px-4 py-12 sm:px-6 md:py-24 lg:px-8">
         <SectionHeading title={HOME.howTitle} />
         <p className="mt-4 max-w-prose text-lg text-ink/80">{HOME.howIntro}</p>

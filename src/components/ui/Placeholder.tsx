@@ -43,7 +43,7 @@ export function Placeholder({ slot, label, className = "", compact = false, badg
       role="img"
       aria-label={aria}
       style={fill ? undefined : { aspectRatio: `${s.width} / ${s.height}` }}
-      className={`relative flex w-full flex-col justify-between overflow-hidden ${fill || square ? "rounded-none" : "rounded-[20px]"} ${fill ? "h-full items-end text-right" : "text-left"} ${className.includes("bg-white") ? "" : "bg-petal"} p-3 sm:p-4 ${className}`}
+      className={`relative flex w-full flex-col justify-between overflow-hidden ${fill || square ? "rounded-none" : "rounded-[20px]"} ${fill ? "h-full items-end text-right" : "text-left"} ${className.includes("bg-surface") ? "" : "bg-petal"} p-3 sm:p-4 ${className}`}
     >
       <svg aria-hidden="true" focusable="false" className="absolute inset-0 h-full w-full text-raspberry/20" preserveAspectRatio="none" viewBox="0 0 100 100">
         <line x1="0" y1="0" x2="100" y2="100" stroke="currentColor" strokeWidth="1" vectorEffect="non-scaling-stroke" />
@@ -51,7 +51,7 @@ export function Placeholder({ slot, label, className = "", compact = false, badg
       </svg>
       <span className={`relative w-fit whitespace-nowrap rounded-full bg-raspberry px-2.5 py-1 text-xs font-semibold text-white`}>{tag}</span>
       <div className="relative min-w-0">
-        <p className={`inline pr-2 ${className.includes("bg-white") ? "bg-white" : "bg-petal"} text-sm font-semibold leading-tight text-ink sm:text-base`}>{name}</p>
+        <p className={`inline pr-2 ${className.includes("bg-surface") ? "bg-surface" : "bg-petal"} text-sm font-semibold leading-tight text-ink sm:text-base`}>{name}</p>
         <p className="mt-1 break-words text-xs leading-snug text-mute sm:text-sm">
           <span className="font-semibold text-ink">{s.width} × {s.height} px</span> · {ratio} {compact ? "" : orientation + " · "}{s.format}
         </p>

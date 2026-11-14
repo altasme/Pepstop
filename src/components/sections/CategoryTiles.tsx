@@ -14,7 +14,7 @@ export function CategoryTiles() {
   const areas = getFocusAreas();
   const primary = getChannelsWithMessage(HOME.matchMessage)[0];
   return (
-    <section className="bg-white">
+    <section className="bg-surface">
       <div className="mx-auto max-w-page px-4 py-12 sm:px-6 md:py-20 lg:px-8">
         <SectionHeading title={HOME.categoriesTitle} />
         <p className="mt-4 max-w-prose text-lg text-ink/80">{HOME.categoriesBody}</p>
@@ -39,7 +39,7 @@ export function CategoryTiles() {
 
         <div id="match" className="relative mt-10 scroll-mt-40 md:mt-14 grid gap-8 overflow-hidden rounded-[28px] bg-petal p-6 sm:p-10 md:grid-cols-[1.1fr_0.9fr] md:items-center md:gap-12">
                     <div className="relative">
-            <Sparkle className="mb-4 h-5 w-5" fill="#C30239" />
+            <Sparkle className="mb-4 h-5 w-5" fill="var(--raspberry)" />
             <h3 className="max-w-[20ch] font-display text-h2 font-medium text-raspberry-deep">{HOME.matchTitle}</h3>
             <p className="mt-4 max-w-prose text-ink/80"><span className="font-semibold text-raspberry-deep">{HOME.matchName}</span> {HOME.matchBody}</p>
           </div>

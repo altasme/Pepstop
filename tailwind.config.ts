@@ -5,19 +5,22 @@ export default {
   theme: {
     extend: {
       colors: {
-        ink: "#2B1220",
-        claret: "#5A0118",
-        raspberry: { DEFAULT: "#C30239", deep: "#7A0220" },
-        petal: "#FFEEF2",
-        rosewater: "#F8CDD9",
-        mute: "#6F5B66",
-        line: "#F2D9E1",
-        edge: "#8F7A86",
-        gold: "#ECB86C",
+        // Values live in src/styles/tokens.css as RGB channels so opacity utilities (text-ink/80) keep working.
+        ground: "rgb(var(--c-ground) / <alpha-value>)",
+        surface: "rgb(var(--c-surface) / <alpha-value>)",
+        ink: "rgb(var(--c-ink) / <alpha-value>)",
+        claret: "rgb(var(--c-claret) / <alpha-value>)",
+        raspberry: { DEFAULT: "rgb(var(--c-raspberry) / <alpha-value>)", deep: "rgb(var(--c-raspberry-deep) / <alpha-value>)" },
+        petal: "rgb(var(--c-petal) / <alpha-value>)",
+        rosewater: "rgb(var(--c-rosewater) / <alpha-value>)",
+        mute: "rgb(var(--c-mute) / <alpha-value>)",
+        line: "rgb(var(--c-line) / <alpha-value>)",
+        edge: "rgb(var(--c-edge) / <alpha-value>)",
+        gold: { DEFAULT: "rgb(var(--c-gold) / <alpha-value>)", ink: "rgb(var(--c-gold-ink) / <alpha-value>)" },
       },
       fontFamily: {
-        sans: ['"Hanken Grotesk"', "system-ui", "sans-serif"],
-        display: ['"Bodoni Moda"', "Georgia", "serif"],
+        sans: "var(--font-sans)",
+        display: "var(--font-display)",
       },
       fontSize: {
         display: ["clamp(2.5rem, 1rem + 2.6vw, 3.5rem)", { lineHeight: "1.02", letterSpacing: "-0.02em" }],
@@ -27,7 +30,7 @@ export default {
       },
       maxWidth: { page: "80rem", prose: "40rem" },
       boxShadow: {
-        lift: "0 2px 4px rgba(43,18,32,.05), 0 16px 32px -16px rgba(43,18,32,.22)",
+        lift: "var(--shadow-lift)",
       },
       transitionTimingFunction: { out: "cubic-bezier(0.22, 1, 0.36, 1)" },
     },

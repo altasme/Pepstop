@@ -19,11 +19,11 @@ export function BrandStory() {
           <Reveal className="hidden md:block">
             <div className="relative mx-auto w-full max-w-sm md:max-w-none">
               <div aria-hidden="true" className="absolute -bottom-4 -left-4 right-8 top-8 rounded-[28px] bg-rosewater" />
-              <SlotImage slot="story" sizes="(min-width: 768px) 34vw, 90vw" className="relative bg-white" />
+              <SlotImage slot="story" sizes="(min-width: 768px) 34vw, 90vw" className="relative bg-surface" />
             </div>
           </Reveal>
           <div>
-            <Sparkle className="mb-4 h-5 w-5" fill="#C30239" />
+            <Sparkle className="mb-4 h-5 w-5" fill="var(--raspberry)" />
             <SectionHeading title={HOME.storyHeading} className="max-w-[22ch] text-claret" />
             <div className="mt-5 max-w-prose space-y-4 text-lg text-ink/80">
               {HOME.storyBody.map((p) => <p key={p}>{p}</p>)}

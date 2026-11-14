@@ -11,7 +11,7 @@ export function ProductImage({ src, alt, sizes = "50vw", priority = false, class
   if (!src || failed) {
     return (
       <div role="img" aria-label={`${alt}. Photo coming soon.`} className={`grid aspect-square w-full place-items-center bg-petal ${shape} ${className}`}>
-        <Sparkle className="h-7 w-7 opacity-60" fill="#C30239" />
+        <Sparkle className="h-7 w-7 opacity-60" fill="var(--raspberry)" />
       </div>
     );
   }

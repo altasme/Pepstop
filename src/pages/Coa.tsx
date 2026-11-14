@@ -21,7 +21,7 @@ export default function CoaDirectory() {
       <PageBanner title={COA.title} body={COA.body} />
       <section className="mx-auto max-w-page px-4 py-10 sm:px-6 md:py-14 lg:px-8">
         <label htmlFor="coa-search" className="mb-1.5 block text-sm font-semibold text-ink">{COA.searchLabel}</label>
-        <input id="coa-search" type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={COA.searchPlaceholder} className="min-h-12 w-full max-w-xl rounded-full border border-edge bg-white px-5 text-base text-ink placeholder:text-mute" />
+        <input id="coa-search" type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={COA.searchPlaceholder} className="min-h-12 w-full max-w-xl rounded-full border border-edge bg-surface px-5 text-base text-ink placeholder:text-mute" />
         <p className="mt-5 text-sm text-mute" role="status" aria-live="polite">{rows ? COA.results(rows.length) : ""}</p>
         {rows && rows.length === 0 && <p className="mt-4 bg-petal p-6 text-ink">{q.trim() ? COA.empty : COA.emptyAll}</p>}
         {failed && <p className="mt-4 text-ink">Documents could not be loaded. Please try again.</p>}

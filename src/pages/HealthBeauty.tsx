@@ -48,7 +48,7 @@ export default function HealthBeauty() {
           })}
         </ol>
         <section className="border-t border-line py-14 text-center md:py-16">
-          <Sparkle className="mx-auto mb-4 h-5 w-5" fill="#C30239" />
+          <Sparkle className="mx-auto mb-4 h-5 w-5" fill="var(--raspberry)" />
           <h2 className="font-display text-h2 font-medium text-claret">{HEALTH_BEAUTY.closingTitle}</h2>
           <p className="mx-auto mt-4 max-w-prose text-lg text-ink/80">{HEALTH_BEAUTY.closingBody}</p>
           <div className="mt-6"><Button to="/contact">{HEALTH_BEAUTY.closingCta}</Button></div>

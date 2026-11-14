@@ -9,8 +9,8 @@ const base =
 const variants: Record<Variant, string> = {
   primary: "sheen bg-raspberry text-white hover:bg-raspberry-deep",
   secondary: "border border-raspberry text-raspberry hover:bg-raspberry hover:text-white",
-  onDark: "sheen bg-white text-ink hover:bg-petal",
-  onDarkOutline: "border border-white/60 text-white hover:bg-white hover:text-ink",
+  onDark: "sheen bg-surface text-ink hover:bg-petal",
+  onDarkOutline: "border border-white/60 text-white hover:bg-surface hover:text-ink",
 };
 
 type Props = {

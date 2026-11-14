@@ -94,7 +94,7 @@ export function Hero() {
           bloom
           spots={[
             { x: "52%", y: "12%", size: 24, delay: 0.2 },
-            { x: "88%", y: "14%", size: 18, delay: 0.7, fill: "#C30239" },
+            { x: "88%", y: "14%", size: 18, delay: 0.7, fill: "var(--raspberry)" },
             { x: "44%", y: "30%", size: 12, delay: 1.4 },
           ]}
         />
@@ -104,7 +104,7 @@ export function Hero() {
         <div className="mx-auto flex h-full max-w-page items-center px-4 sm:px-6 lg:px-8">
           <div className="w-full py-10 sm:py-12 xl:max-w-[34rem] xl:py-0">
             <span className="hero-in mb-5 block h-6 w-6">
-              <span className="twinkle block h-full w-full"><Sparkle className="h-full w-full" fill="#C30239" /></span>
+              <span className="twinkle block h-full w-full"><Sparkle className="h-full w-full" fill="var(--raspberry)" /></span>
             </span>
             <h1 className="font-display text-display font-medium text-claret">
               <Words text={HOME.heroTitle} />

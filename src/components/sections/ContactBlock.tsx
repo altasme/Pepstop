@@ -15,11 +15,11 @@ export function ContactBlock() {
         className="hidden sm:block"
         spots={[
           { x: "72%", y: "16%", size: 16, delay: 0.3 },
-          { x: "92%", y: "62%", size: 12, delay: 1.5, fill: "#C30239" },
+          { x: "92%", y: "62%", size: 12, delay: 1.5, fill: "var(--raspberry)" },
         ]}
       />
       <div className="relative mx-auto max-w-page px-4 py-12 sm:px-6 md:py-24 lg:px-8">
-        <Sparkle className="mb-5 h-6 w-6" fill="#C30239" />
+        <Sparkle className="mb-5 h-6 w-6" fill="var(--raspberry)" />
         <SectionHeading title={HOME.contactTitle} className="max-w-[22ch] text-raspberry-deep" />
         <p className="mt-5 max-w-prose text-lg text-ink/80">{HOME.contactBody} {hasChatChannel() ? CHAT_HELPER.withChat : CHAT_HELPER.phoneOnly}</p>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">

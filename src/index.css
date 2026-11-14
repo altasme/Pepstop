@@ -1,26 +1,9 @@
-@import "@fontsource/bodoni-moda/latin-500.css";
-@import "@fontsource/bodoni-moda/latin-600.css";
-@import "@fontsource/hanken-grotesk/latin-400.css";
-@import "@fontsource/hanken-grotesk/latin-500.css";
-@import "@fontsource/hanken-grotesk/latin-600.css";
-@import "@fontsource/hanken-grotesk/latin-700.css";
+
+@import "./styles/tokens.css";
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-:root {
-  --ink: #2b1220;
-  --claret: #5a0118;
-  --raspberry: #c30239;
-  --raspberry-deep: #7a0220;
-  --petal: #ffeef2;
-  --rosewater: #f8cdd9;
-  --mute: #6f5b66;
-  --line: #f2d9e1;
-  --edge: #8f7a86;
-  --gold: #ecb86c;
-}
 
 @layer base {
   html {
@@ -30,14 +13,25 @@
     scrollbar-width: thin;
   }
   body {
-    @apply bg-white font-sans text-base text-ink antialiased;
+    @apply bg-ground font-sans text-base text-ink antialiased;
     overflow-x: hidden;
-    font-feature-settings: "tnum" 1, "ss01" 1;
+    line-height: 1.6;
+    font-optical-sizing: auto;
+    font-kerning: normal;
     text-wrap: pretty;
+  }
+  /* Display type. Bodoni Moda's optical-size axis is pinned: left on auto it goes to a fashion-poster hairline at headline size,
+     which is fragile on a phone. 14 keeps the didone contrast with hairlines that survive a 360px screen. */
+  h1, h2, h3, .font-display {
+    font-optical-sizing: none;
+    font-variation-settings: "opsz" var(--display-opsz);
+    font-feature-settings: "kern" 1, "liga" 1, "lnum" 1;
   }
   h1, h2, h3 {
     text-wrap: balance;
   }
+  /* Money and quantities align in columns; running text keeps proportional figures. */
+  .tabular-nums { font-variant-numeric: tabular-nums lining-nums; }
   :focus-visible {
     outline: 2px solid var(--ink);
     outline-offset: 3px;
@@ -78,8 +72,6 @@
 /* Motion system. Everything below is decorative and switches off     */
 /* under prefers-reduced-motion. Easing is one exponential ease-out.  */
 /* ------------------------------------------------------------------ */
-:root { --ease: cubic-bezier(0.22, 1, 0.36, 1); }
-
 /* Scroll reveal: visible by default, hidden only after hydration for below-the-fold items. */
 .reveal[data-reveal="hidden"] { opacity: 0; transform: translateY(22px); }
 .reveal[data-reveal="shown"] { animation: rise 0.9s var(--ease) var(--d, 0s) both; }

@@ -153,7 +153,7 @@ export default function Product() {
         </div>
       </div>
       {others.length > 0 && (
-        <section className="border-t border-line bg-white">
+        <section className="border-t border-line bg-surface">
           <div className="mx-auto max-w-page px-4 py-14 sm:px-6 lg:px-8">
             <SectionHeading title={SHOP.relatedTitle} />
             <ul className="mt-8 grid grid-cols-2 gap-x-4 gap-y-8 lg:grid-cols-4 lg:gap-x-6">{others.map((p) => <li key={p.id}><ProductCard product={p} /></li>)}</ul>

@@ -10,7 +10,7 @@ export function EducationHighlights() {
   const articles = getPublishedArticles().slice(0, 3);
   if (articles.length === 0) return null;
   return (
-    <section className="bg-white">
+    <section className="bg-surface">
       <div className="mx-auto max-w-page px-4 pb-16 sm:px-6 md:pb-24 lg:px-8">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>

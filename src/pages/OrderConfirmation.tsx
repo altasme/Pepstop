@@ -18,7 +18,7 @@ function PaymentDetails({ order, paid }: { order: Order; paid: boolean }) {
   const method = paymentMethods.find((m) => m.id === order.customer.payment);
   const due = order.total !== undefined && !order.hasUnpriced ? formatPhp(order.total) : null;
   const [state, setState] = useState<"idle" | "sending" | "sent" | "error" | "need">(paid ? "sent" : "idle");
-  const input = "mt-1 min-h-12 w-full rounded-xl border border-edge bg-white px-4 text-base text-ink";
+  const input = "mt-1 min-h-12 w-full rounded-xl border border-edge bg-surface px-4 text-base text-ink";
   return (
     <Card>
       <h2 className="font-sans text-h3 font-semibold text-ink">{CONFIRMATION.payTitle}</h2>
@@ -27,7 +27,7 @@ function PaymentDetails({ order, paid }: { order: Order; paid: boolean }) {
         <div className="mt-3 rounded-xl bg-petal p-4 text-sm text-ink">
           <p className="font-semibold">{CONFIRMATION.payHow}: {method.label}</p>
           {due && <p className="mt-2">{CONFIRMATION.payTotal}: <span className="font-semibold">{due}</span></p>}
-          {method.qr && <img src={method.qr} alt={`${CONFIRMATION.payScan} ${method.label}`} className="mx-auto mt-3 max-h-96 w-auto rounded-xl border border-edge bg-white" />}
+          {method.qr && <img src={method.qr} alt={`${CONFIRMATION.payScan} ${method.label}`} className="mx-auto mt-3 max-h-96 w-auto rounded-xl border border-edge bg-surface" />}
           {method.accountName && <p className="mt-2">{CONFIRMATION.payAccountName}: <span className="font-semibold">{method.accountName}</span></p>}
           {method.accountNumber && <p className="mt-1">{CONFIRMATION.payAccountNumber}: <span className="font-semibold">{method.accountNumber}</span></p>}
           {method.instructions && <p className="mt-2 whitespace-pre-line">{method.instructions}</p>}

@@ -6,7 +6,7 @@ import { getRegistrationInfo, loginCustomer, registerCustomer, useRemote, type R
 import { Button } from "../components/ui/Button";
 import { Sparkle } from "../components/ui/Sparkle";
 
-const input = "mt-1 min-h-12 w-full rounded-xl border border-edge bg-white px-4 text-base text-ink";
+const input = "mt-1 min-h-12 w-full rounded-xl border border-edge bg-surface px-4 text-base text-ink";
 /** Only same-site storefront paths are allowed as the post-login destination. */
 const NEXT_OK = /^\/(shop|cart|checkout|coa|account|about|contact|health-beauty|education)?[a-z0-9\-_/?=&%.]*$/i;
 const safeNext = (n: string | null) => (n && NEXT_OK.test(n) && !n.startsWith("//") ? n : "/shop");
@@ -88,7 +88,7 @@ export default function Account() {
     <>
       <Seo path="/account" noindex />
       <section className="mx-auto max-w-xl px-4 py-12 sm:px-6 md:py-20">
-        <Sparkle className="mb-4 h-5 w-5" fill="#C30239" />
+        <Sparkle className="mb-4 h-5 w-5" fill="var(--raspberry)" />
         <h1 className="font-display text-display font-medium text-claret">{A.title}</h1>
         <p className="mt-3 text-lg text-ink/80">{A.intro}</p>
         <p className="mt-2 text-ink/80">{A.explain} <Link to="/contact" className="font-semibold text-raspberry underline">{A.explainLink}</Link></p>

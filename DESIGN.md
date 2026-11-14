@@ -2,94 +2,104 @@
 name: The Pep Stop
 description: A premium, feminine, mobile-first health and beauty shop that sells a curated range and shows the business behind it, led by the logo's own world of petal pink, claret, raspberry action, gold sparkle and line-drawn botanicals, with a quiet decorative motion layer.
 colors:
-  ink: "#2B1220"
-  claret: "#5A0118"
-  raspberry: "#C30239"
-  raspberry-deep: "#7A0220"
-  petal: "#FFEEF2"
-  rosewater: "#F8CDD9"
-  mute: "#6F5B66"
-  line: "#F2D9E1"
-  edge: "#8F7A86"
-  gold: "#ECB86C"
+  ground: "#FFFAF6"
+  surface: "#FFFFFF"
+  ink: "#25121B"
+  claret: "#4E0E1F"
+  raspberry: "#B2123F"
+  raspberry-deep: "#8A0F30"
+  petal: "#FBEFF1"
+  rosewater: "#F1CFD6"
+  mute: "#675559"
+  line: "#EFDCE0"
+  edge: "#85707A"
+  gold: "#D9B36B"
+  gold-ink: "#7A5712"
+  good: "#14703E"
+  good-bg: "#DFF3E7"
+  warn: "#8A5A00"
+  warn-bg: "#FFF0CF"
+  bad: "#A3212B"
+  bad-bg: "#FBE0E6"
+  bad-line: "#E2A9AE"
   white: "#FFFFFF"
 typography:
   display:
-    fontFamily: "Bodoni Moda, Georgia, serif"
+    fontFamily: "Bodoni Moda Variable, Georgia, serif"
     fontSize: "clamp(2.5rem, 1.4rem + 3.6vw, 4.25rem)"
     fontWeight: 500
     lineHeight: 1.02
     letterSpacing: "-0.02em"
   headline-1:
-    fontFamily: "Bodoni Moda, Georgia, serif"
+    fontFamily: "Bodoni Moda Variable, Georgia, serif"
     fontSize: "clamp(2.25rem, 1.4rem + 3.6vw, 4rem)"
     fontWeight: 500
     lineHeight: 1.06
     letterSpacing: "-0.02em"
   headline-2:
-    fontFamily: "Bodoni Moda, Georgia, serif"
+    fontFamily: "Bodoni Moda Variable, Georgia, serif"
     fontSize: "clamp(1.75rem, 1.25rem + 2.2vw, 3rem)"
     fontWeight: 500
     lineHeight: 1.1
     letterSpacing: "-0.015em"
   title:
-    fontFamily: "Bodoni Moda, Georgia, serif"
+    fontFamily: "Bodoni Moda Variable, Georgia, serif"
     fontSize: "1.5rem"
     fontWeight: 500
     lineHeight: 1.33
   wordmark:
-    fontFamily: "Bodoni Moda, Georgia, serif"
+    fontFamily: "Bodoni Moda Variable, Georgia, serif"
     fontSize: "1.5rem"
     fontWeight: 600
     lineHeight: 1
     letterSpacing: "0.01em"
   body:
-    fontFamily: "Hanken Grotesk, system-ui, sans-serif"
+    fontFamily: "Hanken Grotesk Variable, system-ui, sans-serif"
     fontSize: "1rem"
     fontWeight: 400
     lineHeight: 1.5
   lead:
-    fontFamily: "Hanken Grotesk, system-ui, sans-serif"
+    fontFamily: "Hanken Grotesk Variable, system-ui, sans-serif"
     fontSize: "1.125rem"
     fontWeight: 400
     lineHeight: 1.55
   label:
-    fontFamily: "Hanken Grotesk, system-ui, sans-serif"
+    fontFamily: "Hanken Grotesk Variable, system-ui, sans-serif"
     fontSize: "1rem"
     fontWeight: 600
     lineHeight: 1
   admin-title:
-    fontFamily: "Bodoni Moda, Georgia, serif"
+    fontFamily: "Bodoni Moda Variable, Georgia, serif"
     fontSize: "2rem"
     fontWeight: 500
     lineHeight: 1.1
   admin-heading:
-    fontFamily: "Hanken Grotesk, system-ui, sans-serif"
+    fontFamily: "Hanken Grotesk Variable, system-ui, sans-serif"
     fontSize: "1.0625rem"
     fontWeight: 600
     lineHeight: 1.3
   admin-table:
-    fontFamily: "Hanken Grotesk, system-ui, sans-serif"
+    fontFamily: "Hanken Grotesk Variable, system-ui, sans-serif"
     fontSize: "0.9375rem"
     fontWeight: 400
     lineHeight: 1.5
   admin-dense:
-    fontFamily: "Hanken Grotesk, system-ui, sans-serif"
+    fontFamily: "Hanken Grotesk Variable, system-ui, sans-serif"
     fontSize: "0.875rem"
     fontWeight: 500
     lineHeight: 1.5
   admin-badge:
-    fontFamily: "Hanken Grotesk, system-ui, sans-serif"
+    fontFamily: "Hanken Grotesk Variable, system-ui, sans-serif"
     fontSize: "0.8125rem"
     fontWeight: 600
     lineHeight: 1.4
   admin-lockup:
-    fontFamily: "Bodoni Moda, Georgia, serif"
+    fontFamily: "Bodoni Moda Variable, Georgia, serif"
     fontSize: "1.3rem"
     fontWeight: 600
     lineHeight: 1
   admin-auth-line:
-    fontFamily: "Bodoni Moda, Georgia, serif"
+    fontFamily: "Bodoni Moda Variable, Georgia, serif"
     fontSize: "clamp(1.9rem, 1.3rem + 1.8vw, 2.8rem)"
     fontWeight: 500
     lineHeight: 1.08
@@ -406,3 +416,12 @@ Applied after an Impeccable critique, keeping the client's wording and changing 
 - **Product page** shows only what exists: empty accordions are not rendered, one assurance line replaces the list, and the disclaimer appears once.
 - **Checkout** marks required fields, asks for a numeric keyboard on the postal code, and links to the order summary from the top on phones.
 - **The contact band** closes Home and About only; other pages end on their own call to action and the footer.
+
+
+## Token architecture and brand refinement (v1.31)
+
+One file, `src/styles/tokens.css`, holds every colour, font, radius, shadow and easing for the public site and the admin. Colour is stored as RGB channels (`--c-ink: 37 18 27`) so Tailwind opacity utilities (`text-ink/80`) work and CSS can still use the finished value (`var(--ink)`). `tailwind.config.ts` reads the channels; `admin.css` imports the same file, so the two surfaces cannot drift.
+
+Palette, refined from the logo's lacquer: the page ground is warm ivory (`ground`, never pure white) and white is reserved for things that sit on it (`surface`: cards, inputs, tables). Action is a deeper lacquer rouge (`raspberry` #B2123F, was an electric #C30239), dark ground is oxblood (`claret` #4E0E1F), panels are dusty blush (`petal`, `rosewater`), and gold is antique (`gold` #D9B36B) for hairlines and sparkles only, with `gold-ink` for gold as text. Contrast: ink on ground 17.2, mute on ground 6.7, raspberry on ground 6.6, white on raspberry 6.9, white on claret 14.9, gold on claret 7.5, edge on surface 4.6.
+
+Type: Bodoni Moda Variable for display and Hanken Grotesk Variable for everything read or tapped, both latin subset, one file each (about 81 KB together, replacing six static files). The display face's optical-size axis is pinned (`--display-opsz: 14`): on auto it renders a fashion-poster hairline at headline size that is fragile on a phone. Figures are lining and tabular where they align (prices, counts); running text keeps proportional figures.

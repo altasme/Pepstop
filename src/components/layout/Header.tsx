@@ -27,7 +27,7 @@ export function Header() {
   return (
     <>
       <p className="on-dark flex items-center justify-center gap-2 bg-claret px-4 py-2 text-center text-sm font-medium text-white"><Sparkle className="h-3 w-3 shrink-0" />{HOME.announcement}<Sparkle className="h-3 w-3 shrink-0" /></p>
-      <header className={`sticky top-0 z-40 border-b bg-white/95 backdrop-blur transition-[border-color] duration-200 ${scrolled ? "border-line" : "border-transparent"}`}>
+      <header className={`sticky top-0 z-40 border-b bg-surface/95 backdrop-blur transition-[border-color] duration-200 ${scrolled ? "border-line" : "border-transparent"}`}>
         <div className={`mx-auto flex max-w-page items-center justify-between gap-4 px-4 transition-all duration-200 ease-out sm:px-6 lg:px-8 ${scrolled ? "py-2" : "py-3"}`}>
           <Logo compact={scrolled} />
           <nav aria-label={UI.primaryNavLabel} className="hidden xl:block">

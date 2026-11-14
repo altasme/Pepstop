@@ -5,7 +5,7 @@ import { Button } from "../ui/Button";
 /** Sends an inquiry to the Worker API. A hidden field catches bots; the Worker also rate limits by address. */
 export function InquiryForm() {
   const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
-  const field = "mt-1 min-h-12 w-full rounded-xl border border-edge bg-white px-4 text-base text-ink";
+  const field = "mt-1 min-h-12 w-full rounded-xl border border-edge bg-surface px-4 text-base text-ink";
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const f = new FormData(e.currentTarget);

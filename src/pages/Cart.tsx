@@ -20,7 +20,7 @@ export default function Cart() {
         {lines.length === 0 ? (
           <div className="relative mt-10 min-h-[22rem] max-w-prose">
             <Sprig className="pointer-events-none absolute -bottom-6 right-0 hidden h-72 w-auto text-raspberry/50 sm:block" />
-            <SparkleField className="hidden sm:block" spots={[{ x: "70%", y: "6%", size: 12, delay: 0.4 }, { x: "92%", y: "40%", size: 9, delay: 1.8, fill: "#C30239" }]} />
+            <SparkleField className="hidden sm:block" spots={[{ x: "70%", y: "6%", size: 12, delay: 0.4 }, { x: "92%", y: "40%", size: 9, delay: 1.8, fill: "var(--raspberry)" }]} />
             <p className="text-xl font-semibold text-ink">{CART.empty}</p>
             <p className="mt-2 text-ink/80">{CART.emptyHint}</p>
             <div className="mt-6"><Button to="/shop">{CART.continue}</Button></div>

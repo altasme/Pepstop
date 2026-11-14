@@ -36,7 +36,7 @@ function Field({ id, value, error, onChange, label, hint, type = "text", autoCom
     "aria-invalid": error ? true : undefined,
     "aria-describedby": [hint ? `${id}-hint` : "", error ? `${id}-err` : ""].filter(Boolean).join(" ") || undefined,
   };
-  const cls = `w-full rounded-xl border px-4 py-3 text-base text-ink ${readOnly ? "bg-petal" : "bg-white"} ${error ? "border-raspberry" : "border-edge"}`;
+  const cls = `w-full rounded-xl border px-4 py-3 text-base text-ink ${readOnly ? "bg-petal" : "bg-surface"} ${error ? "border-raspberry" : "border-edge"}`;
   return (
     <div>
       <label htmlFor={id} className="mb-1 block text-sm font-semibold text-ink">{label}{!OPTIONAL.includes(id) && !readOnly && <span aria-hidden="true" className="text-raspberry"> *</span>}</label>
@@ -133,7 +133,7 @@ export default function Checkout() {
                 <legend className="mb-2 text-h3 font-semibold text-ink"><span className="mr-2 font-display text-raspberry">3</span>{CHECKOUT.deliveryTitle}</legend>
                 <div className="grid gap-3">
                   {deliveryOptions.map((o) => (
-                    <label key={o.id} className={`flex min-h-12 cursor-pointer items-center gap-3 rounded-xl border bg-white px-4 py-3 ${c.delivery === o.id ? "border-raspberry ring-1 ring-raspberry" : "border-edge"}`}>
+                    <label key={o.id} className={`flex min-h-12 cursor-pointer items-center gap-3 rounded-xl border bg-surface px-4 py-3 ${c.delivery === o.id ? "border-raspberry ring-1 ring-raspberry" : "border-edge"}`}>
                       <input id={`del-${o.id}`} type="radio" name="delivery" value={o.id} checked={c.delivery === o.id} onChange={() => set("delivery")(o.id)} className="h-5 w-5 accent-raspberry" />
                       <span className="flex-1"><span className="font-semibold">{o.label}</span>{o.note && <span className="block text-sm text-ink/80">{o.note}</span>}</span>
                       <span className="font-semibold tabular-nums">{freeDeliveryMin !== null && !hasUnpriced && subtotal >= freeDeliveryMin ? CHECKOUT.deliveryFree : formatPhp(o.fee)}</span>
@@ -148,7 +148,7 @@ export default function Checkout() {
               <legend className="mb-2 text-h3 font-semibold text-ink"><span className="mr-2 font-display text-raspberry">{deliveryOptions.length > 0 ? 4 : 3}</span>{CHECKOUT.paymentTitle}</legend>
               <div className="grid gap-3 sm:grid-cols-2">
                 {paymentMethods.map((m) => (
-                  <label key={m.id} className={`flex min-h-12 cursor-pointer items-center gap-3 rounded-xl border bg-white px-4 py-3 ${c.payment === m.id ? "border-raspberry ring-1 ring-raspberry" : "border-edge"}`}>
+                  <label key={m.id} className={`flex min-h-12 cursor-pointer items-center gap-3 rounded-xl border bg-surface px-4 py-3 ${c.payment === m.id ? "border-raspberry ring-1 ring-raspberry" : "border-edge"}`}>
                     <input id={`pay-${m.id}`} type="radio" name="payment" value={m.id} checked={c.payment === m.id} onChange={() => set("payment")(m.id)} className="h-5 w-5 accent-raspberry" />
                     <span className="font-semibold">{m.label}</span>
                   </label>

@@ -13,7 +13,7 @@ export function FeaturedProducts() {
   const products = getFeaturedProducts(4);
   if (products.length === 0) return null;
   return (
-    <section className="bg-white">
+    <section className="bg-surface">
       <div className="mx-auto max-w-page px-4 pb-14 sm:px-6 md:pb-20 lg:px-8">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>

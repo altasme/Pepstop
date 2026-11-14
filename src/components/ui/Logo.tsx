@@ -13,7 +13,7 @@ export function Logo({ onDark = false, compact = false }: { onDark?: boolean; co
       className="inline-flex items-center gap-3 leading-none"
     >
       {url && (
-        <span className={`shrink-0 rounded-full ${onDark ? "bg-white p-0.5" : ""}`}>
+        <span className={`shrink-0 rounded-full ${onDark ? "bg-surface p-0.5" : ""}`}>
           <img
             src={url}
             srcSet={local ? LOGO_ASSET.srcSet : undefined}

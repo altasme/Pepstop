@@ -45,12 +45,12 @@ export default function About() {
           <SparkleField className="hidden md:block" spots={[{ x: "47%", y: "14%", size: 14, delay: 0.3 }]} />
           <div className="relative mx-auto grid max-w-page gap-10 px-4 py-16 sm:px-6 md:grid-cols-2 md:gap-16 md:py-24 lg:px-8">
             <div>
-              <Sparkle className="mb-4 h-5 w-5" fill="#C30239" />
+              <Sparkle className="mb-4 h-5 w-5" fill="var(--raspberry)" />
               <h2 className="font-display text-h2 font-medium text-claret">{ABOUT.missionTitle}</h2>
               <p className="mt-4 max-w-[34ch] text-xl leading-relaxed text-ink/80">{ORG.mission}</p>
             </div>
             <div>
-              <Sparkle className="mb-4 h-5 w-5" fill="#C30239" />
+              <Sparkle className="mb-4 h-5 w-5" fill="var(--raspberry)" />
               <h2 className="font-display text-h2 font-medium text-claret">{ABOUT.visionTitle}</h2>
               <p className="mt-4 max-w-[34ch] text-xl leading-relaxed text-ink/80">{ORG.vision}</p>
             </div>
@@ -72,7 +72,7 @@ export default function About() {
 
       <Values />
 
-      <section className="bg-white">
+      <section className="bg-surface">
         <div className="mx-auto max-w-page px-4 py-16 sm:px-6 md:py-20 lg:px-8">
           <SectionHeading title={ABOUT.collectionsTitle} className="text-claret" />
           <ul className="mt-8 grid gap-x-8 sm:grid-cols-2 lg:grid-cols-3">

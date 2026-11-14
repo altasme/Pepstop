@@ -1,0 +1,77 @@
+/*
+ * The Pep Stop design tokens: one source for the public site and the admin panel.
+ * Colour is stored as RGB channels so Tailwind can apply opacity (text-ink/80) and CSS can still use the
+ * finished value (var(--ink)). Change a value here and both surfaces follow. DESIGN.md documents the roles.
+ *
+ * Contrast (WCAG 2.1): ink on ground 17.2, mute on ground 6.7, raspberry on ground 6.6 and on surface 6.9,
+ * surface on raspberry 6.9, surface on claret 14.9, gold on claret 7.5, edge on surface 4.6.
+ */
+
+/* Variable fonts, latin subset only (Philippine English needs nothing more). Bodoni Moda carries an optical-size axis. */
+@font-face {
+  font-family: "Bodoni Moda Variable"; font-style: normal; font-display: swap; font-weight: 400 900;
+  src: url("../../node_modules/@fontsource-variable/bodoni-moda/files/bodoni-moda-latin-opsz-normal.woff2") format("woff2-variations");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Hanken Grotesk Variable"; font-style: normal; font-display: swap; font-weight: 100 900;
+  src: url("../../node_modules/@fontsource-variable/hanken-grotesk/files/hanken-grotesk-latin-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  /* Ground and surfaces */
+  --c-ground: 255 250 246;      /* page: warm ivory, never pure white */
+  --c-surface: 255 255 255;     /* cards, inputs, anything that sits on the ground */
+  --c-petal: 251 239 241;       /* quiet blush panels */
+  --c-rosewater: 241 207 214;   /* dusty rose plates and hairlines on petal */
+
+  /* Ink */
+  --c-ink: 37 18 27;            /* warm aubergine black: body text and headings on light */
+  --c-mute: 103 85 89;          /* secondary text */
+  --c-edge: 133 112 122;        /* form borders and controls (4.6:1 on surface) */
+  --c-line: 239 220 224;        /* hairline rules */
+
+  /* Brand: lacquer rouge for action, oxblood for the dark ground, antique gold for fine detail */
+  --c-raspberry: 178 18 63;     /* action */
+  --c-raspberry-deep: 138 15 48;/* hover and pressed */
+  --c-claret: 78 14 31;         /* dark ground: footer, menu, announcement, admin sidebar */
+  --c-gold: 217 179 107;        /* hairlines, sparkles, focus ring on dark. Never text on light */
+  --c-gold-ink: 122 87 18;      /* gold as text on light */
+
+  /* State (admin and form feedback) */
+  --c-good: 20 112 62;   --c-good-bg: 223 243 231;
+  --c-warn: 138 90 0;    --c-warn-bg: 255 240 207;
+  --c-bad: 163 33 43;    --c-bad-bg: 251 224 230;  --c-bad-line: 226 169 174;
+
+  /* Finished values */
+  --ground: rgb(var(--c-ground));
+  --surface: rgb(var(--c-surface));
+  --petal: rgb(var(--c-petal));
+  --rosewater: rgb(var(--c-rosewater));
+  --ink: rgb(var(--c-ink));
+  --mute: rgb(var(--c-mute));
+  --edge: rgb(var(--c-edge));
+  --line: rgb(var(--c-line));
+  --raspberry: rgb(var(--c-raspberry));
+  --raspberry-deep: rgb(var(--c-raspberry-deep));
+  --claret: rgb(var(--c-claret));
+  --gold: rgb(var(--c-gold));
+  --gold-ink: rgb(var(--c-gold-ink));
+  --good: rgb(var(--c-good)); --good-bg: rgb(var(--c-good-bg));
+  --warn: rgb(var(--c-warn)); --warn-bg: rgb(var(--c-warn-bg));
+  --bad: rgb(var(--c-bad)); --bad-bg: rgb(var(--c-bad-bg)); --bad-line: rgb(var(--c-bad-line));
+
+  /* Type: a high-contrast didone for display, a humanist grotesque for everything you read or tap */
+  --font-display: "Bodoni Moda Variable", "Bodoni Moda", "Didot", Georgia, "Times New Roman", serif;
+  --font-sans: "Hanken Grotesk Variable", "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  --display-opsz: 14;
+
+  /* Shape and depth */
+  --r-sm: 12px; --r-md: 16px; --r-lg: 20px; --r-xl: 28px;
+  --shadow-lift: 0 1px 2px rgb(var(--c-ink) / 0.05), 0 18px 36px -18px rgb(var(--c-ink) / 0.26);
+
+  /* Motion */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}

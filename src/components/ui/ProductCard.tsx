@@ -11,7 +11,7 @@ export function ProductCard({ product }: { product: Product }) {
     <Link to={`/shop/${product.slug}`} className="group flex h-full flex-col">
       <div className="relative overflow-hidden rounded-[20px]">
         <ProductImage src={product.image} alt={product.name} sizes="(min-width: 1024px) 22vw, 45vw" rounded={false} className="transition-transform duration-700 ease-out group-hover:scale-[1.04]" />
-        <span aria-hidden="true" className="pointer-events-none absolute inset-x-3 bottom-3 hidden translate-y-2 rounded-full bg-white px-4 py-2 text-center text-sm font-semibold text-raspberry opacity-0 shadow-lift transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100 md:block">{SHOP.viewProduct}</span>
+        <span aria-hidden="true" className="pointer-events-none absolute inset-x-3 bottom-3 hidden translate-y-2 rounded-full bg-surface px-4 py-2 text-center text-sm font-semibold text-raspberry opacity-0 shadow-lift transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100 md:block">{SHOP.viewProduct}</span>
       </div>
       <div className="mt-3 flex flex-1 flex-col">
         <p className="text-sm text-mute">{getCategoryName(product.categoryId)}</p>

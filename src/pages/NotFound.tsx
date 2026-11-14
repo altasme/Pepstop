@@ -11,7 +11,7 @@ export default function NotFound() {
       <Seo path="/404" title={SEO.notFoundTitle} description={NOT_FOUND.body} noindex />
       <section className="relative overflow-hidden bg-petal">
         <Sprig className="pointer-events-none absolute -bottom-4 right-6 hidden h-[110%] w-auto text-raspberry/60 sm:block lg:right-32" />
-        <SparkleField spots={[{ x: "70%", y: "20%", size: 14, delay: 0.3 }, { x: "86%", y: "50%", size: 10, delay: 1.5, fill: "#C30239" }, { x: "62%", y: "76%", size: 10, delay: 2.4 }]} />
+        <SparkleField spots={[{ x: "70%", y: "20%", size: 14, delay: 0.3 }, { x: "86%", y: "50%", size: 10, delay: 1.5, fill: "var(--raspberry)" }, { x: "62%", y: "76%", size: 10, delay: 2.4 }]} />
         <div className="relative mx-auto max-w-page px-4 py-24 sm:px-6 md:py-32 lg:px-8">
           <SectionHeading as="h1" title={NOT_FOUND.title} />
           <p className="mt-5 max-w-prose text-lg text-ink/80">{NOT_FOUND.body}</p>
