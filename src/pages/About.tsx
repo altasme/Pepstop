@@ -20,8 +20,8 @@ export default function About() {
   const areas = getFocusAreas();
   const how = [
     { title: ABOUT.philosophyTitle, body: ABOUT.philosophy },
-    { title: ABOUT.educationTitle, body: [ABOUT.education] },
-    { title: ABOUT.serviceTitle, body: [ABOUT.service] },
+    { title: ABOUT.educationTitle, body: ABOUT.education },
+    { title: ABOUT.serviceTitle, body: ABOUT.service },
   ];
   return (
     <>

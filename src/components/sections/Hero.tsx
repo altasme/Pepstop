@@ -13,21 +13,25 @@ const d = (s: number) => ({ "--d": `${s}s` }) as CSSProperties;
 
 /**
  * Headline set word by word, each rising out of its own mask. The words stay one readable sentence.
- * Everything after the first comma is set in the display italic, the one expressive move in the headline.
+ * Text between asterisks is set in the display italic, the one expressive move in the headline. Without
+ * asterisks (for example a title edited in the admin) everything after the first comma is italic.
  */
 function Headline({ text, start = 0.15, step = 0.1 }: { text: string; start?: number; step?: number }) {
   const cut = text.indexOf(",");
-  const head = cut === -1 ? text : text.slice(0, cut + 1);
-  const tail = cut === -1 ? "" : text.slice(cut + 1).trim();
-  const words = (t: string, offset: number, italic: boolean) =>
-    t.split(" ").map((w, i, all) => (
-      <span key={`${offset}-${i}`} className={italic ? "italic" : undefined}>
-        <span className="word"><span style={d(start + (offset + i) * step)}>{w}</span></span>
-        {i < all.length - 1 || (!italic && tail) ? " " : ""}
-      </span>
-    ));
-  const n = head.split(" ").length;
-  return <>{words(head, 0, false)}{tail && words(tail, n, true)}</>;
+  const segments: { t: string; italic: boolean }[] = text.includes("*")
+    ? text.split("*").map((t, i) => ({ t, italic: i % 2 === 1 }))
+    : cut === -1 ? [{ t: text, italic: false }] : [{ t: text.slice(0, cut + 1), italic: false }, { t: text.slice(cut + 1), italic: true }];
+  const words = segments.flatMap((seg) => seg.t.split(" ").filter(Boolean).map((w) => ({ w, italic: seg.italic })));
+  return (
+    <>
+      {words.map((x, i) => (
+        <span key={i} className={x.italic ? "italic" : undefined}>
+          <span className="word"><span style={d(start + i * step)}>{x.w}</span></span>
+          {i < words.length - 1 ? " " : ""}
+        </span>
+      ))}
+    </>
+  );
 }
 
 type Slide = { desktop: string; mobile: string; alt: string; mobilePosition: string };
@@ -167,7 +171,7 @@ export function Hero() {
             <h1 className="font-display text-[clamp(2.5rem,1.2rem+2.7vw,3.5rem)] font-medium leading-[1.03] tracking-[-0.022em] text-claret">
               <Headline text={HOME.heroTitle} />
             </h1>
-            <p className="hero-in mt-5 max-w-[36ch] text-lg text-ink/80 sm:text-xl" style={d(0.75)}>{HOME.heroSupport}</p>
+            <p className="hero-in mt-5 max-w-[46ch] text-lg leading-relaxed text-ink/80 xl:max-w-[44ch]" style={d(0.75)}>{HOME.heroSupport}</p>
             <div className="hero-in mt-7 flex flex-col gap-3 sm:flex-row" style={d(0.95)}>
               <Button to={HOME.heroShop.to}>{HOME.heroShop.label}</Button>
               <CtaButton

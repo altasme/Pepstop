@@ -226,11 +226,11 @@ export const MEDIA = {
 
 export const HOME = {
   announcement: "Questions before you order? Call or text us. We are happy to help.",
-  heroTitle: "Beauty and wellness, with someone to help you choose.",
+  heroTitle: "Feel good about *what you choose.*",
   heroSupport:
-    "Skin, body and everyday wellness picks, with the details laid out for each one. Ask us anything before you order.",
-  heroShop: { label: "View Products", to: "/shop" },
-  heroTalk: "Talk to Us",
+    "Discover thoughtfully presented beauty and wellness selections, with clear product details and personal assistance when you need it. Have a question? We're here to help you make an informed choice before you order.",
+  heroShop: { label: "Explore The Pep Stop", to: "/shop" },
+  heroTalk: "Talk to Our Team",
   heroNote: "Not sure what you need? Ask first. That is what we are here for.",
   heroMatch: { lead: "Not sure where to start?", link: "Get matched" },
   heroSlideshow: "Photo slideshow",
@@ -254,26 +254,27 @@ export const HOME = {
   featuredBody:
     "A few products we would point you to first. Open one to see the options and details.",
   featuredAll: "See All Products",
-  storyHeading: "Shopping that does not leave you guessing.",
+  storyHeading: "More clarity. More confidence. A more personal experience.",
   storyBody: [
-    "Buying wellness and beauty products online can feel like guesswork. The Pep Stop is set up to change that.",
-    "Each product comes with its details laid out: options, protocols, packaging and supporting documents where we have them. If something is not clear, ask us before you spend a peso.",
-    "Orders are handled by a person. We check availability, arrange delivery and tell you how to pay.",
+    "Choosing beauty and wellness products should feel straightforward, not uncertain.",
+    "At The Pep Stop, we make it easier to explore your options with product information presented clearly. Browse available selections, review product details, and access supporting documents where available. If you need clarification, our team is here to help before you place an order.",
+    "And when you're ready, you won't be left figuring things out on your own. Every order is personally reviewed, with our team coordinating availability, delivery arrangements, and payment instructions directly with you.",
   ],
   storyPillars: [
-    { title: "Easy to Browse", body: "Organized by collection, so you find what you need quickly." },
-    { title: "Clear Details", body: "Options, protocols and documents, all on the product page." },
-    { title: "A Real Person", body: "Message or call us with any product or order question." },
+    { title: "Easy to Explore", body: "Browse thoughtfully organized collections and discover available selections with ease." },
+    { title: "Details You Can Review", body: "Find product options, specifications, usage information where applicable, and supporting documents where available." },
+    { title: "Personal Assistance", body: "Have a question about a product or order? Talk directly with our team through message or phone." },
   ],
+  storyPillarsTitle: "A better way to shop",
   storyLink: { label: "About The Pep Stop", to: "/about" },
-  whyTitle: "Why shop with us",
+  whyTitle: "A more thoughtful way to shop.",
   whyIntro:
-    "You should know what you are buying and who you are buying from. Here is how we make that easy.",
+    "We believe a good shopping experience starts with clear information and people you can actually talk to. At The Pep Stop, we make it easier to explore your options, get answers, and know what to expect before placing an order.",
   whyItems: [
-    { title: "Details in One Place", body: "Options, protocols and supporting documents sit together on each product page." },
-    { title: "Ask Before You Buy", body: "Message or call and our team will help with product details and availability." },
-    { title: "No Guesswork", body: "We tell you what we know about a product and leave out what we cannot back up." },
-    { title: "Pay Your Way", body: "Pay by e-wallet or bank transfer. We send the account details once we confirm your order." },
+    { title: "Clear Product Information", body: "Explore product options, specifications, and available supporting documents in one convenient place." },
+    { title: "We're Here to Help", body: "Need more information? Reach out to our team for assistance with product details, order inquiries, and availability." },
+    { title: "Transparency Comes First", body: "We share the information available to us and are upfront whenever details or supporting documents are unavailable. No unnecessary promises, just clarity." },
+    { title: "Convenient Payment Options", body: "Choose from available e-wallet and bank transfer options. Once your order details are confirmed, we'll send the appropriate payment instructions directly." },
   ],
   howTitle: "How ordering works",
   howIntro: "Three steps from browsing to your door.",
@@ -287,9 +288,12 @@ export const HOME = {
   educationBody:
     "Short, plain-language articles on beauty, skincare and everyday wellness. General information only.",
   educationAll: "Read the Journal",
-  contactTitle: "Still have questions?",
+  contactTitle: "We're Here to Help",
   contactBody:
-    "Ask about a product, check availability or follow up on an order. Call, text or send a message and we will help.",
+    [
+    "Have a question or need a little more information? Whether you'd like to learn more about a product, check availability, or get an update on your order, our team is just a message or call away.",
+    "Reach out and tell us what you need. Share your name and inquiry, and we'll be happy to assist you.",
+  ],
   contactPrimary: { label: "Contact Us", to: "/contact" },
   contactSecondary: { label: "Browse Products", to: "/shop" },
 };
@@ -308,55 +312,55 @@ export const FOCUS_AREAS: FocusArea[] = [
   {
     id: "weight-wellness",
     title: "Weight & Wellness",
-    tagline: "Your goals, at your pace.",
+    tagline: "Explore wellness-related selections with clarity.",
     summary:
-      "For the goals you set for yourself, with no pressure from us. We lay out the details of each product plainly and answer your questions before you order. For anything about your own health, talk to a licensed physician.",
+      "Discover a collection of products presented with clear specifications and available supporting information. Take your time exploring each option, and reach out to our team if you have questions before placing an order.",
     order: 1,
     image: "/images/collection-weight-wellness.webp",
   },
   {
     id: "next-generation-wellness",
     title: "Next-Generation Wellness",
-    tagline: "Newer ideas in wellness, explained plainly.",
+    tagline: "Explore emerging areas of wellness and research.",
     summary:
-      "Curious about what is new? We explain newer products in plain language, without hype, so you can ask good questions and decide for yourself. A licensed professional is the right person to advise on your personal health.",
+      "Stay curious about new developments and emerging wellness-related products. We make the available product information easier to understand, so you can explore the details, ask questions, and make informed decisions without the hype.",
     order: 2,
     image: "/images/collection-next-generation-wellness.webp",
   },
   {
     id: "skin-beauty",
     title: "Skin & Beauty",
-    tagline: "Skincare and beauty for everyday routines.",
+    tagline: "Thoughtful selections for your beauty routine.",
     summary:
-      "Skincare and beauty essentials for a routine that stays simple. Each product page lists what you need to know, and we are a message away if you want help choosing.",
+      "Explore products for skin and beauty, with information presented to help you understand what each selection offers. Whether you know exactly what you're looking for or need a little guidance, our team is here to help.",
     order: 3,
     image: "/images/collection-skin-beauty.webp",
   },
   {
     id: "vitality-cellular-health",
     title: "Vitality & Cellular Health",
-    tagline: "For people who like to read the details.",
+    tagline: "For the curious, the detail-oriented, and the well-informed.",
     summary:
-      "If you like to know what you are choosing and why, start here. We list every detail we have, we make no promises about results, and we are glad to answer questions before you order.",
+      "Explore products associated with cellular health and wellness. We put available specifications and supporting documentation front and center, so you can review the information, ask questions, and make your own informed decisions.",
     order: 4,
     image: "/images/collection-vitality-cellular-health.webp",
   },
   {
     id: "energy-cellular-wellness",
     title: "Energy & Cellular Wellness",
-    tagline: "For the busy days.",
+    tagline: "Discover more about products in this growing field.",
     summary:
-      "For the days that ask a lot of you. Details are set out plainly, and a real person confirms your order. For any health concern, please consult a licensed physician.",
+      "Explore a selection of products associated with energy and cellular wellness. Every product deserves a closer look, so we present available details clearly and provide personal assistance when you need help understanding your options.",
     order: 5,
     image: "/images/collection-energy-cellular-wellness.webp",
   },
 ];
 
 export const VALUES = [
-  { id: "informed-choices", title: "Informed Choices", body: "You should have the details before you decide, so we put product information and documents up front." },
-  { id: "transparency", title: "Honesty", body: "We share what we know about a product and leave out claims we cannot support." },
-  { id: "customer-care", title: "Real Service", body: "A person handles your questions and orders, and we aim to be helpful and respectful every time." },
-  { id: "responsible-wellness", title: "Responsible Wellness", body: "For health questions, we point you to a qualified professional. Our product information is not medical advice." },
+  { id: "informed-choices", title: "Informed Choices", body: "We believe good decisions start with clear information. That's why we make product details and available documentation accessible, giving you the opportunity to review the facts and make choices with confidence." },
+  { id: "transparency", title: "Honesty", body: "Trust begins with transparency. We share what we know, provide information we can stand behind, and avoid making claims or promises that we cannot substantiate." },
+  { id: "customer-care", title: "Real Service", body: "Every customer deserves personal attention. Whether you're asking a question, exploring product details, or following up on an order, a real person is here to listen, assist, and make your experience as smooth as possible." },
+  { id: "responsible-wellness", title: "Responsible Wellness", body: "Your well-being matters. We encourage informed and responsible choices, and recommend consulting a qualified healthcare professional for questions about your health. The information we provide is for general informational purposes only and is not a substitute for professional medical advice." },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -401,20 +405,26 @@ export const ABOUT = {
   missionTitle: "Our Mission",
   visionTitle: "Our Vision",
   draftNote: "Draft copy, pending review by The Pep Stop.",
-  valuesTitle: "What we stand for",
+  valuesTitle: "What We Stand For",
   storyImageNote: "Our shop and our people",
   collectionsTitle: "Shop the collections",
-  philosophyTitle: "Our philosophy",
+  philosophyTitle: "Our Philosophy",
   philosophy: [
-    "We put product details and documents first, so the decision is yours and you make it with the facts in front of you.",
-    "We only say what we can support. If your question is about your health, we will point you to a qualified healthcare professional.",
+    "We believe informed choices start with clear information. That's why we put product details and available documentation first, giving you the opportunity to review the facts and make decisions with confidence.",
+    "We're committed to sharing information we can stand behind. When a question involves your health or medical needs, we encourage you to seek guidance from a qualified healthcare professional.",
   ],
-  educationTitle: "Why we share articles",
+  educationTitle: "Why We Share Articles",
   education:
-    "We publish short, general articles on beauty, skincare and wellness, and we are glad to answer questions. We would like you to leave every conversation knowing a bit more than when you arrived.",
-  serviceTitle: "How we look after customers",
+    [
+    "Good decisions begin with better understanding. We share easy-to-read articles on beauty, skincare, and general wellness to help make information more accessible and conversations more meaningful.",
+    "Whether you're exploring a topic or simply curious to learn more, our goal is to leave you with something useful and a little more knowledge than you had before.",
+  ],
+  serviceTitle: "How We Look After Our Customers",
   service:
-    "Whether you are browsing, asking about a specification or checking on an order, you will deal with a person who wants to help. Message or call us.",
+    [
+    "A good customer experience should feel personal from start to finish. Whether you're browsing our selections, asking about product specifications, or following up on an order, our team is here to assist.",
+    "No complicated process or unanswered messages. Just real people ready to listen, provide the information available, and help you through the next steps. Reach us through message or phone whenever you need us.",
+  ],
   closingCta: "See the Collections",
 };
 
@@ -725,7 +735,7 @@ export const UI = {
   footerShopTitle: "Explore",
   footerShopAll: "All Products",
   footerCompanyTitle: "The Pep Stop",
-  footerBrand: "The Pep Stop is a health, beauty and wellness shop. Read the details, ask us anything, and a real person will help you order.",
+  footerBrand: "The Pep Stop brings beauty and wellness selections together with clear product information and personal assistance. Explore at your own pace, ask questions, and let our team guide you through the ordering process.",
   rights: "All rights reserved.",
   socials: [] as { label: string; href: string }[],
   loading: "Loading...",

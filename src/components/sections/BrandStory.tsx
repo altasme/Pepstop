@@ -26,9 +26,10 @@ export function BrandStory() {
             <div className="mt-5 max-w-prose space-y-4 text-lg text-ink/80">
               {HOME.storyBody.map((p) => <p key={p}>{p}</p>)}
             </div>
-            <ul className="mt-8 divide-y divide-rosewater border-y border-rosewater">
+            <h3 className="mt-9 font-display text-2xl font-medium text-claret">{HOME.storyPillarsTitle}</h3>
+            <ul className="mt-4 divide-y divide-rosewater border-y border-rosewater">
               {HOME.storyPillars.map((p) => (
-                <li key={p.title} className="grid gap-1 py-4 sm:grid-cols-[13rem_1fr] sm:gap-6">
+                <li key={p.title} className="grid gap-1 py-4 sm:grid-cols-[14rem_1fr] sm:gap-6">
                   <span className="font-semibold text-raspberry-deep">{p.title}</span>
                   <span className="text-ink/80">{p.body}</span>
                 </li>
