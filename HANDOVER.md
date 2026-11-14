@@ -1,7 +1,7 @@
 # HANDOVER: The Pep Stop · Phase 1 (Public Website)
 
 **Built by:** Altaventures Business Development Services
-**Handover date:** 2026-11-11 · **Spec version built:** v1.44 (storefront added per client direction; logo and palette applied)
+**Handover date:** 2026-11-11 · **Spec version built:** v1.45 (storefront added per client direction; logo and palette applied)
 **Preview URL:** https://pepstop.vanamaranto1.workers.dev (working account from 2026-11-14 by the owner's decision; noindex). The dedicated altasmeworks copy (https://pepstop.altasmeworks.workers.dev) stops at v1.43 until launch · **Live URL:** not live: gates open · **Repo:** altasme/pepstop
 
 ## 1. What was delivered

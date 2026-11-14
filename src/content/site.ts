@@ -526,7 +526,6 @@ export const CART = {
   qty: "Quantity",
   lineTotal: "Total",
   openCart: (n: number) => `Cart, ${n} ${n === 1 ? "item" : "items"}`,
-  note: "Delivery fees and arrangements are confirmed by The Pep Stop. Your total is an estimate until we confirm availability and delivery.",
   decrease: "Decrease quantity",
   increase: "Increase quantity",
 };

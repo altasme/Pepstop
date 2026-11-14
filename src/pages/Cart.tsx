@@ -34,7 +34,6 @@ export default function Cart() {
                 <div className="flex justify-between gap-4"><dt>{CART.shipping}</dt><dd className="text-right text-sm text-mute">{deliveryOptions.length > 0 ? CART.shippingChoose : CART.shippingTbc}</dd></div>
                 <div className="flex flex-wrap justify-between gap-x-4 border-t border-ink/15 pt-3 text-lg"><dt className="font-semibold">{CART.total}</dt><dd className="text-right font-semibold tabular-nums">{amountLabel(subtotal, hasUnpriced)}</dd></div>
               </dl>
-              <p className="mt-4 text-sm text-mute">{CART.note}</p>
               <div className="mt-5 flex flex-col gap-3">
                 <Button to="/checkout">{CART.checkout}</Button>
                 <Button to="/shop" variant="secondary">{CART.continue}</Button>
