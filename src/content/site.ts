@@ -114,6 +114,14 @@ export const LOGO_ASSET = {
   height: 640,
 };
 
+/** Hero slideshow. Slide 1 is the `hero` and `heroMobile` slots above (so the admin can still replace it); these follow it. Desktop 12:5, phone 6:5. */
+export const HERO_SLIDES = [
+  { desktop: "/images/hero-2-desktop.webp", mobile: "/images/hero-2-mobile.webp", alt: "Four women leaning together and smiling against a pale studio wall", mobilePosition: "50% 30%" },
+  { desktop: "/images/hero-3-desktop.webp", mobile: "/images/hero-3-mobile.webp", alt: "Five women smiling with their arms around each other against a warm peach wall", mobilePosition: "50% 30%" },
+];
+/** Time each hero slide stays up, in milliseconds. */
+export const HERO_INTERVAL_MS = 4000;
+
 export const IMAGE_SLOTS = {
   hero: {
     id: "hero",
@@ -122,7 +130,7 @@ export const IMAGE_SLOTS = {
     width: 2400,
     height: 1000,
     format: "JPG or WebP",
-    src: "/images/hero-desktop.webp",
+    src: "/images/hero-1-desktop.webp",
     alt: "Five women laughing together in soft neutral tops against a light studio wall",
     direction: "Subject in the right 40 percent, a clean light area across the left 55 percent for the headline. Soft blush tones, natural light. No clinical imagery.",
   },
@@ -133,7 +141,7 @@ export const IMAGE_SLOTS = {
     width: 1200,
     height: 1000,
     format: "JPG or WebP",
-    src: "/images/hero-mobile.webp",
+    src: "/images/hero-1-mobile.webp",
     alt: "Five women laughing together in soft neutral tops against a light studio wall",
     direction: "Same photograph recomposed with the subject centered and 15 percent margin all round.",
   },
@@ -224,6 +232,10 @@ export const HOME = {
   heroTalk: "Talk to Us",
   heroNote: "Not sure what you need? Ask first. That is what we are here for.",
   heroMatch: { lead: "Not sure where to start?", link: "Get matched" },
+  heroSlideshow: "Photo slideshow",
+  heroPause: "Pause slideshow",
+  heroPlay: "Play slideshow",
+  heroGoTo: (n: number, total: number) => `Show photo ${n} of ${total}`,
   heroCollectionsLabel: "Our collections",
   categoriesTitle: "Shop by Collection",
   categoriesBody:

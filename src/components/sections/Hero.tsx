@@ -1,10 +1,10 @@
-import { useEffect, useRef, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { Pause, Play } from "lucide-react";
 import { Link } from "react-router-dom";
-import { HOME } from "../../content/site";
+import { HERO_INTERVAL_MS, HERO_SLIDES, HOME, IMAGE_SLOTS } from "../../content/site";
 import { getFocusAreas } from "../../content/getContent";
 import { primaryCta } from "../../lib/cta";
 import { CtaButton } from "../ui/CtaButton";
-import { SlotImage } from "../ui/SlotImage";
 import { Button } from "../ui/Button";
 import { Sparkle } from "../ui/Sparkle";
 import { SparkleField } from "../ui/SparkleField";
@@ -26,6 +26,54 @@ function Words({ text, start = 0.15, step = 0.1 }: { text: string; start?: numbe
   );
 }
 
+type Slide = { desktop: string; mobile: string; alt: string; mobilePosition: string };
+const slides = (): Slide[] => [
+  { desktop: IMAGE_SLOTS.hero.src ?? "", mobile: IMAGE_SLOTS.heroMobile.src ?? "", alt: IMAGE_SLOTS.hero.alt, mobilePosition: "50% 36%" },
+  ...HERO_SLIDES,
+];
+
+/** One layer of the slideshow. Every photograph stays in the page and the active one fades in. */
+function Layer({ items, kind, active }: { items: Slide[]; kind: "desktop" | "mobile"; active: number }) {
+  const w = kind === "desktop" ? IMAGE_SLOTS.hero.width : IMAGE_SLOTS.heroMobile.width;
+  const h = kind === "desktop" ? IMAGE_SLOTS.hero.height : IMAGE_SLOTS.heroMobile.height;
+  return (
+    <>
+      {items.map((sl, i) => (
+        <img
+          key={i}
+          src={kind === "desktop" ? sl.desktop : sl.mobile}
+          width={w}
+          height={h}
+          alt={i === active ? sl.alt : ""}
+          aria-hidden={i === active ? undefined : true}
+          loading="eager"
+          decoding="async"
+          fetchPriority={i === 0 ? "high" : "low"}
+          sizes="100vw"
+          className="absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ease-out motion-reduce:transition-none"
+          style={{ opacity: i === active ? 1 : 0, objectPosition: kind === "desktop" ? "100% 20%" : sl.mobilePosition }}
+        />
+      ))}
+    </>
+  );
+}
+
+/** Pause and slide buttons. A moving hero needs a way to stop it (WCAG 2.2.2). */
+function Controls({ count, active, paused, onGo, onToggle, className = "" }: { count: number; active: number; paused: boolean; onGo: (i: number) => void; onToggle: () => void; className?: string }) {
+  return (
+    <div role="group" aria-label={HOME.heroSlideshow} className={`absolute z-10 flex items-center rounded-full bg-surface/85 px-1 shadow-lift backdrop-blur ${className}`}>
+      <button type="button" onClick={onToggle} aria-label={paused ? HOME.heroPlay : HOME.heroPause} className="grid h-11 w-11 place-items-center rounded-full text-ink hover:text-raspberry">
+        {paused ? <Play className="h-4 w-4" strokeWidth={2} aria-hidden="true" /> : <Pause className="h-4 w-4" strokeWidth={2} aria-hidden="true" />}
+      </button>
+      {Array.from({ length: count }, (_, i) => (
+        <button key={i} type="button" onClick={() => onGo(i)} aria-label={HOME.heroGoTo(i + 1, count)} aria-current={i === active ? "true" : undefined} className="grid h-11 w-11 place-items-center">
+          <span className={`block h-2 rounded-full transition-all duration-300 ${i === active ? "w-6 bg-raspberry" : "w-2 bg-ink/30"}`} />
+        </button>
+      ))}
+    </div>
+  );
+}
+
 /**
  * Hero. From 1280 px up: one wide photograph fills the section at its own 12:5 ratio (no crop), the group on
  * the right and a clean light wall on the left carrying the headline. Below 1280 px: the 6:5 photograph sits
@@ -36,6 +84,19 @@ function Words({ text, start = 0.15, step = 0.1 }: { text: string; start?: numbe
 export function Hero() {
   const areas = getFocusAreas();
   const root = useRef<HTMLElement>(null);
+  const items = slides();
+  const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
+
+  // Autoplay. Off for people who ask for reduced motion; the timer restarts whenever a slide changes, so a manual pick gets the full interval.
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) { setPaused(true); return; }
+  }, []);
+  useEffect(() => {
+    if (paused || items.length < 2) return;
+    const t = setInterval(() => { if (!document.hidden) setActive((a) => (a + 1) % items.length); }, HERO_INTERVAL_MS);
+    return () => clearInterval(t);
+  }, [active, paused, items.length]);
 
   useEffect(() => {
     const el = root.current;
@@ -70,8 +131,9 @@ export function Hero() {
       {/* Under 1280: image first, full width */}
       <div className="hero-photo relative aspect-[6/5] overflow-hidden sm:aspect-[16/9] md:aspect-[2/1] xl:hidden">
         <div className="kenburns h-full w-full">
-          <SlotImage slot="heroMobile" priority fill objectPosition="50% 36%" sizes="100vw" />
+          <Layer items={items} kind="mobile" active={active} />
         </div>
+        <Controls count={items.length} active={active} paused={paused} onGo={setActive} onToggle={() => setPaused((p) => !p)} className="bottom-3 left-1/2 -translate-x-1/2" />
       </div>
       {/* 1280 and up: image fills the section, with a touch of pointer depth */}
       <div className="hero-photo absolute inset-0 hidden overflow-hidden xl:block">
@@ -80,9 +142,10 @@ export function Hero() {
           style={{ transform: "translate3d(calc(var(--mx, 0) * -10px), calc(var(--my, 0) * -6px), 0) scale(1.02)" }}
         >
           <div className="kenburns h-full w-full">
-            <SlotImage slot="hero" priority fill objectPosition="100% 20%" sizes="100vw" />
+            <Layer items={items} kind="desktop" active={active} />
           </div>
         </div>
+        <Controls count={items.length} active={active} paused={paused} onGo={setActive} onToggle={() => setPaused((p) => !p)} className="bottom-5 right-8" />
       </div>
 
       {/* Sparkles bloom into the empty wall above the group and beside the text */}
@@ -100,9 +163,9 @@ export function Hero() {
         />
       </div>
 
-      <div className="relative xl:absolute xl:inset-0">
+      <div className="relative xl:pointer-events-none xl:absolute xl:inset-0">
         <div className="mx-auto flex h-full max-w-page items-center px-4 sm:px-6 lg:px-8">
-          <div className="w-full py-10 sm:py-12 xl:max-w-[34rem] xl:py-0">
+          <div className="w-full py-10 sm:py-12 xl:pointer-events-auto xl:max-w-[34rem] xl:py-0">
             <span className="hero-in mb-5 block h-6 w-6">
               <span className="twinkle block h-full w-full"><Sparkle className="h-full w-full" fill="var(--raspberry)" /></span>
             </span>
