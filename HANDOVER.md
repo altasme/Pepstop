@@ -100,7 +100,7 @@
 - Tools: Cloudflare Web Analytics loads only when `ANALYTICS.cfBeaconToken` is set (★C8). Meta Pixel is not loaded; ID slot exists, public routes only. Conversion = outbound chat or call click. Events: `cta_*_click`, `article_view`, payloads `{ page, cta }` or `{ slug }` only. Events also dispatch a `pepstop:event` window event.
 
 ## 8. Accounts & infrastructure (pointers, never secrets)
-- Cloudflare Worker `pepstop` with D1 `pepstop_db` and R2 `pepstop-files`, in a dedicated account (Altasmeworks@gmail.com's Account, subdomain `altasmeworks`), separate from other Altaventures client sites as Appendix C-15 recommends. The earlier Worker on the shared account (`pepstop.vanamaranto1.workers.dev`) is superseded; remove it and its empty D1 database and R2 bucket there once the client confirms the new address.
+- Cloudflare Worker `pepstop` with D1 `pepstop_db` and R2 `pepstop-files`, in a dedicated account (Altasmeworks@gmail.com's Account, subdomain `altasmeworks`), separate from other Altaventures client sites as Appendix C-15 recommends. The earlier Worker on the shared account (`pepstop.vanamaranto1.workers.dev`) was deleted on 2026-11-14 at the owner's request. Its old D1 database (`pepstop_db`) and R2 bucket (`pepstop-files`) still exist on that shared account with test data only; delete them there when convenient.
 - Cloudinary: cloud name not set · Repo: altasme/pepstop
 
 ## 9. Known limitations / conflicts noted
