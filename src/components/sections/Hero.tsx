@@ -129,23 +129,16 @@ export function Hero() {
 
   return (
     <section ref={root} className="relative overflow-hidden bg-petal xl:aspect-[12/5]">
-      {/* Under 1280: image first, full width */}
+      {/* Under 1280: image first, full width. The photographs never scale or drift: a still image stays as sharp as its file. */}
       <div className="hero-photo relative aspect-[6/5] overflow-hidden sm:aspect-[16/9] md:aspect-[2/1] xl:hidden">
-        <div className="kenburns h-full w-full">
-          <Layer items={items} kind="mobile" active={active} />
-        </div>
+        <Layer items={items} kind="mobile" active={active} />
+        <div aria-hidden="true" className="grain pointer-events-none absolute inset-0" />
         <Controls count={items.length} active={active} paused={paused} onGo={setActive} onToggle={() => setPaused((p) => !p)} className="bottom-3 left-1/2 -translate-x-1/2" />
       </div>
-      {/* 1280 and up: image fills the section, with a touch of pointer depth */}
+      {/* 1280 and up: image fills the section */}
       <div className="hero-photo absolute inset-0 hidden overflow-hidden xl:block">
-        <div
-          className="depth h-full w-full"
-          style={{ transform: "translate3d(calc(var(--mx, 0) * -10px), calc(var(--my, 0) * -6px), 0) scale(1.02)" }}
-        >
-          <div className="kenburns h-full w-full">
-            <Layer items={items} kind="desktop" active={active} />
-          </div>
-        </div>
+        <Layer items={items} kind="desktop" active={active} />
+        <div aria-hidden="true" className="grain pointer-events-none absolute inset-0" />
         <Controls count={items.length} active={active} paused={paused} onGo={setActive} onToggle={() => setPaused((p) => !p)} className="bottom-5 right-8" />
       </div>
 

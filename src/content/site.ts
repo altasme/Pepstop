@@ -118,6 +118,7 @@ export const LOGO_ASSET = {
 export const HERO_SLIDES = [
   { desktop: "/images/hero-2-desktop.webp", mobile: "/images/hero-2-mobile.webp", alt: "Four women leaning together and smiling against a pale studio wall", mobilePosition: "50% 30%" },
   { desktop: "/images/hero-3-desktop.webp", mobile: "/images/hero-3-mobile.webp", alt: "Five women smiling with their arms around each other against a warm peach wall", mobilePosition: "50% 30%" },
+  { desktop: "/images/hero-4-desktop.webp", mobile: "/images/hero-4-mobile.webp", alt: "Three women with their arms around each other against a pale lavender backdrop", mobilePosition: "50% 30%" },
 ];
 /** Time each hero slide stays up, in milliseconds. */
 export const HERO_INTERVAL_MS = 5000;
