@@ -1,7 +1,7 @@
 # HANDOVER: The Pep Stop · Phase 1 (Public Website)
 
 **Built by:** Altaventures Business Development Services
-**Handover date:** 2026-11-11 · **Spec version built:** v1.25 (storefront added per client direction; logo and palette applied)
+**Handover date:** 2026-11-11 · **Spec version built:** v1.26 (storefront added per client direction; logo and palette applied)
 **Preview URL:** https://pepstop.altasmeworks.workers.dev (moved to the dedicated account 2026-11-13, noindex) · **Live URL:** not live: gates open · **Repo:** altasme/pepstop
 
 ## 1. What was delivered
@@ -142,6 +142,8 @@
 - v1.24 finishing pass: the mobile menu now renders in a portal on the page body (a fixed element inside the blurred header was only 72px tall); header navigation switches to the menu at 1280 px because the row overflowed at 1024 px; Contact is two columns; duplicate disclaimer and placeholder sentences removed. Checked at 320, 375, 390, 430, 768, 1024, 1280, 1440 and 1920 px with no horizontal overflow; content audit and design detector report no findings.
 
 - v1.25 copy rewrite: all customer-facing text in `src/content/site.ts` was rewritten in a plainer, more commercial voice (see CLAUDE.md v1.25). The client should still read every page and approve the wording; unpublished articles in `src/content/articles.ts` were not changed.
+
+- v1.26: the regulatory review gate was removed from the admin and the Worker by direction (CLAUDE.md v1.26, conflict with v1.21 noted). Content responsibility rests with the client per the service agreement clause (★G3), so that signature matters more now.
 
 ### Hand-over checklist: only the client can supply these
 | Item | Where it goes | Until then |

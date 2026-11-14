@@ -139,7 +139,7 @@ type ProductRow = {
   overview: string; specifications: string; composition: string; packaging: string; storage: string; notes: string; reg_type: string | null; reg_number: string | null; reg_holder: string | null;
   base_price: number | null; availability: string; show_price: number; inquire_price: number;
 };
-const VISIBLE = "p.status='published' AND p.regulatory_status='verified'";
+const VISIBLE = "p.status='published'";
 
 async function catalog(env: Env) {
   const [cats, prods, vars, info, coas] = await Promise.all([

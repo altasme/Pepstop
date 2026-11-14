@@ -42,7 +42,6 @@ const MESSAGES: Record<string, string> = {
   file_too_large: "That file is too large.",
   unsupported_file_type: "That file type is not supported.",
   review_required: "Guidelines must be marked Reviewed before they can be published.",
-  regulatory_review_required: "Only products verified for their intended sale and promotion can be published.",
   invalid_transition: "That change is not allowed for the account's current status.",
   password_change_required: "Please change your temporary password first.",
 };

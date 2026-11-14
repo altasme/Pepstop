@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { api, errorText, peso, when } from "../api";
-import { Badge, ConfirmButton, Empty, ErrorNote, Field, ImageField, Loading, PageHead, Pager, RowMenu, SafeImg, Switch, useLoad, useToast, useUnsavedWarning } from "../ui";
+import { Badge, ConfirmButton, Empty, ErrorNote, Field, ImageField, Loading, PageHead, Pager, RowMenu, SafeImg, useLoad, useToast, useUnsavedWarning } from "../ui";
 
 export function ProductsList() {
   const toast = useToast();
   const [sp] = useSearchParams();
   const [q, setQ] = useState(""); const [category, setCategory] = useState(""); const [status, setStatus] = useState(sp.get("status") ?? "");
-  const [availability, setAvail] = useState(""); const [regulatory, setReg] = useState(""); const [sort, setSort] = useState("updated"); const [page, setPage] = useState(1);
+  const [availability, setAvail] = useState(""); const [sort, setSort] = useState("updated"); const [page, setPage] = useState(1);
   const cats = useLoad(() => api<any[]>("GET", "/categories"), []);
   const { data, error, loading, reload } = useLoad(() => {
-    const p = new URLSearchParams({ q, category, status, availability, regulatory, sort, page: String(page), per: "20" });
+    const p = new URLSearchParams({ q, category, status, availability, sort, page: String(page), per: "20" });
     return api<{ total: number; rows: any[] }>("GET", `/products?${p}`);
-  }, [q, category, status, availability, regulatory, sort, page]);
+  }, [q, category, status, availability, sort, page]);
   const act = async (fn: () => Promise<unknown>, ok: string) => { try { await fn(); toast("ok", ok); reload(); } catch (e) { toast("error", errorText(e)); } };
   return (
     <>
@@ -21,7 +21,6 @@ export function ProductsList() {
         <input aria-label="Search by product name" placeholder="Search by product name" value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }} />
         <select aria-label="Category" value={category} onChange={(e) => { setCategory(e.target.value); setPage(1); }}><option value="">All categories</option>{cats.data?.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select>
         <select aria-label="Publication status" value={status} onChange={(e) => { setStatus(e.target.value); setPage(1); }}><option value="">All except archived</option><option value="published">Published</option><option value="draft">Draft</option><option value="unpublished">Unpublished</option><option value="archived">Archived</option></select>
-        <select aria-label="Regulatory review" value={regulatory} onChange={(e) => { setReg(e.target.value); setPage(1); }}><option value="">Any regulatory status</option><option value="verified">Verified for intended sale</option><option value="pending_review">Pending review</option><option value="not_cleared">Not cleared</option></select>
         <select aria-label="Availability" value={availability} onChange={(e) => { setAvail(e.target.value); setPage(1); }}><option value="">Any availability</option><option value="available">Available</option><option value="ask">Inquire</option><option value="unavailable">Unavailable</option></select>
         <select aria-label="Sort" value={sort} onChange={(e) => setSort(e.target.value)}><option value="updated">Latest update</option><option value="name">Name</option></select>
       </div>
@@ -29,7 +28,7 @@ export function ProductsList() {
       {loading && !data ? <Loading /> : data && data.rows.length === 0 ? <Empty>No products match. Add your first product to get started.</Empty> : data && (
         <>
           <div className="tablewrap"><table>
-            <thead><tr><th>Image</th><th>Product</th><th>Category</th><th className="num">Price</th><th className="num">Variants</th><th>Availability</th><th>Regulatory review</th><th>Status</th><th>Last updated</th><th><span className="sr-only">Actions</span></th></tr></thead>
+            <thead><tr><th>Image</th><th>Product</th><th>Category</th><th className="num">Price</th><th className="num">Variants</th><th>Availability</th><th>Status</th><th>Last updated</th><th><span className="sr-only">Actions</span></th></tr></thead>
             <tbody>{data.rows.map((p) => (
               <tr key={p.id}>
                 <td>{p.main_image ? <SafeImg className="thumb" src={p.main_image} tile="thumb" /> : <span className="thumb" />}</td>
@@ -38,7 +37,6 @@ export function ProductsList() {
                 <td className="num">{peso(p.base_price)}</td>
                 <td className="num">{p.variants}</td>
                 <td><Badge value={p.availability} /></td>
-                <td><Badge value={p.regulatory_status} /></td>
                 <td><Badge value={p.status} /></td>
                 <td>{when(p.updated_at)}</td>
                 <td className="rowact">
@@ -63,7 +61,7 @@ export function ProductsList() {
 
 const blank = () => ({ name: "", slug: "", short_description: "", full_description: "", category_id: "", main_image: null as string | null, sort: 0,
   overview: "", specifications: "", composition: "", packaging: "", storage: "", notes: "", reg_type: "", reg_number: "", reg_holder: "",
-  base_price: "" as string | number | null, regulatory_status: "pending_review", availability: "ask", show_price: false, inquire_price: true, status: "draft", variants: [] as any[], images: [] as string[] });
+  base_price: "" as string | number | null, availability: "ask", show_price: false, inquire_price: true, status: "draft", variants: [] as any[], images: [] as string[] });
 
 export function ProductForm() {
   const { id = "new" } = useParams();
@@ -78,7 +76,7 @@ export function ProductForm() {
   const { loading, error } = useLoad(async () => {
     if (isNew) { setF(blank()); return null; }
     const p = await api<any>("GET", `/products/${id}`);
-    setF({ ...blank(), ...p, base_price: p.base_price ?? "", category_id: p.category_id ?? "", show_price: !!p.show_price, inquire_price: !!p.inquire_price, images: p.images.map((i: any) => i.image) });
+    setF({ ...blank(), ...p, base_price: p.base_price ?? "", category_id: p.category_id ?? "", show_price: !!p.show_price && !p.inquire_price, inquire_price: !(!!p.show_price && !p.inquire_price), images: p.images.map((i: any) => i.image) });
     setSlugEdited(true); setDirty(false);
     return p;
   }, [id]);
@@ -103,7 +101,6 @@ export function ProductForm() {
   };
 
   if (loading && !isNew) return <Loading />;
-  const verified = f.regulatory_status === "verified";
   return (
     <>
       <PageHead title={isNew ? "Add product" : f.name || "Edit product"} crumbs={["Products", isNew ? "Add" : "Edit"]}>
@@ -118,7 +115,7 @@ export function ProductForm() {
               <Field label="Product name"><input value={f.name} onChange={(e) => { set("name", e.target.value); if (!slugEdited) set("slug", e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")); }} /></Field>
               <Field label="Category"><select value={f.category_id} onChange={(e) => set("category_id", e.target.value)}><option value="">Choose a category</option>{cats.data?.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select></Field>
               <Field label="Short description" wide><input value={f.short_description} maxLength={400} onChange={(e) => set("short_description", e.target.value)} /></Field>
-              <Field label="Full description" wide hint="Plain text. Only add content the client has verified."><textarea value={f.full_description} onChange={(e) => set("full_description", e.target.value)} /></Field>
+              <Field label="Full description" wide hint="Plain text."><textarea value={f.full_description} onChange={(e) => set("full_description", e.target.value)} /></Field>
             </div>
           </section>
 
@@ -138,9 +135,10 @@ export function ProductForm() {
             <div className="form">
               <Field label="Base price (PHP)" hint="Used for variants without a price of their own."><input type="number" min={0} value={f.base_price ?? ""} onChange={(e) => set("base_price", e.target.value)} /></Field>
               <Field label="Availability"><select value={f.availability} onChange={(e) => set("availability", e.target.value)}><option value="available">Available</option><option value="ask">Inquire for availability</option><option value="unavailable">Currently unavailable</option></select></Field>
-              <div className="wide"><Switch checked={f.show_price} onChange={(v) => set("show_price", v)}>Show the price to customers</Switch>
-                <Switch checked={f.inquire_price} onChange={(v) => set("inquire_price", v)}>Ask customers to inquire for the price instead</Switch>
-                <small className="muted">A price is shown only when the first is on and the second is off.</small></div>
+              <fieldset className="wide choice"><legend>Price shown to customers</legend>
+                <label className="check"><input type="radio" name="price_mode" checked={!!f.show_price} onChange={() => setF((x: any) => ({ ...x, show_price: true, inquire_price: false }))} /> Show the price to customers</label>
+                <label className="check"><input type="radio" name="price_mode" checked={!f.show_price} onChange={() => setF((x: any) => ({ ...x, show_price: false, inquire_price: true }))} /> Ask customers to inquire for the price instead</label>
+              </fieldset>
             </div>
           </section>
 
@@ -166,7 +164,7 @@ export function ProductForm() {
           </section>
 
           <section className="card"><h2>Product details</h2>
-            <p className="muted">Only add information the client has supplied and verified.</p>
+            <p className="muted">Fill in only what applies. Empty sections are hidden from customers.</p>
             <div className="form">
               <Field label="Overview" wide><textarea value={f.overview} onChange={(e) => set("overview", e.target.value)} /></Field>
               <Field label="Specifications" wide hint="One line per item."><textarea value={f.specifications} onChange={(e) => set("specifications", e.target.value)} /></Field>
@@ -192,16 +190,9 @@ export function ProductForm() {
           <section className="card">
             <h2>Publishing</h2>
             <p className="railrow"><span className="muted">Status</span><Badge value={f.status} /></p>
-            <Field label="Regulatory review">
-              <select value={f.regulatory_status} onChange={(e) => set("regulatory_status", e.target.value)}>
-                <option value="pending_review">Pending review</option><option value="verified">Verified for intended sale</option><option value="not_cleared">Not cleared</option>
-              </select>
-            </Field>
-            <p className="muted small">Only products verified for their intended sale and promotion in the Philippines can be published. Leaving Verified takes a product off the catalog at once.</p>
-            {!verified && <p className="note">Mark this product Verified to enable Publish.</p>}
             <div className="stackbtns">
               <button className="btn" disabled={busy} onClick={() => save()}>{dirty ? "Save changes" : "Save"}</button>
-              {f.status !== "published" && <button className="btn ghost" disabled={busy || !verified} title={!verified ? "Mark the product Verified first" : ""} onClick={() => save("published")}>Publish</button>}
+              {f.status !== "published" && <button className="btn ghost" disabled={busy} onClick={() => save("published")}>Publish</button>}
               {f.status === "published" && <button className="btn ghost" disabled={busy} onClick={() => save("unpublished")}>Unpublish</button>}
               {f.status === "archived" && <button className="btn ghost" disabled={busy} onClick={() => save("draft")}>Restore as draft</button>}
               {!isNew && f.status !== "archived" && <ConfirmButton className="btn danger" message="Archive this product? It will be removed from the private catalog." onConfirm={() => save("archived")}>Archive</ConfirmButton>}

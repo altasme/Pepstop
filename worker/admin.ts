@@ -6,10 +6,8 @@ const IDLE_MS = 60 * 60 * 1000; // inactive sessions expire after 60 minutes
 const MAX_MS = 12 * 60 * 60 * 1000; // absolute session lifetime
 export const INFO_SECTIONS = ["overview", "general", "specifications", "manufacturer", "guidelines", "storage", "handling", "supporting", "notices", "notes"];
 const PUB_STATUSES = ["draft", "published", "unpublished", "archived"];
-const REG_STATUSES = ["pending_review", "verified", "not_cleared"];
 /** "Unpublished" is stored as a draft with unpublished = 1 (see migration 0003). */
 const toDb = (s: string) => (s === "unpublished" ? { status: "draft", unpublished: 1 } : { status: s, unpublished: 0 });
-const GATE_MESSAGE = "Only products verified for their intended sale and promotion can be published. Set the regulatory review status to Verified for Intended Sale first.";
 export const ORDER_STATUSES = ["new_order", "under_review", "awaiting_payment", "payment_submitted", "payment_verified", "processing", "ready_for_dispatch", "shipped", "completed", "cancelled"];
 const CONTENT_KEYS = ["home", "about", "contact", "footer"];
 
@@ -308,7 +306,6 @@ async function listProducts(c: Ctx) {
   if (st === "unpublished") where.push("p.status='draft' AND p.unpublished=1");
   else if (st === "draft") where.push("p.status='draft' AND p.unpublished=0");
   else if (st) { where.push("p.status=?"); args.push(st); } else where.push("p.status!='archived'");
-  if (p.get("regulatory")) { where.push("p.regulatory_status=?"); args.push(p.get("regulatory")); }
   if (p.get("availability")) { where.push("p.availability=?"); args.push(p.get("availability")); }
   const order = p.get("sort") === "name" ? "p.name COLLATE NOCASE" : "p.updated_at DESC";
   const w = where.length ? "WHERE " + where.join(" AND ") : "";
@@ -334,17 +331,15 @@ async function saveProduct(c: Ctx, id: string | null) {
   const slug = await uniqueSlug(env, "products", slugify(clip(d.slug, 100) || name), id);
   const wanted = PUB_STATUSES.includes(d.status) ? d.status : "draft";
   const avail = ["available", "ask", "unavailable"].includes(d.availability) ? d.availability : "ask";
-  const existing = id ? await env.DB.prepare("SELECT regulatory_status FROM products WHERE id=?").bind(id).first<{ regulatory_status: string }>() : null;
-  if (id && !existing) return err(404, "not_found");
-  const regulatory = REG_STATUSES.includes(d.regulatory_status) ? d.regulatory_status : (existing?.regulatory_status ?? "pending_review");
-  // Server-side gate: nothing is published without a verified regulatory status. The UI cannot bypass it.
-  if (wanted === "published" && regulatory !== "verified") return err(409, "regulatory_review_required", { message: GATE_MESSAGE });
+  if (id && !(await env.DB.prepare("SELECT 1 x FROM products WHERE id=?").bind(id).first())) return err(404, "not_found");
+  // v1.26: no regulatory gate. Products publish when the owner says so; the column is kept as "verified" for old data.
+  const regulatory = "verified";
   const { status, unpublished } = toDb(wanted);
   const t = now();
   const vals = [name, slug, clip(d.short_description, 400), sanitizeHtml(clip(d.full_description, 20000)), clip(d.category_id, 80) || null, clip(d.main_image, 300) || null, intOrNull(d.sort) ?? 0,
     clip(d.overview, 5000), clip(d.specifications, 5000), clip(d.composition, 5000), clip(d.packaging, 2000), clip(d.storage, 2000), clip(d.notes, 5000),
     clip(d.reg_type, 80) || null, clip(d.reg_number, 80) || null, clip(d.reg_holder, 120) || null,
-    intOrNull(d.base_price), avail, d.show_price ? 1 : 0, d.inquire_price === false || d.inquire_price === 0 ? 0 : 1, status, regulatory, unpublished];
+    intOrNull(d.base_price), avail, d.show_price ? 1 : 0, d.show_price ? 0 : 1, status, regulatory, unpublished];
   const isNew = !id;
   if (isNew) {
     id = uid();
@@ -369,18 +364,9 @@ async function saveProduct(c: Ctx, id: string | null) {
 }
 
 async function productStatus(c: Ctx, id: string) {
-  const d = await body<{ status?: string; regulatory_status?: string }>(c.req);
-  const p = await c.env.DB.prepare("SELECT regulatory_status FROM products WHERE id=?").bind(id).first<{ regulatory_status: string }>();
-  if (!p) return err(404, "not_found");
-  if (d?.regulatory_status !== undefined) {
-    if (!REG_STATUSES.includes(d.regulatory_status)) return err(400, "bad_status");
-    // Leaving "verified" takes a published product off the catalog immediately.
-    await c.env.DB.prepare("UPDATE products SET regulatory_status=?, status=CASE WHEN ?!='verified' AND status='published' THEN 'draft' ELSE status END, unpublished=CASE WHEN ?!='verified' AND status='published' THEN 1 ELSE unpublished END, updated_at=? WHERE id=?").bind(d.regulatory_status, d.regulatory_status, d.regulatory_status, now(), id).run();
-    await log(c.env, c.admin, "product_regulatory_status_changed", "product", id, { from: p.regulatory_status, to: d.regulatory_status }, c.ip);
-    return json({ ok: true });
-  }
+  const d = await body<{ status?: string }>(c.req);
+  if (!(await c.env.DB.prepare("SELECT 1 x FROM products WHERE id=?").bind(id).first())) return err(404, "not_found");
   if (!d || !PUB_STATUSES.includes(d.status ?? "")) return err(400, "bad_status");
-  if (d.status === "published" && p.regulatory_status !== "verified") return err(409, "regulatory_review_required", { message: GATE_MESSAGE });
   const m = toDb(d.status!);
   await c.env.DB.prepare("UPDATE products SET status=?, unpublished=?, updated_at=? WHERE id=?").bind(m.status, m.unpublished, now(), id).run();
   await log(c.env, c.admin, d.status === "archived" ? "product_archived" : d.status === "published" ? "product_published" : "product_unpublished", "product", id, undefined, c.ip);

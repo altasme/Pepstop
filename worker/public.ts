@@ -69,7 +69,7 @@ export async function handleFiles(req: Request, env: Env, url: URL): Promise<Res
     if (!allowed) return deny(401);
     if (kind === "coa") {
       const isAdmin = !(customer && customer.status === "approved");
-      const r = await env.DB.prepare(`SELECT d.file_key FROM coa_documents d JOIN products p ON p.id=d.product_id WHERE d.id=? ${isAdmin ? "" : "AND d.status='published' AND p.status='published' AND p.regulatory_status='verified'"}`).bind(name).first<{ file_key: string }>();
+      const r = await env.DB.prepare(`SELECT d.file_key FROM coa_documents d JOIN products p ON p.id=d.product_id WHERE d.id=? ${isAdmin ? "" : "AND d.status='published' AND p.status='published'"}`).bind(name).first<{ file_key: string }>();
       key = r?.file_key ?? null;
     }
   }

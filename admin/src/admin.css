@@ -200,3 +200,7 @@ details.rowmenu .menu .danger { color: var(--bad); }
   td a:not(.btn) { display: inline-flex; align-items: center; min-height: 44px; }
 }
 @media (prefers-reduced-motion: reduce) { .sp { animation: none !important; } .btn, .side nav a, .logout { transition: none; } }
+
+fieldset.choice { border: 0; padding: 0; margin: 0; }
+fieldset.choice legend { padding: 0; margin-bottom: .25rem; font-weight: 600; }
+fieldset.choice .check { min-height: 36px; }
