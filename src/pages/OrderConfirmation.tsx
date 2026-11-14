@@ -53,6 +53,7 @@ function PaymentDetails({ order, paid }: { order: Order; paid: boolean }) {
 }
 
 export default function OrderConfirmation() {
+  const navigate = useNavigate();
   const [order, setOrder] = useState<Order | null | undefined>(undefined);
   const [copied, setCopied] = useState(false);
   const [paid, setPaid] = useState(false);
@@ -63,6 +64,7 @@ export default function OrderConfirmation() {
       .then((r) => r.json().catch(() => null))
       .then((d: { order: Order | null } | null) => {
         if (d?.order) { setOrder(d.order); return; }
+        if (stored?.cod) { navigate("/checkout/thank-you", { replace: true }); return; }
         setPaid(!!stored?.remote);
         setOrder(stored);
       })

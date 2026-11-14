@@ -86,7 +86,7 @@ export default function Product() {
             <p className="text-sm text-mute">{getCategoryName(product.categoryId)}</p>
             <h1 className="mt-1 font-display text-h1 font-medium text-raspberry-deep">{product.name}</h1>
             {product.shortDescription && <p className="mt-3 text-lg text-ink/80">{product.shortDescription}</p>}
-            {(product.specifications || product.packaging || product.storage || (product.coas && product.coas.length > 0)) && <p className="mt-3 text-sm text-mute">{SHOP.productIntro}</p>}
+            {(product.protocolImage || product.packaging || product.storage || (product.coas && product.coas.length > 0)) && <p className="mt-3 text-sm text-mute">{SHOP.productIntro}</p>}
             {product.regNumber && <p className="mt-2 text-sm text-mute">{SHOP.regLabel} {product.regNumber}</p>}
             <p className="mt-5 text-2xl font-semibold text-ink">{selected && product.showPrice && selected.pricePhp !== null ? formatPhp(selected.pricePhp) : priceLabel(product)}</p>
             <p className="mt-1 text-sm text-mute">{SHOP.availability[unavailable ? "unavailable" : product.availability]}</p>
@@ -136,12 +136,20 @@ export default function Product() {
 
             <div className="mt-8 border-t border-line">
               {(product.overview || product.fullDescription) && <Detail title={SHOP.detailsTitle}>{product.overview || product.fullDescription}</Detail>}
-              <Detail title={SHOP.specsTitle}>{product.specifications}</Detail>
+              {product.protocolImage && (
+                <details className="group border-b border-line">
+                  <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 text-base font-semibold text-ink [&::-webkit-details-marker]:hidden">
+                    {SHOP.protocolTitle}
+                    <ChevronDown className="h-5 w-5 shrink-0 transition-transform duration-200 ease-out group-open:rotate-180" strokeWidth={1.75} aria-hidden="true" />
+                  </summary>
+                  <div className="pb-5"><a href={product.protocolImage} target="_blank" rel="noreferrer"><img src={product.protocolImage} alt={`${SHOP.protocolTitle}: ${product.name}`} loading="lazy" decoding="async" className="h-auto w-full rounded-xl border border-line bg-surface" /></a></div>
+                </details>
+              )}
               <Detail title={SHOP.packagingTitle}>{product.packaging}</Detail>
               <Detail title={SHOP.storageTitle}>{product.storage}</Detail>
               {product.composition && <Detail title={SHOP.compositionTitle}>{product.composition}</Detail>}
               {product.notes && <Detail title={SHOP.notesTitle}>{product.notes}</Detail>}
-              {product.info?.filter((i) => i.html.trim()).map((i) => <HtmlDetail key={i.section} title={i.section === "guidelines" ? "Product guidelines" : i.section[0].toUpperCase() + i.section.slice(1)} html={i.html} />)}
+              {product.info?.filter((i) => i.html.trim() && i.section !== "specifications").map((i) => <HtmlDetail key={i.section} title={i.section === "guidelines" ? "Product guidelines" : i.section[0].toUpperCase() + i.section.slice(1)} html={i.html} />)}
               {product.coas && product.coas.length > 0 ? (
                 <details className="group border-b border-line">
                   <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 text-base font-semibold text-ink [&::-webkit-details-marker]:hidden">{SHOP.coaTitle}<ChevronDown className="h-5 w-5 shrink-0 transition-transform duration-200 ease-out group-open:rotate-180" strokeWidth={1.75} aria-hidden="true" /></summary>

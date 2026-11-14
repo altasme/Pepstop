@@ -137,7 +137,7 @@ async function me(req: Request, env: Env) {
 
 type ProductRow = {
   id: string; slug: string; name: string; short_description: string; full_description: string; category_id: string | null; main_image: string | null; sort: number;
-  overview: string; specifications: string; composition: string; packaging: string; storage: string; notes: string; reg_type: string | null; reg_number: string | null; reg_holder: string | null;
+  overview: string; protocol_image: string | null; composition: string; packaging: string; storage: string; notes: string; reg_type: string | null; reg_number: string | null; reg_holder: string | null;
   base_price: number | null; availability: string; show_price: number; inquire_price: number;
 };
 const VISIBLE = "p.status='published'";
@@ -167,7 +167,7 @@ async function catalog(env: Env) {
     return {
       id: p.id, slug: p.slug, name: p.name, categoryId: p.category_id ?? "", image: p.main_image,
       shortDescription: p.short_description, fullDescription: p.full_description, overview: p.overview, composition: p.composition, notes: p.notes,
-      specifications: p.specifications.split("\n").map((s) => s.trim()).filter(Boolean),
+      protocolImage: p.protocol_image,
       variants, packaging: p.packaging, storage: p.storage, regType: p.reg_type, regNumber: p.reg_number, regHolder: p.reg_holder,
       availability: p.availability, showPrice: priceVisible, status: p.availability === "unavailable" ? "unavailable" : "published", order: p.sort,
       info: info.results.filter((i: any) => i.product_id === p.id).map((i: any) => ({ section: i.section, html: i.body_html })),
@@ -191,7 +191,8 @@ async function placeOrder(req: Request, env: Env, customer: Customer) {
   const d = (await req.json().catch(() => null)) as Record<string, any> | null;
   if (!d || !Array.isArray(d.items) || d.items.length < 1 || d.items.length > 30) return err(400, "invalid_items");
   const settings = await getSettings(env);
-  const methods = (await env.DB.prepare("SELECT id FROM payment_methods WHERE enabled=1").all<{ id: string }>()).results.map((m) => m.id);
+  const methodRows = (await env.DB.prepare("SELECT id,kind FROM payment_methods WHERE enabled=1").all<{ id: string; kind: string }>()).results;
+  const methods = methodRows.map((m) => m.id);
   const deliveryOpts = (await env.DB.prepare("SELECT id,label,fee FROM delivery_options WHERE enabled=1").all<{ id: string; label: string; fee: number }>()).results;
   const c = d.customer ?? {};
   const f = { street: clip(c.street, 200), barangay: clip(c.barangay, 100), city: clip(c.city, 100), province: clip(c.province, 100), postal: clip(c.postal, 10), email: clip(c.email, 160), notes: clip(c.notes, 1000), payment: clip(c.payment, 60), delivery: clip(c.delivery, 60) };
@@ -215,6 +216,8 @@ async function placeOrder(req: Request, env: Env, customer: Customer) {
     } else if (clip(it.variantId, 60) !== vid) return err(400, "invalid_variant");
     lines.push({ productId: p.id, variantId: vid, pname: p.name, vname, qty, unit });
   }
+  // Cash on delivery has no payment to prove, so the order goes straight to the administrator.
+  const isCod = methodRows.find((m) => m.id === f.payment)?.kind === "cod";
   const hasUnpriced = lines.some((l) => l.unit === null);
   const subtotal = lines.reduce((s, l) => s + (l.unit ?? 0) * l.qty, 0);
   const freeMin = settings.free_delivery_min ? Number(settings.free_delivery_min) : null;
@@ -223,12 +226,12 @@ async function placeOrder(req: Request, env: Env, customer: Customer) {
   const total = subtotal + (fee ?? 0);
   const id = uid(), ref = `PS-${crypto.randomUUID().replace(/-/g, "").slice(0, 8).toUpperCase()}`, t = now();
   await env.DB.batch([
-    env.DB.prepare("INSERT INTO orders (id,ref,customer_id,full_name,mobile,email,street,barangay,city,province,postal,customer_notes,payment_method,delivery_option,payment_status,order_status,subtotal,delivery_fee,total,has_unpriced,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?, 'pending','new_order',?,?,?,?,?,?)")
-      .bind(id, ref, customer.id, customer.full_name, customer.phone, f.email || null, f.street, f.barangay, f.city, f.province, f.postal, f.notes, f.payment, chosen?.label ?? null, subtotal, fee, total, hasUnpriced ? 1 : 0, t, t),
+    env.DB.prepare("INSERT INTO orders (id,ref,customer_id,full_name,mobile,email,street,barangay,city,province,postal,customer_notes,payment_method,delivery_option,payment_status,order_status,subtotal,delivery_fee,total,has_unpriced,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'new_order',?,?,?,?,?,?)")
+      .bind(id, ref, customer.id, customer.full_name, customer.phone, f.email || null, f.street, f.barangay, f.city, f.province, f.postal, f.notes, f.payment, chosen?.label ?? null, isCod ? "cash_on_delivery" : "pending", subtotal, fee, total, hasUnpriced ? 1 : 0, t, t),
     ...lines.map((l) => env.DB.prepare("INSERT INTO order_items (id,order_id,product_id,variant_id,product_name,variant_name,qty,unit_price,line_total) VALUES (?,?,?,?,?,?,?,?,?)").bind(uid(), id, l.productId, l.variantId, l.pname, l.vname, l.qty, l.unit, (l.unit ?? 0) * l.qty)),
     env.DB.prepare("INSERT INTO order_history (id,order_id,at,status,note,by_user) VALUES (?,?,?,?,?,?)").bind(uid(), id, t, "new_order", "Order submitted from the website", "customer"),
   ]);
-  return json({ ok: true, ref, subtotal, deliveryFee: fee, deliveryLabel: chosen?.label ?? null, total, hasUnpriced }, 201);
+  return json({ ok: true, ref, cod: isCod, subtotal, deliveryFee: fee, deliveryLabel: chosen?.label ?? null, total, hasUnpriced }, 201);
 }
 
 /** The customer's latest order that has no proof of payment yet, so they can come back and finish paying. */

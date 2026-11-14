@@ -16,7 +16,7 @@ export function Orders() {
       <div className="filters">
         <input aria-label="Search orders" placeholder="Search reference, name or mobile" value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }} />
         <select aria-label="Order status" value={status} onChange={(e) => { setStatus(e.target.value); setPage(1); }}><option value="">All order statuses</option>{STATUSES.map((s) => <option key={s} value={s}>{label(s)}</option>)}</select>
-        <select aria-label="Payment status" value={payment} onChange={(e) => { setPayment(e.target.value); setPage(1); }}><option value="">All payment statuses</option>{["pending", "submitted", "verified", "rejected"].map((s) => <option key={s} value={s}>{label(s)}</option>)}</select>
+        <select aria-label="Payment status" value={payment} onChange={(e) => { setPayment(e.target.value); setPage(1); }}><option value="">All payment statuses</option>{["pending", "submitted", "verified", "rejected", "cash_on_delivery"].map((s) => <option key={s} value={s}>{label(s)}</option>)}</select>
       </div>
       <ErrorNote text={error} />
       {loading && !data ? <Loading /> : data && data.rows.length === 0 ? <Empty>No orders match. Orders placed on the website appear here.</Empty> : data && (

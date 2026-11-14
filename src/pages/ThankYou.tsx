@@ -10,8 +10,9 @@ import { CtaButton } from "../components/ui/CtaButton";
 /** Shown once the proof of payment is uploaded. The customer screenshots it and sends it to The Pep Stop on Messenger. */
 export default function ThankYou() {
   const [ref, setRef] = useState<string | null | undefined>(undefined);
+  const [cod, setCod] = useState(false);
   const [copied, setCopied] = useState(false);
-  useEffect(() => setRef(loadLastOrder()?.ref ?? null), []);
+  useEffect(() => { const o = loadLastOrder(); setRef(o?.ref ?? null); setCod(!!o?.cod); }, []);
   const copy = async () => {
     if (!ref) return;
     try { await navigator.clipboard.writeText(ref); setCopied(true); setTimeout(() => setCopied(false), 2000); } catch { /* ignore */ }
@@ -19,7 +20,7 @@ export default function ThankYou() {
   return (
     <>
       <Seo path="/checkout/thank-you" noindex />
-      <PageBanner title={THANKS.title} body={ref === null ? THANKS.noOrder : THANKS.lead} />
+      <PageBanner title={THANKS.title} body={ref === null ? THANKS.noOrder : cod ? THANKS.leadCod : THANKS.lead} />
       <section className="mx-auto max-w-prose px-4 py-12 sm:px-6 md:py-16">
         {ref && (
           <div className="rounded-[20px] bg-petal p-6 text-center">

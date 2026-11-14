@@ -200,7 +200,7 @@ async function resetPassword(c: Ctx): Promise<Response> {
 /* ---------------- dashboard, settings, logs ---------------- */
 
 /** An order reaches the administrator only once the customer has uploaded proof of payment (or it is already paid). Alias: o. */
-const PAID = "(EXISTS (SELECT 1 FROM payments pm WHERE pm.order_id=o.id) OR o.payment_status IN ('submitted','verified','paid'))";
+const PAID = "(EXISTS (SELECT 1 FROM payments pm WHERE pm.order_id=o.id) OR o.payment_status IN ('submitted','verified','paid','cash_on_delivery'))";
 
 /** Work waiting for the administrator. One cheap read, polled by the admin menu badges. */
 async function counts(c: Ctx) {
@@ -381,6 +381,9 @@ async function listProducts(c: Ctx) {
   return json({ total, rows });
 }
 
+/** The protocol is an uploaded image kept in the private catalog area. Anything else is dropped. */
+const protocolOf = (v: unknown) => (typeof v === "string" && /^\/files\/catalog\/[a-f0-9]{32}\.(png|jpg|webp)$/.test(v) ? v : null);
+
 async function getProduct(c: Ctx, id: string) {
   const p = await c.env.DB.prepare("SELECT * FROM products WHERE id=?").bind(id).first();
   if (!p) return err(404, "not_found");
@@ -404,15 +407,15 @@ async function saveProduct(c: Ctx, id: string | null) {
   const { status, unpublished } = toDb(wanted);
   const t = now();
   const vals = [name, slug, clip(d.short_description, 400), sanitizeHtml(clip(d.full_description, 20000)), clip(d.category_id, 80) || null, clip(d.main_image, 300) || null, intOrNull(d.sort) ?? 0,
-    clip(d.overview, 5000), clip(d.specifications, 5000), clip(d.composition, 5000), clip(d.packaging, 2000), clip(d.storage, 2000), clip(d.notes, 5000),
+    clip(d.overview, 5000), protocolOf(d.protocol_image), clip(d.composition, 5000), clip(d.packaging, 2000), clip(d.storage, 2000), clip(d.notes, 5000),
     clip(d.reg_type, 80) || null, clip(d.reg_number, 80) || null, clip(d.reg_holder, 120) || null,
     intOrNull(d.base_price), avail, d.show_price ? 1 : 0, d.show_price ? 0 : 1, status, regulatory, unpublished];
   const isNew = !id;
   if (isNew) {
     id = uid();
-    await env.DB.prepare("INSERT INTO products (name,slug,short_description,full_description,category_id,main_image,sort,overview,specifications,composition,packaging,storage,notes,reg_type,reg_number,reg_holder,base_price,availability,show_price,inquire_price,status,regulatory_status,unpublished,id,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)").bind(...vals, id, t, t).run();
+    await env.DB.prepare("INSERT INTO products (name,slug,short_description,full_description,category_id,main_image,sort,overview,protocol_image,composition,packaging,storage,notes,reg_type,reg_number,reg_holder,base_price,availability,show_price,inquire_price,status,regulatory_status,unpublished,id,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)").bind(...vals, id, t, t).run();
   } else {
-    const r = await env.DB.prepare("UPDATE products SET name=?,slug=?,short_description=?,full_description=?,category_id=?,main_image=?,sort=?,overview=?,specifications=?,composition=?,packaging=?,storage=?,notes=?,reg_type=?,reg_number=?,reg_holder=?,base_price=?,availability=?,show_price=?,inquire_price=?,status=?,regulatory_status=?,unpublished=?,updated_at=? WHERE id=?").bind(...vals, t, id).run();
+    const r = await env.DB.prepare("UPDATE products SET name=?,slug=?,short_description=?,full_description=?,category_id=?,main_image=?,sort=?,overview=?,protocol_image=?,composition=?,packaging=?,storage=?,notes=?,reg_type=?,reg_number=?,reg_holder=?,base_price=?,availability=?,show_price=?,inquire_price=?,status=?,regulatory_status=?,unpublished=?,updated_at=? WHERE id=?").bind(...vals, t, id).run();
     if (!r.meta.changes) return err(404, "not_found");
   }
   const pid = id as string;
@@ -445,7 +448,7 @@ async function duplicateProduct(c: Ctx, id: string) {
   if (!p) return err(404, "not_found");
   const nid = uid(), t = now();
   const slug = await uniqueSlug(c.env, "products", `${p.slug}-copy`, null);
-  await c.env.DB.prepare("INSERT INTO products (id,slug,name,short_description,full_description,category_id,main_image,sort,overview,specifications,composition,packaging,storage,notes,reg_type,reg_number,reg_holder,base_price,availability,show_price,inquire_price,status,created_at,updated_at) SELECT ?,?,name || ' (copy)',short_description,full_description,category_id,main_image,sort,overview,specifications,composition,packaging,storage,notes,reg_type,reg_number,reg_holder,base_price,availability,show_price,inquire_price,'draft',?,? FROM products WHERE id=?").bind(nid, slug, t, t, id).run();
+  await c.env.DB.prepare("INSERT INTO products (id,slug,name,short_description,full_description,category_id,main_image,sort,overview,protocol_image,composition,packaging,storage,notes,reg_type,reg_number,reg_holder,base_price,availability,show_price,inquire_price,status,created_at,updated_at) SELECT ?,?,name || ' (copy)',short_description,full_description,category_id,main_image,sort,overview,protocol_image,composition,packaging,storage,notes,reg_type,reg_number,reg_holder,base_price,availability,show_price,inquire_price,'draft',?,? FROM products WHERE id=?").bind(nid, slug, t, t, id).run();
   await c.env.DB.prepare("INSERT INTO product_variants (id,product_id,name,strength,sku,price,availability,image,sort,status) SELECT lower(hex(randomblob(16))),?,name,strength,sku,price,availability,image,sort,status FROM product_variants WHERE product_id=?").bind(nid, id).run();
   await c.env.DB.prepare("INSERT INTO product_images (id,product_id,image,sort) SELECT lower(hex(randomblob(16))),?,image,sort FROM product_images WHERE product_id=?").bind(nid, id).run();
   await log(c.env, c.admin, "product_duplicated", "product", nid, { from: id }, c.ip);

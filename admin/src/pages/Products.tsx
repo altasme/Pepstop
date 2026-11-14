@@ -60,7 +60,7 @@ export function ProductsList() {
 }
 
 const blank = () => ({ name: "", slug: "", short_description: "", full_description: "", category_id: "", main_image: null as string | null, sort: 0,
-  overview: "", specifications: "", composition: "", packaging: "", storage: "", notes: "", reg_type: "", reg_number: "", reg_holder: "",
+  overview: "", protocol_image: null as string | null, composition: "", packaging: "", storage: "", notes: "", reg_type: "", reg_number: "", reg_holder: "",
   base_price: "" as string | number | null, availability: "ask", show_price: false, inquire_price: true, status: "draft", variants: [] as any[], images: [] as string[] });
 
 export function ProductForm() {
@@ -167,7 +167,7 @@ export function ProductForm() {
             <p className="muted">Fill in only what applies. Empty sections are hidden from customers.</p>
             <div className="form">
               <Field label="Overview" wide><textarea value={f.overview} onChange={(e) => set("overview", e.target.value)} /></Field>
-              <Field label="Specifications" wide hint="One line per item."><textarea value={f.specifications} onChange={(e) => set("specifications", e.target.value)} /></Field>
+              <div className="wide"><ImageField label="Protocol" kind="catalog" value={f.protocol_image ?? null} onChange={(u) => set("protocol_image", u)} /><small className="muted">Upload the protocol as an image. Approved customers see it on the product page.</small></div>
               <Field label="Packaging"><textarea value={f.packaging} onChange={(e) => set("packaging", e.target.value)} /></Field>
               <Field label="Storage"><textarea value={f.storage} onChange={(e) => set("storage", e.target.value)} /></Field>
             </div>

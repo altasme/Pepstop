@@ -116,10 +116,9 @@ export const LOGO_ASSET = {
 
 /** Hero slideshow. Slide 1 is the `hero` and `heroMobile` slots above (so the admin can still replace it); these follow it. Desktop 12:5, phone 6:5. */
 export const HERO_SLIDES = [
-  { desktop: "/images/hero-2-desktop.webp", mobile: "/images/hero-2-mobile.webp", alt: "Five women in soft neutral tops hugging and smiling with their cheeks close, against a pale blue backdrop", mobilePosition: "50% 30%" },
-  { desktop: "/images/hero-3-desktop.webp", mobile: "/images/hero-3-mobile.webp", alt: "Four women leaning together and smiling against a light blue backdrop", mobilePosition: "50% 30%" },
-  { desktop: "/images/hero-4-desktop.webp", mobile: "/images/hero-4-mobile.webp", alt: "Four women embracing and smiling against a pale studio wall", mobilePosition: "50% 30%" },
-  { desktop: "/images/hero-5-desktop.webp", mobile: "/images/hero-5-mobile.webp", alt: "Four women in soft colours standing close together and smiling against a pale backdrop", mobilePosition: "50% 30%" },
+  { desktop: "/images/hero-2-desktop.webp", mobile: "/images/hero-2-mobile.webp", alt: "Four women leaning together and smiling against a pale lavender backdrop", mobilePosition: "50% 30%" },
+  { desktop: "/images/hero-3-desktop.webp", mobile: "/images/hero-3-mobile.webp", alt: "Four women embracing and smiling against a pale lavender backdrop", mobilePosition: "50% 30%" },
+  { desktop: "/images/hero-4-desktop.webp", mobile: "/images/hero-4-mobile.webp", alt: "Four women in dark tops hugging and laughing against a pale lavender backdrop", mobilePosition: "50% 30%" },
 ];
 /** Time each hero slide stays up, in milliseconds. */
 export const HERO_INTERVAL_MS = 5000;
@@ -133,7 +132,7 @@ export const IMAGE_SLOTS = {
     height: 1000,
     format: "JPG or WebP",
     src: "/images/hero-1-desktop.webp",
-    alt: "Five friends laughing together in soft neutral tops against a white studio wall",
+    alt: "Four women in black tops with their arms around each other, smiling against a pale lavender backdrop",
     direction: "Subject in the right 40 percent, a clean light area across the left 55 percent for the headline. Soft blush tones, natural light. No clinical imagery.",
   },
   heroMobile: {
@@ -144,7 +143,7 @@ export const IMAGE_SLOTS = {
     height: 1000,
     format: "JPG or WebP",
     src: "/images/hero-1-mobile.webp",
-    alt: "Five friends laughing together in soft neutral tops against a white studio wall",
+    alt: "Four women in black tops with their arms around each other, smiling against a pale lavender backdrop",
     direction: "Same photograph recomposed with the subject centered and 15 percent margin all round.",
   },
   focus: {
@@ -258,12 +257,12 @@ export const HOME = {
   storyHeading: "Shopping that does not leave you guessing.",
   storyBody: [
     "Buying wellness and beauty products online can feel like guesswork. The Pep Stop is set up to change that.",
-    "Each product comes with its details laid out: options, specifications, packaging and supporting documents where we have them. If something is not clear, ask us before you spend a peso.",
+    "Each product comes with its details laid out: options, protocols, packaging and supporting documents where we have them. If something is not clear, ask us before you spend a peso.",
     "Orders are handled by a person. We check availability, arrange delivery and tell you how to pay.",
   ],
   storyPillars: [
     { title: "Easy to Browse", body: "Organized by collection, so you find what you need quickly." },
-    { title: "Clear Details", body: "Options, specifications and documents, all on the product page." },
+    { title: "Clear Details", body: "Options, protocols and documents, all on the product page." },
     { title: "A Real Person", body: "Message or call us with any product or order question." },
   ],
   storyLink: { label: "About The Pep Stop", to: "/about" },
@@ -271,7 +270,7 @@ export const HOME = {
   whyIntro:
     "You should know what you are buying and who you are buying from. Here is how we make that easy.",
   whyItems: [
-    { title: "Details in One Place", body: "Options, specifications and supporting documents sit together on each product page." },
+    { title: "Details in One Place", body: "Options, protocols and supporting documents sit together on each product page." },
     { title: "Ask Before You Buy", body: "Message or call and our team will help with product details and availability." },
     { title: "No Guesswork", body: "We tell you what we know about a product and leave out what we cannot back up." },
     { title: "Pay Your Way", body: "Pay by e-wallet or bank transfer. We send the account details once we confirm your order." },
@@ -297,7 +296,7 @@ export const HOME = {
 
 /** Business strip on Home and Shop. Statements describe how we work; no delivery times or guarantees are promised. */
 export const TRUST = [
-  { id: "info", title: "Clear Details", body: "Options, specifications and documents, where we have them." },
+  { id: "info", title: "Clear Details", body: "Options, protocols and documents, where we have them." },
   { id: "assist", title: "A Real Person", body: "Questions about a product or an order? Just ask." },
   { id: "order", title: "Simple Ordering", body: "Send your order and we confirm it with you directly." },
   { id: "pay", title: "Pay Your Way", body: "E-wallet or bank transfer. Details sent once we confirm your order." },
@@ -472,11 +471,11 @@ export const SHOP = {
   askAbout: "Ask About This Product",
   priceOnRequest: "Ask us for the price",
   productIntro:
-    "Options, specifications, packaging and documents are listed below.",
+    "Options, protocol, packaging and documents are listed below.",
   inquiryTitle: "Questions about this product?",
   inquiryBody: "Ask us before you order. We will help with the details and availability.",
   detailsTitle: "Overview",
-  specsTitle: "Specifications",
+  protocolTitle: "Protocol",
   optionsTitle: "Options",
   packagingTitle: "Packaging",
   storageTitle: "Storage",
@@ -551,7 +550,7 @@ export const CHECKOUT = {
   summaryTitle: "Order summary",
   place: "Place Order",
   submitNote:
-    "You will not be charged here. After you place your order you will see how to pay, then upload a screenshot of your payment. Your order is confirmed once we have checked it.",
+    "You will not be charged here. If you pay online, you will see how to pay after you place your order, then upload a screenshot of your payment. With cash on delivery you pay when your order arrives. Your order is confirmed once we have checked it.",
   consent:
     "I agree that The Pep Stop may use the information I provide to process my order, as described in its Privacy Policy.",
   privacyLinkLabel: "Privacy Policy",
@@ -624,6 +623,7 @@ export const CONFIRMATION = {
 export const THANKS = {
   title: "Thank you for your order!",
   lead: "We have your proof of payment. Our team will check it and confirm your order.",
+  leadCod: "Your order is placed. You pay in cash when it arrives. Our team will confirm your order and delivery details.",
   orderLabel: "Your order number",
   stepTitle: "One last thing",
   step: "Take a screenshot of this page and send it to The Pep Stop on Messenger. It helps us find your order quickly.",

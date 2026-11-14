@@ -4,7 +4,7 @@ import { api, errorText, label, uploadFile, when } from "../api";
 import { Badge, ConfirmButton, Empty, ErrorNote, Field, Loading, PageHead, Pager, RichText, useLoad, useToast } from "../ui";
 
 const SECTIONS: [string, string][] = [
-  ["overview", "Product overview"], ["general", "General product information"], ["specifications", "Technical specifications"],
+  ["overview", "Product overview"], ["general", "General product information"],
   ["manufacturer", "Manufacturer information"], ["guidelines", "Client-provided product guidelines"], ["storage", "Storage information"], ["handling", "Handling information"],
   ["supporting", "Supporting documents"], ["notices", "Important notices"], ["notes", "Additional notes"],
 ];

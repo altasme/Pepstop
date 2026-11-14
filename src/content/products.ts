@@ -21,7 +21,8 @@ export type Product = {
   image: string | null; // Cloudinary public id
   shortDescription: string;
   fullDescription: string;
-  specifications: string[]; // one line each
+  /** Uploaded protocol image (private catalog file), shown on the product page. */
+  protocolImage?: string | null;
   variants: Variant[];
   packaging: string;
   storage: string;
@@ -57,7 +58,6 @@ const sample = (n: number, categoryId: string): Product => ({
   image: null,
   shortDescription: "",
   fullDescription: "",
-  specifications: [],
   variants: [
     { id: `sample-${n}-a`, label: "Option A", pricePhp: null, available: true },
     { id: `sample-${n}-b`, label: "Option B", pricePhp: null, available: true },

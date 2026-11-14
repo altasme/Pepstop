@@ -73,10 +73,11 @@ export default function Checkout() {
     const order = { ...buildOrder({ ...c, mobile: c.mobile.replace(/\s+/g, " ").trim() }, lines, subtotal, hasUnpriced), paymentName: paymentMethods.find((m) => m.id === c.payment)?.label };
     setSending(true);
     setServerError("");
-    try { await submitOrderRemote(order, lines); } catch (e) { setServerError(e instanceof Error && e.message === "rate" ? CHECKOUT.errors.rate : CHECKOUT.errors.server); setSending(false); return; }
+    let placed: Awaited<ReturnType<typeof submitOrderRemote>>;
+    try { placed = await submitOrderRemote(order, lines); } catch (e) { setServerError(e instanceof Error && e.message === "rate" ? CHECKOUT.errors.rate : CHECKOUT.errors.server); setSending(false); return; }
     setSending(false);
     clear();
-    navigate("/checkout/confirmation");
+    navigate(placed.cod ? "/checkout/thank-you" : "/checkout/confirmation");
   };
 
   const F = (id: keyof Customer, extra: FieldExtra) => (
@@ -150,7 +151,7 @@ export default function Checkout() {
                 {paymentMethods.map((m) => (
                   <label key={m.id} className={`flex min-h-12 cursor-pointer items-center gap-3 rounded-xl border bg-surface px-4 py-3 ${c.payment === m.id ? "border-raspberry ring-1 ring-raspberry" : "border-edge"}`}>
                     <input id={`pay-${m.id}`} type="radio" name="payment" value={m.id} checked={c.payment === m.id} onChange={() => set("payment")(m.id)} className="h-5 w-5 accent-raspberry" />
-                    <span className="font-semibold">{m.label}</span>
+                    <span className="flex-1"><span className="font-semibold">{m.label}</span>{m.kind === "cod" && m.instructions && <span className="block text-sm text-ink/80">{m.instructions}</span>}</span>
                   </label>
                 ))}
               </div>

@@ -19,6 +19,14 @@ function PaymentMethods() {
   const toggle = async (m: any) => {
     try { await api("PUT", `/payment-methods/${m.id}`, { ...m, enabled: m.enabled ? 0 : 1 }); reload(); } catch (e) { toast("error", errorText(e)); }
   };
+  const cod = data?.find((m) => m.kind === "cod");
+  const toggleCod = async (on: boolean) => {
+    try {
+      if (cod) await api("PUT", `/payment-methods/${cod.id}`, { ...cod, enabled: on ? 1 : 0 });
+      else await api("POST", "/payment-methods", { label: "Cash on Delivery", kind: "cod", instructions: "Pay in cash when your order arrives. We confirm your order and delivery details with you first.", enabled: on ? 1 : 0, sort: 99 });
+      toast("ok", on ? "Cash on delivery is on." : "Cash on delivery is off."); reload();
+    } catch (e) { toast("error", errorText(e)); }
+  };
   const remove = async (m: any) => {
     try { await api("DELETE", `/payment-methods/${m.id}`); toast("ok", "Payment method deleted."); reload(); } catch (e) { toast("error", errorText(e)); }
   };
@@ -30,6 +38,12 @@ function PaymentMethods() {
       </div>
       <p className="muted">Customers choose one when they check out. The account details and QR code are shown only to approved customers, after they place an order.</p>
       <ErrorNote text={error} />
+      {data && (
+        <div className="subcard">
+          <Switch checked={!!cod?.enabled} onChange={toggleCod}>Cash on delivery</Switch>
+          <small className="muted">Customers pay in cash when the order arrives. These orders reach you right away, with no payment screenshot to wait for. Delivery fees still apply.</small>
+        </div>
+      )}
       {edit && (
         <div className="subcard">
           <h3>{edit.id ? "Edit payment method" : "New payment method"}</h3>

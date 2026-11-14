@@ -25,6 +25,8 @@ export type Order = {
   deliveryLabel?: string | null;
   total?: number;
   paymentName?: string;
+  /** Cash on delivery: nothing to pay or upload now. */
+  cod?: boolean;
   /** True when the order was saved by the server and can receive payment details. */
   remote?: boolean;
 };
@@ -56,7 +58,7 @@ export async function submitOrderRemote(order: Order, lines: ResolvedLine[]): Pr
   });
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data.error === "too_many_requests" ? "rate" : data.error ?? "failed");
-  return submitOrder({ ...order, ref: data.ref, remote: true, deliveryFee: data.deliveryFee ?? null, deliveryLabel: data.deliveryLabel ?? null, total: data.total ?? order.subtotal });
+  return submitOrder({ ...order, ref: data.ref, remote: true, deliveryFee: data.deliveryFee ?? null, deliveryLabel: data.deliveryLabel ?? null, total: data.total ?? order.subtotal, cod: !!data.cod });
 }
 
 /** Front-end stub. Returns the order unchanged; the backend call goes here in Phase 2A. */
