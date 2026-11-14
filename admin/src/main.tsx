@@ -6,6 +6,7 @@ import { api, errorText, onUnauthorized } from "./api";
 import { ToastProvider, useToast } from "./ui";
 import { useCounts, type Counts } from "./counts";
 import { AuthShell, BrandMark } from "./brand";
+import { BookOpen, CreditCard, ExternalLink, FileCheck, Globe, LayoutDashboard, LogOut, MessageSquare, Package, ScrollText, Settings as Cog, ShoppingBag, Tags, Users, type LucideIcon } from "lucide-react";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import { ProductsList, ProductForm } from "./pages/Products";
@@ -19,14 +20,14 @@ import { CustomerList, CustomerProfile } from "./pages/Customers";
 
 type Me = { username: string; mustChange: boolean };
 
-type NavItem = [path: string, label: string, count?: keyof Counts];
+type NavItem = [path: string, label: string, icon: LucideIcon, count?: keyof Counts];
 /** Grouped by the job being done. Variants live inside Products; the overview is linked from there. */
 const GROUPS: { title?: string; items: NavItem[] }[] = [
-  { items: [["/", "Dashboard"]] },
-  { title: "Work", items: [["/orders", "Orders", "orders"], ["/customers", "Customers", "customers"], ["/inquiries", "Inquiries", "inquiries"]] },
-  { title: "Catalog", items: [["/products", "Products"], ["/categories", "Categories"], ["/coa", "Certificates (COA)"], ["/information", "Product information"]] },
-  { title: "Website", items: [["/content", "Website content"]] },
-  { title: "System", items: [["/payments", "Payments and delivery"], ["/logs", "Activity log"], ["/settings", "Settings"]] },
+  { items: [["/", "Dashboard", LayoutDashboard]] },
+  { title: "Work", items: [["/orders", "Orders", ShoppingBag, "orders"], ["/customers", "Customers", Users, "customers"], ["/inquiries", "Inquiries", MessageSquare, "inquiries"]] },
+  { title: "Catalog", items: [["/products", "Products", Package], ["/categories", "Categories", Tags], ["/coa", "Certificates (COA)", FileCheck], ["/information", "Product information", BookOpen]] },
+  { title: "Website", items: [["/content", "Website content", Globe]] },
+  { title: "System", items: [["/payments", "Payments and delivery", CreditCard], ["/logs", "Activity log", ScrollText], ["/settings", "Settings", Cog]] },
 ];
 
 function Shell({ me, onLogout }: { me: Me; onLogout: () => void }) {
@@ -51,12 +52,13 @@ function Shell({ me, onLogout }: { me: Me; onLogout: () => void }) {
             <div className="navgroup" key={gi}>
               {g.title && <p className="navtitle" id={`nav-${gi}`}>{g.title}</p>}
               <ul aria-labelledby={g.title ? `nav-${gi}` : undefined}>
-                {g.items.map(([to, text, key]) => {
+                {g.items.map(([to, text, Icon, key]) => {
                   const n = key ? counts[key] : 0;
                   return (
                     <li key={to}>
                       <NavLink to={to} end={to === "/"} onClick={() => setOpen(false)} className={({ isActive }) => (isActive ? "active" : "")}>
-                        {text}
+                        <Icon className="navicon" size={18} strokeWidth={1.75} aria-hidden="true" />
+                        <span className="navtext">{text}</span>
                         {n > 0 && <span className="count" aria-label={`${n} waiting`}>{n > 99 ? "99+" : n}</span>}
                       </NavLink>
                     </li>
@@ -67,8 +69,12 @@ function Shell({ me, onLogout }: { me: Me; onLogout: () => void }) {
           ))}
         </nav>
         <div className="sidefoot">
-          <p className="whoami">Signed in as <b>{me.username}</b></p>
-          <button className="logout" onClick={async () => { await api("POST", "/logout").catch(() => {}); onLogout(); nav("/"); }}>Log out</button>
+          <a className="viewsite" href="/" target="_blank" rel="noreferrer"><ExternalLink size={16} strokeWidth={1.75} aria-hidden="true" />View website</a>
+          <div className="user">
+            <span className="avatar" aria-hidden="true">{me.username.slice(0, 1).toUpperCase()}</span>
+            <p className="whoami"><b>{me.username}</b><small>Administrator</small></p>
+            <button className="logout" aria-label="Log out" title="Log out" onClick={async () => { await api("POST", "/logout").catch(() => {}); onLogout(); nav("/"); }}><LogOut size={18} strokeWidth={1.75} aria-hidden="true" /></button>
+          </div>
         </div>
       </aside>
       <main className="main">

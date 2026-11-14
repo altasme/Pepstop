@@ -51,16 +51,19 @@ export default function Dashboard({ counts }: { counts: Counts }) {
           </section>
           <div className="grid2">
             <section className="card"><h2>Latest orders</h2>
-              {data.latestOrders.length === 0 ? <Empty>No orders yet. They appear here as soon as an approved customer checks out.</Empty> : data.latestOrders.map((o: any) => (
-                <p key={o.id}><Link to={`/orders/${o.id}`}>{o.ref}</Link> {o.full_name} <Badge value={o.order_status} /> <span className="muted">{peso(o.total)} · {when(o.created_at)}</span></p>
-              ))}
+              {data.latestOrders.length === 0 ? <Empty>No orders yet. They appear here once a customer has paid and uploaded their proof of payment.</Empty> : <ul className="rowlist">{data.latestOrders.map((o: any) => (
+                <li key={o.id}>
+                  <span><Link to={`/orders/${o.id}`}>{o.ref}</Link><span className="subline">{o.full_name} · {when(o.created_at)}</span></span>
+                  <span className="rowend"><b className="num">{peso(o.total)}</b><Badge value={o.order_status} /></span>
+                </li>
+              ))}</ul>}
             </section>
             <section className="card"><h2>Registrations waiting</h2>
-              {data.pendingList.length === 0 ? <Empty>No registrations are waiting for approval.</Empty> : data.pendingList.map((p: any) => <p key={p.id}><Link to={`/customers/${p.id}`}>{p.full_name}</Link> {p.phone} <span className="muted">{when(p.created_at)}</span></p>)}
+              {data.pendingList.length === 0 ? <Empty>No registrations are waiting for approval.</Empty> : <ul className="rowlist">{data.pendingList.map((p: any) => <li key={p.id}><span><Link to={`/customers/${p.id}`}>{p.full_name}</Link><span className="subline">{p.phone}</span></span><span className="muted small">{when(p.created_at)}</span></li>)}</ul>}
             </section>
           </div>
           <section className="card"><h2>Recent activity</h2>
-            {data.activity.length === 0 ? <Empty>No activity yet.</Empty> : data.activity.map((a: any, i: number) => <p key={i}>{label(a.action)} <span className="muted">by {a.username ?? "system"} · {when(a.at)}</span></p>)}
+            {data.activity.length === 0 ? <Empty>No activity yet.</Empty> : <ul className="rowlist">{data.activity.map((a: any, i: number) => <li key={i}><span>{label(a.action)}<span className="subline">by {a.username ?? "system"}</span></span><span className="muted small">{when(a.at)}</span></li>)}</ul>}
           </section>
         </>
       )}

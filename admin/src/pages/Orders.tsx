@@ -26,7 +26,7 @@ export function Orders() {
             <tbody>{data.rows.map((o) => (
               <tr key={o.id}><td><Link to={`/orders/${o.id}`}><b>{o.ref}</b></Link></td><td>{o.full_name}</td><td>{when(o.created_at)}</td><td className="num">{o.items}</td>
                 <td className="num">{o.has_unpriced ? `${peso(o.total)} + unpriced` : peso(o.total)}</td>
-                <td><Badge value={o.order_status} /><span className="subline">{o.payment_label ?? METHOD[o.payment_method] ?? o.payment_method} · payment {o.payment_status}</span></td></tr>
+                <td><Badge value={o.order_status} /><span className="subline">{o.payment_label ?? METHOD[o.payment_method] ?? o.payment_method}</span></td></tr>
             ))}</tbody>
           </table></div>
           <Pager page={page} per={20} total={data.total} onPage={setPage} />
