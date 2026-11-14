@@ -61,7 +61,7 @@ writeFileSync(join(out, "wrangler.jsonc"), JSON.stringify({
   name: base.name,
   main: "./worker.js",
   compatibility_date: base.compatibility_date,
-  d1_databases: base.d1_databases.map((d) => ({ binding: d.binding, database_name: d.database_name, database_id: d.database_id })),
+  d1_databases: base.d1_databases.map((d) => ({ binding: d.binding, database_name: d.database_name, database_id: process.env.D1_DATABASE_ID ?? d.database_id })),
   r2_buckets: base.r2_buckets,
   observability: base.observability,
 }, null, 2));
