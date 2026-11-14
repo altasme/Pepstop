@@ -150,6 +150,10 @@ async function catalog(env: Env) {
     env.DB.prepare(`SELECT d.id,d.product_id,d.batch,d.title FROM coa_documents d JOIN products p ON p.id=d.product_id WHERE ${VISIBLE} AND d.status='published' ORDER BY d.uploaded_at DESC`).all<any>(),
   ]);
   const settings = await getSettings(env);
+  const [pay, del] = await Promise.all([
+    env.DB.prepare("SELECT id,label,kind,account_name,account_number,instructions,qr_image FROM payment_methods WHERE enabled=1 ORDER BY sort,label").all<any>(),
+    env.DB.prepare("SELECT id,label,fee,note FROM delivery_options WHERE enabled=1 ORDER BY sort,label").all<any>(),
+  ]);
   const products = prods.results.map((p) => {
     const priceVisible = !!p.show_price && !p.inquire_price;
     const variants = vars.results.filter((v: any) => v.product_id === p.id).map((v: any) => ({
@@ -169,7 +173,7 @@ async function catalog(env: Env) {
       coas: coas.results.filter((d: any) => d.product_id === p.id).map((d: any) => ({ id: d.id, batch: d.batch, title: d.title })),
     };
   });
-  return json({ live: products.length > 0, codEnabled: settings.cod_enabled === "1", deliveryFee: settings.delivery_fee === "" || settings.delivery_fee === undefined ? null : Number(settings.delivery_fee), paymentInstructions: settings.payment_instructions ?? "", categories: cats.results, products }, 200, { "cache-control": "private, no-store" });
+  return json({ live: products.length > 0, paymentMethods: pay.results.map((m) => ({ id: m.id, label: m.label, kind: m.kind, accountName: m.account_name, accountNumber: m.account_number, instructions: m.instructions, qr: m.qr_image })), deliveryOptions: del.results, freeDeliveryMin: settings.free_delivery_min ? Number(settings.free_delivery_min) : null, categories: cats.results, products }, 200, { "cache-control": "private, no-store" });
 }
 
 const likeEsc = (s: string) => `%${s.replace(/[%_\\]/g, "\\$&")}%`;
@@ -186,10 +190,13 @@ async function placeOrder(req: Request, env: Env, customer: Customer) {
   const d = (await req.json().catch(() => null)) as Record<string, any> | null;
   if (!d || !Array.isArray(d.items) || d.items.length < 1 || d.items.length > 30) return err(400, "invalid_items");
   const settings = await getSettings(env);
-  const methods = ["gcash", "maya", "bank", ...(settings.cod_enabled === "1" ? ["cod"] : [])];
+  const methods = (await env.DB.prepare("SELECT id FROM payment_methods WHERE enabled=1").all<{ id: string }>()).results.map((m) => m.id);
+  const deliveryOpts = (await env.DB.prepare("SELECT id,label,fee FROM delivery_options WHERE enabled=1").all<{ id: string; label: string; fee: number }>()).results;
   const c = d.customer ?? {};
-  const f = { street: clip(c.street, 200), barangay: clip(c.barangay, 100), city: clip(c.city, 100), province: clip(c.province, 100), postal: clip(c.postal, 10), email: clip(c.email, 160), notes: clip(c.notes, 1000), payment: clip(c.payment, 20) };
+  const f = { street: clip(c.street, 200), barangay: clip(c.barangay, 100), city: clip(c.city, 100), province: clip(c.province, 100), postal: clip(c.postal, 10), email: clip(c.email, 160), notes: clip(c.notes, 1000), payment: clip(c.payment, 60), delivery: clip(c.delivery, 60) };
   if (!f.street || !f.barangay || !f.city || !f.province || !/^\d{4}$/.test(f.postal) || !methods.includes(f.payment)) return err(400, "invalid_customer");
+  const chosen = deliveryOpts.find((o) => o.id === f.delivery);
+  if (deliveryOpts.length > 0 && !chosen) return err(400, "invalid_delivery");
   if (f.email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(f.email)) return err(400, "invalid_email");
 
   const lines: { productId: string; variantId: string; pname: string; vname: string; qty: number; unit: number | null }[] = [];
@@ -209,16 +216,18 @@ async function placeOrder(req: Request, env: Env, customer: Customer) {
   }
   const hasUnpriced = lines.some((l) => l.unit === null);
   const subtotal = lines.reduce((s, l) => s + (l.unit ?? 0) * l.qty, 0);
-  const fee = settings.delivery_fee === "" || settings.delivery_fee === undefined ? null : Number(settings.delivery_fee);
+  const freeMin = settings.free_delivery_min ? Number(settings.free_delivery_min) : null;
+  // No delivery options set up: the fee is confirmed per order. Otherwise it comes from the option the customer picked.
+  const fee = !chosen ? null : freeMin !== null && !hasUnpriced && subtotal >= freeMin ? 0 : chosen.fee;
   const total = subtotal + (fee ?? 0);
   const id = uid(), ref = `PS-${crypto.randomUUID().replace(/-/g, "").slice(0, 8).toUpperCase()}`, t = now();
   await env.DB.batch([
-    env.DB.prepare("INSERT INTO orders (id,ref,customer_id,full_name,mobile,email,street,barangay,city,province,postal,customer_notes,payment_method,payment_status,order_status,subtotal,delivery_fee,total,has_unpriced,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?, 'pending','new_order',?,?,?,?,?,?)")
-      .bind(id, ref, customer.id, customer.full_name, customer.phone, f.email || null, f.street, f.barangay, f.city, f.province, f.postal, f.notes, f.payment, subtotal, fee, total, hasUnpriced ? 1 : 0, t, t),
+    env.DB.prepare("INSERT INTO orders (id,ref,customer_id,full_name,mobile,email,street,barangay,city,province,postal,customer_notes,payment_method,delivery_option,payment_status,order_status,subtotal,delivery_fee,total,has_unpriced,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?, 'pending','new_order',?,?,?,?,?,?)")
+      .bind(id, ref, customer.id, customer.full_name, customer.phone, f.email || null, f.street, f.barangay, f.city, f.province, f.postal, f.notes, f.payment, chosen?.label ?? null, subtotal, fee, total, hasUnpriced ? 1 : 0, t, t),
     ...lines.map((l) => env.DB.prepare("INSERT INTO order_items (id,order_id,product_id,variant_id,product_name,variant_name,qty,unit_price,line_total) VALUES (?,?,?,?,?,?,?,?,?)").bind(uid(), id, l.productId, l.variantId, l.pname, l.vname, l.qty, l.unit, (l.unit ?? 0) * l.qty)),
     env.DB.prepare("INSERT INTO order_history (id,order_id,at,status,note,by_user) VALUES (?,?,?,?,?,?)").bind(uid(), id, t, "new_order", "Order submitted from the website", "customer"),
   ]);
-  return json({ ok: true, ref, subtotal, total, hasUnpriced }, 201);
+  return json({ ok: true, ref, subtotal, deliveryFee: fee, deliveryLabel: chosen?.label ?? null, total, hasUnpriced }, 201);
 }
 
 /** The customer submits a payment reference and optional proof for their own order. Never marks anything verified. */

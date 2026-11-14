@@ -3,7 +3,7 @@ import { Check, Copy } from "lucide-react";
 import { CART, CHECKOUT, CONFIRMATION } from "../content/site";
 import { Seo } from "../lib/seo";
 import { useRemote } from "../lib/remote";
-import { amountLabel } from "../lib/format";
+import { amountLabel, formatPhp } from "../lib/format";
 import { getChannels } from "../lib/cta";
 import { addressLine, loadLastOrder, orderText, paymentLabel, smsHrefWithBody, whatsappHrefWithBody, type Order } from "../lib/orders";
 import { PageBanner } from "../components/sections/PageBanner";
@@ -12,7 +12,9 @@ import { Card } from "../components/ui/Card";
 import { CtaButton } from "../components/ui/CtaButton";
 
 function PaymentDetails({ order }: { order: Order }) {
-  const { paymentInstructions } = useRemote();
+  const { paymentMethods } = useRemote();
+  const method = paymentMethods.find((m) => m.id === order.customer.payment);
+  const due = order.total !== undefined && !order.hasUnpriced ? formatPhp(order.total) : null;
   const [reference, setReference] = useState("");
   const [state, setState] = useState<"idle" | "sending" | "sent" | "error" | "need">("idle");
   const input = "mt-1 min-h-12 w-full rounded-xl border border-edge bg-white px-4 text-base text-ink";
@@ -20,7 +22,16 @@ function PaymentDetails({ order }: { order: Order }) {
     <Card>
       <h2 className="font-sans text-h3 font-semibold text-ink">{CONFIRMATION.payTitle}</h2>
       <p className="mt-2 text-sm text-ink">{CONFIRMATION.payBody}</p>
-      {paymentInstructions && <div className="mt-3 rounded-xl bg-petal p-4 text-sm text-ink"><p className="font-semibold">{CONFIRMATION.payHow}</p>{paymentInstructions.split(/\n\s*\n/).map((p) => <p key={p} className="mt-2 whitespace-pre-line">{p}</p>)}</div>}
+      {method && (
+        <div className="mt-3 rounded-xl bg-petal p-4 text-sm text-ink">
+          <p className="font-semibold">{CONFIRMATION.payHow}: {method.label}</p>
+          {due && <p className="mt-2">{CONFIRMATION.payTotal}: <span className="font-semibold">{due}</span></p>}
+          {method.qr && <img src={method.qr} alt={`${CONFIRMATION.payScan} ${method.label}`} className="mx-auto mt-3 max-h-96 w-auto rounded-xl border border-edge bg-white" />}
+          {method.accountName && <p className="mt-2">{CONFIRMATION.payAccountName}: <span className="font-semibold">{method.accountName}</span></p>}
+          {method.accountNumber && <p className="mt-1">{CONFIRMATION.payAccountNumber}: <span className="font-semibold">{method.accountNumber}</span></p>}
+          {method.instructions && <p className="mt-2 whitespace-pre-line">{method.instructions}</p>}
+        </div>
+      )}
       {state === "sent" ? <p role="status" className="mt-4 rounded-xl bg-petal p-3 text-sm font-medium text-ink">{CONFIRMATION.paySent}</p> : (
         <form className="mt-4 grid gap-3" onSubmit={async (e) => {
           e.preventDefault();
@@ -95,13 +106,13 @@ export default function OrderConfirmation() {
             ))}
           </ul>
           <dl className="mt-3 space-y-1 border-t border-ink/10 pt-3 text-ink">
-            <div className="flex flex-wrap justify-between gap-x-4"><dt>{CART.shipping}</dt><dd className="text-sm">{CART.shippingTbc}</dd></div>
-            <div className="flex flex-wrap justify-between gap-x-4 text-lg"><dt className="font-semibold text-ink">{CART.total}</dt><dd className="font-semibold tabular-nums">{amountLabel(order.subtotal, order.hasUnpriced)}</dd></div>
+            <div className="flex flex-wrap justify-between gap-x-4"><dt>{CART.shipping}</dt><dd className="text-sm">{order.deliveryLabel ? `${order.deliveryLabel}: ${order.deliveryFee ? formatPhp(order.deliveryFee) : CHECKOUT.deliveryFree}` : CART.shippingTbc}</dd></div>
+            <div className="flex flex-wrap justify-between gap-x-4 text-lg"><dt className="font-semibold text-ink">{CART.total}</dt><dd className="font-semibold tabular-nums">{amountLabel(order.total ?? order.subtotal, order.hasUnpriced)}</dd></div>
           </dl>
           <dl className="mt-6 grid gap-3 text-sm text-ink sm:grid-cols-2">
             <div><dt className="font-semibold text-ink">{CONFIRMATION.contactLabel}</dt><dd>{order.customer.fullName}<br />{order.customer.mobile}{order.customer.email && <><br />{order.customer.email}</>}</dd></div>
             <div><dt className="font-semibold text-ink">{CONFIRMATION.deliverTo}</dt><dd>{addressLine(order.customer)}</dd></div>
-            <div><dt className="font-semibold text-ink">{CONFIRMATION.payWith}</dt><dd>{paymentLabel(order.customer.payment)}</dd></div>
+            <div><dt className="font-semibold text-ink">{CONFIRMATION.payWith}</dt><dd>{paymentLabel(order.customer.payment, order.paymentName)}</dd></div>
             {order.customer.notes && <div><dt className="font-semibold text-ink">{CHECKOUT.notesTitle}</dt><dd>{order.customer.notes}</dd></div>}
           </dl>
         </Card>

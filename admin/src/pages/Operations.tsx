@@ -96,14 +96,7 @@ export function Settings() {
           <div><Switch checked={s.disclose_rejection_reason === "1"} onChange={(v) => setS({ ...s, disclose_rejection_reason: v ? "1" : "0" })}>Show the rejection note to a rejected customer who tries to sign in</Switch></div>
         </div>
       </section>
-      <section className="card"><h2>Ordering</h2>
-        <div className="form">
-          <Field label="Standard delivery fee (PHP)" hint="Leave empty to confirm the delivery fee per order."><input type="number" min={0} value={s.delivery_fee ?? ""} onChange={(e) => setS({ ...s, delivery_fee: e.target.value })} /></Field>
-          <Field label="Payment instructions" wide hint="Shown to customers after they submit an order (GCash, Maya and bank transfer details). Supplied by The Pep Stop."><textarea rows={5} value={s.payment_instructions ?? ""} onChange={(e) => setS({ ...s, payment_instructions: e.target.value })} /></Field>
-          <div><Switch checked={s.cod_enabled === "1"} onChange={(v) => setS({ ...s, cod_enabled: v ? "1" : "0" })}>Offer cash on delivery at checkout</Switch><small className="muted">Turn on only after The Pep Stop confirms it supports cash on delivery.</small></div>
-        </div>
-      </section>
-      <p><button className="btn pink" onClick={async () => { try { await api("PUT", "/settings", { search_visibility: s.search_visibility, delivery_fee: s.delivery_fee ?? "", cod_enabled: s.cod_enabled ?? "0", registration_message: s.registration_message, contact_messenger: s.contact_messenger ?? "", contact_whatsapp: s.contact_whatsapp ?? "", contact_phone: s.contact_phone ?? "", disclose_rejection_reason: s.disclose_rejection_reason ?? "0", payment_instructions: s.payment_instructions ?? "" }); toast("ok", "Settings saved."); reload(); } catch (e) { toast("error", errorText(e)); } }}>Save settings</button></p>
+      <p><button className="btn pink" onClick={async () => { try { await api("PUT", "/settings", { search_visibility: s.search_visibility, registration_message: s.registration_message, contact_messenger: s.contact_messenger ?? "", contact_whatsapp: s.contact_whatsapp ?? "", contact_phone: s.contact_phone ?? "", disclose_rejection_reason: s.disclose_rejection_reason ?? "0" }); toast("ok", "Settings saved."); reload(); } catch (e) { toast("error", errorText(e)); } }}>Save settings</button></p>
       <section className="card"><h2>Change password</h2>
         <div className="form">
           <Field label="Current password"><input type="password" autoComplete="current-password" value={cur} onChange={(e) => setCur(e.target.value)} /></Field>

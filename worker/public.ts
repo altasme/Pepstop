@@ -12,6 +12,7 @@ export async function handlePublic(req: Request, env: Env, url: URL): Promise<Re
   if (m === "GET" && seg[0] === "content") return content(env);
   if (m === "GET" && seg[0] === "articles") return articles(env, seg[1]);
   if (m === "GET" && seg[0] === "registration-info") return registrationInfo(env);
+  if (m === "GET" && seg[0] === "payments") return payments(env);
   if (m === "POST" && seg[0] === "inquiries") return inquiry(req, env);
   return err(404, "not_found");
 }
@@ -35,6 +36,12 @@ async function articles(env: Env, slug?: string) {
 async function registrationInfo(env: Env) {
   const s = await getSettings(env);
   return json({ message: s.registration_message ?? "", messenger: s.contact_messenger ?? "", whatsapp: s.contact_whatsapp ?? "", phone: s.contact_phone ?? "" }, 200, cache(30));
+}
+
+/** Names only. Account details and QR codes are shown to approved customers after they order. */
+async function payments(env: Env) {
+  const rows = (await env.DB.prepare("SELECT id,label FROM payment_methods WHERE enabled=1 ORDER BY sort,label").all()).results;
+  return json(rows, 200, cache(30));
 }
 
 async function inquiry(req: Request, env: Env) {

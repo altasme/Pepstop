@@ -1,7 +1,7 @@
 # HANDOVER: The Pep Stop · Phase 1 (Public Website)
 
 **Built by:** Altaventures Business Development Services
-**Handover date:** 2026-11-11 · **Spec version built:** v1.26 (storefront added per client direction; logo and palette applied)
+**Handover date:** 2026-11-11 · **Spec version built:** v1.27 (storefront added per client direction; logo and palette applied)
 **Preview URL:** https://pepstop.altasmeworks.workers.dev (moved to the dedicated account 2026-11-13, noindex) · **Live URL:** not live: gates open · **Repo:** altasme/pepstop
 
 ## 1. What was delivered
@@ -145,13 +145,15 @@
 
 - v1.26: the regulatory review gate was removed from the admin and the Worker by direction (CLAUDE.md v1.26, conflict with v1.21 noted). Content responsibility rests with the client per the service agreement clause (★G3), so that signature matters more now.
 
+- v1.27: payment methods (GCash and BPI, from the client's QR codes) and delivery options are managed in Admin, Payments and delivery. Delivery fees are not set yet; the client adds them there. The QR codes show masked account names, so check with the client that the account name and number they want customers to see are covered by the QR or entered in the method's fields.
+
 ### Hand-over checklist: only the client can supply these
 | Item | Where it goes | Until then |
 |---|---|---|
 | Business registration (DTI or SEC) and address, ★G1 | `ORG.legalName`, `ORG.registration` in `src/content/site.ts` | Footer legal line and Privacy registration sentence are omitted |
 | Privacy approval, retention period and privacy contact, ★C7 | `LEGAL.privacyStatus`, `LEGAL.retention`, `LEGAL.privacyContact` | Red "draft" banner stays on Privacy |
 | Facebook Page, business email, hours, Viber or WhatsApp, ★C2 to ★C6 | `CONTACT` | Hidden; Call and Text show |
-| Real products, photos, prices, payment instructions, delivery details | Admin panel | Catalog is empty; customers see "Log in to view products" |
+| Real products, photos, prices, delivery fees | Admin panel, Payments and delivery | Catalog is empty; customers see "Log in to view products" |
 | Origin and licence of all supplied photographs | Confirm in writing | Required before launch |
 | Custom domain in the client's name | `SEO.siteUrl`, Worker route | Site uses the workers.dev address |
 | Signed service agreement, ★G3 | Agreement | Open |

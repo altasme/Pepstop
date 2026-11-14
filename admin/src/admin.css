@@ -204,3 +204,8 @@ details.rowmenu .menu .danger { color: var(--bad); }
 fieldset.choice { border: 0; padding: 0; margin: 0; }
 fieldset.choice legend { padding: 0; margin-bottom: .25rem; font-weight: 600; }
 fieldset.choice .check { min-height: 36px; }
+
+.cardhead { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.cardhead h2 { margin: 0; }
+.subcard { margin: 1rem 0; padding: 1rem; border: 1px solid var(--line); border-radius: var(--r-sm); background: #fff; }
+.subcard h3 { margin: 0 0 .75rem; font-size: 1rem; }

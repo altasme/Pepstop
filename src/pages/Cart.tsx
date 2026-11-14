@@ -1,3 +1,4 @@
+import { useRemote } from "../lib/remote";
 import { CART } from "../content/site";
 import { Seo } from "../lib/seo";
 import { useCart } from "../lib/cart";
@@ -10,6 +11,7 @@ import { SparkleField } from "../components/ui/SparkleField";
 
 export default function Cart() {
   const { lines, subtotal, hasUnpriced } = useCart();
+  const { deliveryOptions } = useRemote();
   return (
     <>
       <Seo path="/cart" noindex />
@@ -29,7 +31,7 @@ export default function Cart() {
             <aside className="bg-petal p-6 lg:sticky lg:top-36">
               <dl className="space-y-3 text-ink">
                 <div className="flex flex-wrap justify-between gap-x-4"><dt>{CART.subtotal}</dt><dd className="text-right font-semibold tabular-nums">{amountLabel(subtotal, hasUnpriced)}</dd></div>
-                <div className="flex justify-between gap-4"><dt>{CART.shipping}</dt><dd className="text-right text-sm text-mute">{CART.shippingTbc}</dd></div>
+                <div className="flex justify-between gap-4"><dt>{CART.shipping}</dt><dd className="text-right text-sm text-mute">{deliveryOptions.length > 0 ? CART.shippingChoose : CART.shippingTbc}</dd></div>
                 <div className="flex flex-wrap justify-between gap-x-4 border-t border-ink/15 pt-3 text-lg"><dt className="font-semibold">{CART.total}</dt><dd className="text-right font-semibold tabular-nums">{amountLabel(subtotal, hasUnpriced)}</dd></div>
               </dl>
               <p className="mt-4 text-sm text-mute">{CART.note}</p>

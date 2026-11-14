@@ -1,9 +1,9 @@
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { CART, CHECKOUT, PAYMENT_METHODS, UI } from "../content/site";
+import { CART, CHECKOUT, UI } from "../content/site";
 import { Seo } from "../lib/seo";
 import { useCart } from "../lib/cart";
-import { amountLabel } from "../lib/format";
+import { amountLabel, formatPhp } from "../lib/format";
 import { buildOrder, submitOrderRemote, type Customer } from "../lib/orders";
 import { useRemote } from "../lib/remote";
 import { SectionHeading } from "../components/ui/SectionHeading";
@@ -11,15 +11,16 @@ import { Button } from "../components/ui/Button";
 import { ProductImage } from "../components/ui/ProductImage";
 
 type Errors = Partial<Record<keyof Customer | "consent", string>>;
-const empty: Customer = { fullName: "", mobile: "", email: "", street: "", barangay: "", city: "", province: "", postal: "", notes: "", payment: "" };
+const empty: Customer = { fullName: "", mobile: "", email: "", street: "", barangay: "", city: "", province: "", postal: "", notes: "", payment: "", delivery: "" };
 
-function validate(c: Customer, consent: boolean): Errors {
+function validate(c: Customer, consent: boolean, needDelivery: boolean): Errors {
   const e: Errors = {};
   const E = CHECKOUT.errors;
   (["fullName", "mobile", "street", "barangay", "city", "province", "postal"] as const).forEach((k) => { if (!c[k].trim()) e[k] = E.required; });
   if (c.mobile.trim() && !/^(09|\+639)\d{9}$/.test(c.mobile.replace(/[\s-]/g, ""))) e.mobile = E.mobile;
   if (c.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(c.email.trim())) e.email = E.email;
   if (c.postal.trim() && !/^\d{4}$/.test(c.postal.trim())) e.postal = E.postal;
+  if (needDelivery && !c.delivery) e.delivery = E.delivery;
   if (!c.payment) e.payment = E.payment;
   if (!consent) e.consent = E.consent;
   return e;
@@ -50,7 +51,7 @@ const [consentBefore, consentAfter] = CHECKOUT.consent.split(CHECKOUT.privacyLin
 export default function Checkout() {
   const { lines, subtotal, hasUnpriced, clear } = useCart();
   const navigate = useNavigate();
-  const { customer } = useRemote();
+  const { customer, paymentMethods, deliveryOptions, freeDeliveryMin } = useRemote();
   const [c0, setC] = useState<Customer>(empty);
   // Name and phone come from the approved account and cannot be edited here.
   const c: Customer = { ...c0, fullName: customer?.name ?? "", mobile: customer?.phone ?? "" };
@@ -62,14 +63,14 @@ export default function Checkout() {
 
   const onSubmit = async (ev: FormEvent) => {
     ev.preventDefault();
-    const errs = validate(c, consent);
+    const errs = validate(c, consent, deliveryOptions.length > 0);
     setErrors(errs);
     const first = Object.keys(errs)[0];
     if (first) {
-      document.getElementById(first === "payment" ? "pay-gcash" : first)?.focus();
+      document.getElementById(first === "payment" ? `pay-${paymentMethods[0]?.id}` : first === "delivery" ? `del-${deliveryOptions[0]?.id}` : first)?.focus();
       return;
     }
-    const order = buildOrder({ ...c, mobile: c.mobile.replace(/\s+/g, " ").trim() }, lines, subtotal, hasUnpriced);
+    const order = { ...buildOrder({ ...c, mobile: c.mobile.replace(/\s+/g, " ").trim() }, lines, subtotal, hasUnpriced), paymentName: paymentMethods.find((m) => m.id === c.payment)?.label };
     setSending(true);
     setServerError("");
     try { await submitOrderRemote(order, lines); } catch (e) { setServerError(e instanceof Error && e.message === "rate" ? CHECKOUT.errors.rate : CHECKOUT.errors.server); setSending(false); return; }
@@ -96,6 +97,9 @@ export default function Checkout() {
   }
 
   const errCount = Object.keys(errors).length;
+  const chosen = deliveryOptions.find((o) => o.id === c.delivery);
+  const fee = !chosen ? null : freeDeliveryMin !== null && !hasUnpriced && subtotal >= freeDeliveryMin ? 0 : chosen.fee;
+  const total = subtotal + (fee ?? 0);
   return (
     <>
       <Seo path="/checkout" noindex />
@@ -124,10 +128,26 @@ export default function Checkout() {
                 {F("postal", { label: CHECKOUT.fields.postal, autoComplete: "postal-code", inputMode: "numeric" })}
               </div>
             </fieldset>
+            {deliveryOptions.length > 0 && (
+              <fieldset aria-describedby="del-note">
+                <legend className="mb-2 text-h3 font-semibold text-ink"><span className="mr-2 font-display text-raspberry">3</span>{CHECKOUT.deliveryTitle}</legend>
+                <div className="grid gap-3">
+                  {deliveryOptions.map((o) => (
+                    <label key={o.id} className={`flex min-h-12 cursor-pointer items-center gap-3 rounded-xl border bg-white px-4 py-3 ${c.delivery === o.id ? "border-raspberry ring-1 ring-raspberry" : "border-edge"}`}>
+                      <input id={`del-${o.id}`} type="radio" name="delivery" value={o.id} checked={c.delivery === o.id} onChange={() => set("delivery")(o.id)} className="h-5 w-5 accent-raspberry" />
+                      <span className="flex-1"><span className="font-semibold">{o.label}</span>{o.note && <span className="block text-sm text-ink/80">{o.note}</span>}</span>
+                      <span className="font-semibold tabular-nums">{freeDeliveryMin !== null && !hasUnpriced && subtotal >= freeDeliveryMin ? CHECKOUT.deliveryFree : formatPhp(o.fee)}</span>
+                    </label>
+                  ))}
+                </div>
+                {errors.delivery && <p className="mt-2 text-sm font-semibold text-raspberry">{errors.delivery}</p>}
+                <p id="del-note" className="mt-3 text-sm text-ink/80">{CHECKOUT.deliveryNote}{freeDeliveryMin !== null && ` ${CHECKOUT.deliveryFreeAbove(formatPhp(freeDeliveryMin))}`}</p>
+              </fieldset>
+            )}
             <fieldset aria-describedby="pay-note">
-              <legend className="mb-2 text-h3 font-semibold text-ink"><span className="mr-2 font-display text-raspberry">3</span>{CHECKOUT.paymentTitle}</legend>
+              <legend className="mb-2 text-h3 font-semibold text-ink"><span className="mr-2 font-display text-raspberry">{deliveryOptions.length > 0 ? 4 : 3}</span>{CHECKOUT.paymentTitle}</legend>
               <div className="grid gap-3 sm:grid-cols-2">
-                {PAYMENT_METHODS.filter((m) => m.enabled).map((m) => (
+                {paymentMethods.map((m) => (
                   <label key={m.id} className={`flex min-h-12 cursor-pointer items-center gap-3 rounded-xl border bg-white px-4 py-3 ${c.payment === m.id ? "border-raspberry ring-1 ring-raspberry" : "border-edge"}`}>
                     <input id={`pay-${m.id}`} type="radio" name="payment" value={m.id} checked={c.payment === m.id} onChange={() => set("payment")(m.id)} className="h-5 w-5 accent-raspberry" />
                     <span className="font-semibold">{m.label}</span>
@@ -158,8 +178,8 @@ export default function Checkout() {
               ))}
             </ul>
             <dl className="mt-3 space-y-2 border-t border-ink/10 pt-3 text-ink">
-              <div className="flex flex-wrap justify-between gap-x-4"><dt>{CART.shipping}</dt><dd className="text-sm">{CART.shippingTbc}</dd></div>
-              <div className="flex flex-wrap justify-between gap-x-4 text-lg"><dt className="font-semibold text-ink">{CART.total}</dt><dd className="text-right font-semibold tabular-nums">{amountLabel(subtotal, hasUnpriced)}</dd></div>
+              <div className="flex flex-wrap justify-between gap-x-4"><dt>{CART.shipping}</dt><dd className="text-sm">{fee === null ? CART.shippingTbc : fee === 0 ? CHECKOUT.deliveryFree : formatPhp(fee)}</dd></div>
+              <div className="flex flex-wrap justify-between gap-x-4 text-lg"><dt className="font-semibold text-ink">{CART.total}</dt><dd className="text-right font-semibold tabular-nums">{amountLabel(total, hasUnpriced)}</dd></div>
             </dl>
             {serverError && <p role="alert" className="mt-4 rounded-xl bg-petal p-3 text-sm font-medium text-raspberry-deep">{serverError}</p>}
             <Button submit disabled={sending} className="mt-5 w-full">{sending ? UI.loading : CHECKOUT.place}</Button>

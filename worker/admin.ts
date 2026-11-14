@@ -107,6 +107,14 @@ export async function handleAdmin(req: Request, env: Env, url: URL): Promise<Res
     case "GET orders": return b ? getOrder(c, b) : listOrders(c);
     case "PATCH orders": return b ? patchOrder(c, b) : err(404, "not_found");
     case "POST orders": return b && d === "payments" && seg[3] ? payment(c, b, seg[3]) : err(404, "not_found");
+    case "GET payment-methods": return listPaymentMethods(c);
+    case "POST payment-methods": return b === undefined ? savePaymentMethod(c, null) : err(404, "not_found");
+    case "PUT payment-methods": return b ? savePaymentMethod(c, b) : err(404, "not_found");
+    case "DELETE payment-methods": return b ? deleteRow(c, "payment_methods", b, "payment_method_deleted") : err(404, "not_found");
+    case "GET delivery-options": return listDeliveryOptions(c);
+    case "POST delivery-options": return b === undefined ? saveDeliveryOption(c, null) : err(404, "not_found");
+    case "PUT delivery-options": return b ? saveDeliveryOption(c, b) : err(404, "not_found");
+    case "DELETE delivery-options": return b ? deleteRow(c, "delivery_options", b, "delivery_option_deleted") : err(404, "not_found");
     case "GET inquiries": return listInquiries(c);
     case "PUT inquiries": return b ? saveInquiry(c, b) : err(404, "not_found");
     case "GET articles": return b ? json(await env.DB.prepare("SELECT * FROM articles WHERE id=?").bind(b).first() ?? {}) : json((await env.DB.prepare("SELECT * FROM articles ORDER BY updated_at DESC").all()).results);
@@ -236,12 +244,67 @@ async function dashboard(c: Ctx) {
   });
 }
 
+/* ---------------- payment methods and delivery options ---------------- */
+
+async function listPaymentMethods(c: Ctx) {
+  return json((await c.env.DB.prepare("SELECT * FROM payment_methods ORDER BY sort,label").all()).results);
+}
+const KINDS = ["ewallet", "bank", "cod", "other"];
+async function savePaymentMethod(c: Ctx, id: string | null) {
+  const d = await body<Record<string, any>>(c.req);
+  const label = clip(d?.label, 60);
+  if (!d || !label) return err(400, "name_required");
+  const qr = typeof d.qr_image === "string" && /^\/files\/catalog\/[a-f0-9]{32}\.(png|jpg|webp)$/.test(d.qr_image) ? d.qr_image : null;
+  const kind = KINDS.includes(d.kind) ? d.kind : "other";
+  const t = now();
+  const vals = [label, kind, clip(d.account_name, 100), clip(d.account_number, 60), clip(d.instructions, 2000), qr, d.enabled === false || d.enabled === 0 ? 0 : 1, intOrNull(d.sort) ?? 0];
+  if (id) {
+    const r = await c.env.DB.prepare("UPDATE payment_methods SET label=?,kind=?,account_name=?,account_number=?,instructions=?,qr_image=?,enabled=?,sort=?,updated_at=? WHERE id=?").bind(...vals, t, id).run();
+    if (!r.meta.changes) return err(404, "not_found");
+  } else {
+    let base = slugify(label) || "method", nid = base, n = 1;
+    while (await c.env.DB.prepare("SELECT 1 x FROM payment_methods WHERE id=?").bind(nid).first()) nid = `${base}-${++n}`;
+    id = nid;
+    await c.env.DB.prepare("INSERT INTO payment_methods (label,kind,account_name,account_number,instructions,qr_image,enabled,sort,id,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?)").bind(...vals, id, t, t).run();
+  }
+  await log(c.env, c.admin, "payment_method_saved", "payment_method", id, { label, enabled: vals[6] }, c.ip);
+  return json({ ok: true, id });
+}
+async function listDeliveryOptions(c: Ctx) {
+  return json((await c.env.DB.prepare("SELECT * FROM delivery_options ORDER BY sort,label").all()).results);
+}
+async function saveDeliveryOption(c: Ctx, id: string | null) {
+  const d = await body<Record<string, any>>(c.req);
+  const label = clip(d?.label, 80);
+  if (!d || !label) return err(400, "name_required");
+  const fee = intOrNull(d.fee);
+  if (fee === null) return err(400, "fee_required");
+  const t = now();
+  const vals = [label, fee, clip(d.note, 300), d.enabled === false || d.enabled === 0 ? 0 : 1, intOrNull(d.sort) ?? 0];
+  if (id) {
+    const r = await c.env.DB.prepare("UPDATE delivery_options SET label=?,fee=?,note=?,enabled=?,sort=?,updated_at=? WHERE id=?").bind(...vals, t, id).run();
+    if (!r.meta.changes) return err(404, "not_found");
+  } else {
+    id = uid();
+    await c.env.DB.prepare("INSERT INTO delivery_options (label,fee,note,enabled,sort,id,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?)").bind(...vals, id, t, t).run();
+  }
+  await log(c.env, c.admin, "delivery_option_saved", "delivery_option", id, { label, fee }, c.ip);
+  return json({ ok: true, id });
+}
+async function deleteRow(c: Ctx, table: "payment_methods" | "delivery_options", id: string, action: string) {
+  const r = await c.env.DB.prepare(`DELETE FROM ${table} WHERE id=?`).bind(id).run();
+  if (!r.meta.changes) return err(404, "not_found");
+  await log(c.env, c.admin, action, table, id, undefined, c.ip);
+  return json({ ok: true });
+}
+
 async function putSettings(c: Ctx) {
   const data = await body<Record<string, unknown>>(c.req);
   if (!data) return err(400, "bad_request");
   const allowed: Record<string, (v: unknown) => string | null> = {
     search_visibility: (v) => (v === "visible" || v === "hidden" ? v : null),
     delivery_fee: (v) => (v === "" || v === null ? "" : intOrNull(v) === null ? null : String(intOrNull(v))),
+    free_delivery_min: (v) => (v === "" || v === null ? "" : intOrNull(v) === null ? null : String(intOrNull(v))),
     cod_enabled: (v) => (v === "1" || v === "0" ? v : null),
     disclose_rejection_reason: (v) => (v === "1" || v === "0" ? v : null),
     registration_message: (v) => (typeof v === "string" && v.trim().length > 0 ? clip(v, 4000) : null),
@@ -476,14 +539,15 @@ async function listOrders(c: Ctx) {
   if (p.get("payment")) { where.push("o.payment_status=?"); args.push(p.get("payment")); }
   const w = where.length ? "WHERE " + where.join(" AND ") : "";
   const total = (await c.env.DB.prepare(`SELECT COUNT(*) n FROM orders o ${w}`).bind(...args).first<{ n: number }>())!.n;
-  const rows = (await c.env.DB.prepare(`SELECT o.id,o.ref,o.full_name,o.created_at,o.total,o.has_unpriced,o.payment_method,o.payment_status,o.order_status,(SELECT COALESCE(SUM(qty),0) FROM order_items i WHERE i.order_id=o.id) AS items FROM orders o ${w} ORDER BY o.created_at DESC LIMIT ? OFFSET ?`).bind(...args, per, offset).all()).results;
+  const rows = (await c.env.DB.prepare(`SELECT o.id,o.ref,o.full_name,o.created_at,o.total,o.has_unpriced,o.payment_method,(SELECT label FROM payment_methods m WHERE m.id=o.payment_method) AS payment_label,o.payment_status,o.order_status,(SELECT COALESCE(SUM(qty),0) FROM order_items i WHERE i.order_id=o.id) AS items FROM orders o ${w} ORDER BY o.created_at DESC LIMIT ? OFFSET ?`).bind(...args, per, offset).all()).results;
   return json({ total, rows });
 }
 async function getOrder(c: Ctx, id: string) {
   const o = await c.env.DB.prepare("SELECT * FROM orders WHERE id=?").bind(id).first();
   if (!o) return err(404, "not_found");
   const q = async (sql: string) => (await c.env.DB.prepare(sql).bind(id).all()).results;
-  return json({ ...o, items: await q("SELECT * FROM order_items WHERE order_id=?"), payments: await q("SELECT * FROM payments WHERE order_id=? ORDER BY created_at DESC"), history: await q("SELECT * FROM order_history WHERE order_id=? ORDER BY at DESC") });
+  const pm = await c.env.DB.prepare("SELECT label FROM payment_methods WHERE id=?").bind((o as { payment_method: string }).payment_method).first<{ label: string }>();
+  return json({ ...o, payment_label: pm?.label ?? null, items: await q("SELECT * FROM order_items WHERE order_id=?"), payments: await q("SELECT * FROM payments WHERE order_id=? ORDER BY created_at DESC"), history: await q("SELECT * FROM order_history WHERE order_id=? ORDER BY at DESC") });
 }
 async function patchOrder(c: Ctx, id: string) {
   const d = await body<Record<string, any>>(c.req);

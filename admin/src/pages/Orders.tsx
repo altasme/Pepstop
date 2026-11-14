@@ -4,7 +4,7 @@ import { api, errorText, label, peso, when } from "../api";
 import { Badge, Empty, ErrorNote, Field, Loading, PageHead, Pager, useLoad, useToast } from "../ui";
 
 const STATUSES = ["new_order", "under_review", "awaiting_payment", "payment_submitted", "payment_verified", "processing", "ready_for_dispatch", "shipped", "completed", "cancelled"];
-const METHOD: Record<string, string> = { gcash: "GCash", maya: "Maya", bank: "Bank transfer", cod: "Cash on delivery" };
+const METHOD: Record<string, string> = { gcash: "GCash", maya: "Maya", bank: "Bank transfer", cod: "Cash on delivery", bpi: "BPI" };
 
 export function Orders() {
   const [sp] = useSearchParams();
@@ -26,7 +26,7 @@ export function Orders() {
             <tbody>{data.rows.map((o) => (
               <tr key={o.id}><td><Link to={`/orders/${o.id}`}><b>{o.ref}</b></Link></td><td>{o.full_name}</td><td>{when(o.created_at)}</td><td className="num">{o.items}</td>
                 <td className="num">{o.has_unpriced ? `${peso(o.total)} + unpriced` : peso(o.total)}</td>
-                <td><Badge value={o.order_status} /><span className="subline">{METHOD[o.payment_method] ?? o.payment_method} · payment {o.payment_status}</span></td></tr>
+                <td><Badge value={o.order_status} /><span className="subline">{o.payment_label ?? METHOD[o.payment_method] ?? o.payment_method} · payment {o.payment_status}</span></td></tr>
             ))}</tbody>
           </table></div>
           <Pager page={page} per={20} total={data.total} onPage={setPage} />
@@ -60,7 +60,7 @@ export function OrderDetail() {
       <section className="card"><h2>Order information</h2>
         <div className="tablewrap"><table><thead><tr><th>Product</th><th>Variant</th><th className="num">Qty</th><th className="num">Unit price</th><th className="num">Subtotal</th></tr></thead>
           <tbody>{o.items.map((i: any) => <tr key={i.id}><td>{i.product_name}</td><td>{i.variant_name}</td><td className="num">{i.qty}</td><td className="num">{i.unit_price === null ? "To be confirmed" : peso(i.unit_price)}</td><td className="num">{i.unit_price === null ? "" : peso(i.line_total)}</td></tr>)}</tbody></table></div>
-        <dl className="kv"><dt>Order date</dt><dd>{when(o.created_at)}</dd><dt>Subtotal</dt><dd>{peso(o.subtotal)}{o.has_unpriced ? " (some items have no listed price)" : ""}</dd><dt>Delivery fee</dt><dd>{o.delivery_fee === null ? "To be confirmed" : peso(o.delivery_fee)}</dd><dt>Estimated total</dt><dd><b>{peso(o.total)}</b></dd><dt>Customer notes</dt><dd>{o.customer_notes || "None"}</dd></dl>
+        <dl className="kv"><dt>Order date</dt><dd>{when(o.created_at)}</dd><dt>Subtotal</dt><dd>{peso(o.subtotal)}{o.has_unpriced ? " (some items have no listed price)" : ""}</dd><dt>Delivery</dt><dd>{o.delivery_option ? `${o.delivery_option}: ` : ""}{o.delivery_fee === null ? "Fee to be confirmed" : o.delivery_fee === 0 ? "Free" : peso(o.delivery_fee)}</dd><dt>Estimated total</dt><dd><b>{peso(o.total)}</b></dd><dt>Customer notes</dt><dd>{o.customer_notes || "None"}</dd></dl>
       </section>
       <section className="card"><h2>Update order</h2>
         <div className="form">
@@ -74,7 +74,7 @@ export function OrderDetail() {
         </div>
       </section>
       <section className="card"><h2>Payment information</h2>
-        <dl className="kv"><dt>Preferred method</dt><dd>{METHOD[o.payment_method] ?? o.payment_method}</dd><dt>Payment status</dt><dd><Badge value={o.payment_status} /></dd></dl>
+        <dl className="kv"><dt>Preferred method</dt><dd>{o.payment_label ?? METHOD[o.payment_method] ?? o.payment_method}</dd><dt>Payment status</dt><dd><Badge value={o.payment_status} /></dd></dl>
         {o.payments.length === 0 ? <Empty>No payment reference submitted yet.</Empty> : o.payments.map((p: any) => (
           <div key={p.id} className="card" style={{ marginTop: ".75rem" }}>
             <dl className="kv"><dt>Reference</dt><dd>{p.reference || "None"}</dd><dt>Submitted</dt><dd>{when(p.created_at)}</dd><dt>Status</dt><dd><Badge value={p.status} /></dd><dt>Proof</dt><dd>{p.proof_key ? <a href={`/api/admin/files/proof/${p.id}`} target="_blank" rel="noreferrer">View payment proof</a> : "No file submitted"}</dd>{p.notes && <><dt>Verification notes</dt><dd>{p.notes}</dd></>}</dl>

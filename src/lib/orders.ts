@@ -10,7 +10,7 @@ import { amountLabel } from "./format";
 export type Customer = {
   fullName: string; mobile: string; email: string;
   street: string; barangay: string; city: string; province: string; postal: string;
-  notes: string; payment: string;
+  notes: string; payment: string; delivery: string;
 };
 
 export type Order = {
@@ -20,6 +20,11 @@ export type Order = {
   lines: { name: string; variant: string; qty: number; unitPrice: number; lineTotal: number; isSample: boolean; unpriced: boolean }[];
   subtotal: number;
   hasUnpriced: boolean;
+  /** Delivery fee set by the chosen option, or null when it is confirmed later. */
+  deliveryFee?: number | null;
+  deliveryLabel?: string | null;
+  total?: number;
+  paymentName?: string;
   /** True when the order was saved by the server and can receive payment details. */
   remote?: boolean;
 };
@@ -51,7 +56,7 @@ export async function submitOrderRemote(order: Order, lines: ResolvedLine[]): Pr
   });
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data.error === "too_many_requests" ? "rate" : data.error ?? "failed");
-  return submitOrder({ ...order, ref: data.ref, remote: true });
+  return submitOrder({ ...order, ref: data.ref, remote: true, deliveryFee: data.deliveryFee ?? null, deliveryLabel: data.deliveryLabel ?? null, total: data.total ?? order.subtotal });
 }
 
 /** Front-end stub. Returns the order unchanged; the backend call goes here in Phase 2A. */
@@ -73,7 +78,7 @@ export function loadLastOrder(): Order | null {
   }
 }
 
-export const paymentLabel = (id: string) => PAYMENT_METHODS.find((m) => m.id === id)?.label ?? id;
+export const paymentLabel = (id: string, name?: string) => name ?? PAYMENT_METHODS.find((m) => m.id === id)?.label ?? id;
 
 export function addressLine(c: Customer): string {
   return [c.street, `Brgy. ${c.barangay}`, c.city, c.province, c.postal].join(", ");
@@ -86,11 +91,13 @@ export function orderText(o: Order): string {
     CONFIRMATION.messageIntro,
     `${CONFIRMATION.reference}: ${o.ref}`,
     items,
-    `Subtotal: ${amountLabel(o.subtotal, o.hasUnpriced)} (shipping to be confirmed)`,
+    `Subtotal: ${amountLabel(o.subtotal, o.hasUnpriced)}`,
+    o.deliveryLabel ? `Delivery: ${o.deliveryLabel}, ${o.deliveryFee ? amountLabel(o.deliveryFee, false) : "free"}` : "Delivery fee: to be confirmed",
+    o.total !== undefined && !o.hasUnpriced ? `Total: ${amountLabel(o.total, false)}` : "",
     `Name: ${o.customer.fullName}`,
     `Mobile: ${o.customer.mobile}${o.customer.email ? ` | Email: ${o.customer.email}` : ""}`,
     `Deliver to: ${addressLine(o.customer)}`,
-    `Payment: ${paymentLabel(o.customer.payment)}`,
+    `Payment: ${paymentLabel(o.customer.payment, o.paymentName)}`,
     o.customer.notes ? `Notes: ${o.customer.notes}` : "",
     `${ORG.name}`,
   ].filter(Boolean).join("\n");

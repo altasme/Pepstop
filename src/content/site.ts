@@ -257,7 +257,7 @@ export const HOME = {
     { title: "Details in One Place", body: "Options, specifications and supporting documents sit together on each product page." },
     { title: "Ask Before You Buy", body: "Message or call and our team will help with product details and availability." },
     { title: "No Guesswork", body: "We tell you what we know about a product and leave out what we cannot back up." },
-    { title: "Pay Your Way", body: "GCash, Maya or bank transfer. We confirm the payment details with you when we confirm your order." },
+    { title: "Pay Your Way", body: "Pay by e-wallet or bank transfer. We send the account details once we confirm your order." },
   ],
   howTitle: "How ordering works",
   howIntro: "Three steps from browsing to confirmation.",
@@ -285,7 +285,7 @@ export const TRUST = [
   { id: "info", title: "Clear Details", body: "Options, specifications and documents, where we have them." },
   { id: "assist", title: "A Real Person", body: "Questions about a product or an order? Just ask." },
   { id: "order", title: "Simple Ordering", body: "Send your order and we confirm it with you directly." },
-  { id: "pay", title: "Pay Your Way", body: "GCash, Maya or bank transfer, confirmed when we confirm your order." },
+  { id: "pay", title: "Pay Your Way", body: "E-wallet or bank transfer. Details sent once we confirm your order." },
 ];
 
 export type FocusArea = { id: string; title: string; tagline: string; summary: string; order: number; image: string | null };
@@ -497,6 +497,7 @@ export const CART = {
   subtotal: "Subtotal",
   shipping: "Delivery",
   shippingTbc: "We will confirm",
+  shippingChoose: "Chosen at checkout",
   priceTbc: "Ask us for the price",
   total: "Estimated Total",
   item: "Product",
@@ -509,12 +510,13 @@ export const CART = {
   increase: "Increase quantity",
 };
 
-/** Cash on delivery stays off until The Pep Stop confirms it is actually supported. */
-export const PAYMENT_METHODS = [
+/**
+ * Starting list for the prerendered pages. The administrator manages the real list (Payments and delivery in the admin);
+ * the site replaces this with it as soon as the page loads.
+ */
+export const PAYMENT_METHODS: { id: string; label: string; enabled: boolean }[] = [
   { id: "gcash", label: "GCash", enabled: true },
-  { id: "maya", label: "Maya", enabled: true },
-  { id: "bank", label: "Bank Transfer", enabled: true },
-  { id: "cod", label: "Cash on Delivery", enabled: false },
+  { id: "bpi", label: "BPI", enabled: true },
 ];
 
 export const CHECKOUT = {
@@ -525,6 +527,11 @@ export const CHECKOUT = {
   addressTitle: "Delivery address",
   requiredNote: "Fields marked * are required.",
   summaryJump: (n: number, total: string) => `Order summary: ${n} ${n === 1 ? "item" : "items"}, ${total}`,
+  deliveryTitle: "Delivery",
+  deliveryNote: "Pick the area that matches your address. We confirm the final delivery arrangements with you.",
+  deliveryFree: "Free",
+  deliveryFreeAbove: (min: string) => `Free delivery on orders of ${min} or more.`,
+  deliveryChoose: "Choose a delivery option.",
   paymentTitle: "How would you like to pay?",
   paymentNote:
     "Pick the one you prefer. We will send the payment instructions once we have reviewed and confirmed your order.",
@@ -558,6 +565,7 @@ export const CHECKOUT = {
     email: "Enter a valid email address.",
     postal: "Enter a 4 digit postal code.",
     payment: "Choose a payment method.",
+    delivery: "Choose a delivery option.",
     consent: "Please tick the box to continue.",
     summary: "Please fix the highlighted fields.",
     server: "We could not send your order. Check your connection and try again, or contact us directly.",
@@ -585,6 +593,11 @@ export const CONFIRMATION = {
   noneHint: "There is no order summary in this browser. You can go back to the shop and start again.",
   messageIntro: "Hi The Pep Stop, I would like to place this order.",
   payHow: "How to pay",
+  payScan: "Scan to pay",
+  payAccountName: "Account name",
+  payAccountNumber: "Account number",
+  payTotal: "Amount to pay",
+  deliveryLabel: "Delivery",
   payTitle: "Already sent your payment?",
   payBody: "Send your payment reference number or a screenshot so we can match it to your order. We check every payment by hand, so your order is confirmed only once we reply.",
   payReference: "Payment reference number",

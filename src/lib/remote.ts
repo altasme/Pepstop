@@ -11,6 +11,8 @@ import { ARTICLES, type Article } from "../content/articles";
 export type RemoteArticle = { slug: string; title: string; summary: string; thumbnail?: string | null; content_html?: string; published_at: string | null; updated_at: string };
 export type Coa = { id: string; title: string; batch: string; doc_date: string | null; product_name: string; product_slug: string };
 export type Me = { authenticated: boolean; status?: "pending" | "approved" | "rejected" | "suspended"; name?: string; phone?: string };
+export type PayDetail = { id: string; label: string; kind: string; accountName: string; accountNumber: string; instructions: string; qr: string | null };
+export type DeliveryOption = { id: string; label: string; fee: number; note: string };
 export type RegistrationInfo = { message: string; messenger: string; whatsapp: string; phone: string };
 
 type State = {
@@ -20,13 +22,15 @@ type State = {
   products: Product[];
   categories: ProductCategory[];
   categoryImages: Record<string, string>;
-  paymentInstructions: string;
+  paymentMethods: PayDetail[];
+  deliveryOptions: DeliveryOption[];
+  freeDeliveryMin: number | null;
   articles: RemoteArticle[] | null; // null = use built-in articles
   featuredSlugs: string[];
   version: number; // bumps when website text overrides are applied
 };
 
-const initial: State = { status: "loading", customer: null, products: [], categories: PRODUCT_CATEGORIES, categoryImages: {}, paymentInstructions: "", articles: null, featuredSlugs: [], version: 0 };
+const initial: State = { status: "loading", customer: null, products: [], categories: PRODUCT_CATEGORIES, categoryImages: {}, paymentMethods: [], deliveryOptions: [], freeDeliveryMin: null, articles: null, featuredSlugs: [], version: 0 };
 let state: State = initial;
 const subs = new Set<() => void>();
 const set = (patch: Partial<State>) => { state = { ...state, ...patch }; subs.forEach((f) => f()); };
@@ -81,24 +85,25 @@ function applyContent(c: Record<string, Record<string, string>>) {
   return h.featuredSlugs ? h.featuredSlugs.split(",").map((s) => s.trim()).filter(Boolean) : [];
 }
 
-type CatalogResponse = { codEnabled: boolean; paymentInstructions: string; categories: { id: string; slug: string; name: string; sort: number; image: string | null }[]; products: Product[] };
+type CatalogResponse = { paymentMethods: PayDetail[]; deliveryOptions: DeliveryOption[]; freeDeliveryMin: number | null; categories: { id: string; slug: string; name: string; sort: number; image: string | null }[]; products: Product[] };
 
 /** Loads the private catalog. Only called once the Worker has confirmed an approved customer. */
 async function loadCatalog() {
   const cat = await getJson<CatalogResponse>("/api/customer/catalog");
-  if (!cat) return { products: [] as Product[], categories: PRODUCT_CATEGORIES, categoryImages: {}, paymentInstructions: "" };
-  PAYMENT_METHODS.forEach((m) => { if (m.id === "cod") m.enabled = !!cat.codEnabled; });
+  if (!cat) return { products: [] as Product[], categories: PRODUCT_CATEGORIES, categoryImages: {}, paymentMethods: [], deliveryOptions: [], freeDeliveryMin: null };
   return {
     products: cat.products.map((p) => ({ ...p, image: p.image || "" })), // no photo: honest placeholder
     categories: cat.categories.length ? cat.categories.map((c) => ({ id: c.id, name: c.name, slug: c.slug, sort: c.sort })) : PRODUCT_CATEGORIES,
     categoryImages: Object.fromEntries(cat.categories.filter((c) => c.image).map((c) => [c.id, c.image as string])),
-    paymentInstructions: cat.paymentInstructions ?? "",
+    paymentMethods: cat.paymentMethods ?? [],
+    deliveryOptions: cat.deliveryOptions ?? [],
+    freeDeliveryMin: cat.freeDeliveryMin ?? null,
   };
 }
 
-async function resolveAccount(): Promise<Pick<State, "customer" | "products" | "categories" | "categoryImages" | "paymentInstructions">> {
+async function resolveAccount(): Promise<Pick<State, "customer" | "products" | "categories" | "categoryImages" | "paymentMethods" | "deliveryOptions" | "freeDeliveryMin">> {
   const me = await getJson<Me>("/api/customer/me");
-  if (!me?.authenticated || me.status !== "approved") return { customer: null, products: [], categories: PRODUCT_CATEGORIES, categoryImages: {}, paymentInstructions: "" };
+  if (!me?.authenticated || me.status !== "approved") return { customer: null, products: [], categories: PRODUCT_CATEGORIES, categoryImages: {}, paymentMethods: [], deliveryOptions: [], freeDeliveryMin: null };
   return { customer: { name: me.name ?? "", phone: me.phone ?? "" }, ...(await loadCatalog()) };
 }
 
@@ -106,7 +111,9 @@ let started = false;
 export async function startRemote() {
   if (started || typeof window === "undefined") return;
   started = true;
-  const [account, content, articles] = await Promise.all([resolveAccount(), getJson<Record<string, Record<string, string>>>("/api/public/content"), getJson<RemoteArticle[]>("/api/public/articles")]);
+  const [account, content, articles, pay] = await Promise.all([resolveAccount(), getJson<Record<string, Record<string, string>>>("/api/public/content"), getJson<RemoteArticle[]>("/api/public/articles"), getJson<{ id: string; label: string }[]>("/api/public/payments")]);
+  // Public pages show only the names of the payment methods the administrator has switched on.
+  if (pay) PAYMENT_METHODS.splice(0, PAYMENT_METHODS.length, ...pay.map((m) => ({ id: m.id, label: m.label, enabled: true })));
   const featured = content ? applyContent(content) : [];
   set({ ...account, status: "ready", articles: articles && articles.length ? articles : null, featuredSlugs: featured, version: state.version + 1 });
 }

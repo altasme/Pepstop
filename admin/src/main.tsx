@@ -13,6 +13,7 @@ import { Categories, Variants } from "./pages/Catalog";
 import { CoaLibrary, ProductInformation } from "./pages/Documents";
 import { Orders, OrderDetail } from "./pages/Orders";
 import { Inquiries, Logs, Settings } from "./pages/Operations";
+import PaymentsAndDelivery from "./pages/Payments";
 import { WebsiteContent } from "./pages/Content";
 import { CustomerList, CustomerProfile } from "./pages/Customers";
 
@@ -25,7 +26,7 @@ const GROUPS: { title?: string; items: NavItem[] }[] = [
   { title: "Work", items: [["/orders", "Orders", "orders"], ["/customers", "Customers", "customers"], ["/inquiries", "Inquiries", "inquiries"]] },
   { title: "Catalog", items: [["/products", "Products"], ["/categories", "Categories"], ["/coa", "Certificates (COA)"], ["/information", "Product information"]] },
   { title: "Website", items: [["/content", "Website content"]] },
-  { title: "System", items: [["/logs", "Activity log"], ["/settings", "Settings"]] },
+  { title: "System", items: [["/payments", "Payments and delivery"], ["/logs", "Activity log"], ["/settings", "Settings"]] },
 ];
 
 function Shell({ me, onLogout }: { me: Me; onLogout: () => void }) {
@@ -85,6 +86,7 @@ function Shell({ me, onLogout }: { me: Me; onLogout: () => void }) {
           <Route path="/orders/:id" element={<OrderDetail />} />
           <Route path="/inquiries" element={<Inquiries />} />
           <Route path="/content" element={<WebsiteContent />} />
+          <Route path="/payments" element={<PaymentsAndDelivery />} />
           <Route path="/logs" element={<Logs />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<Navigate to="/" replace />} />
