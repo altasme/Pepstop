@@ -11,19 +11,23 @@ import { SparkleField } from "../ui/SparkleField";
 
 const d = (s: number) => ({ "--d": `${s}s` }) as CSSProperties;
 
-/** Headline set word by word, each rising out of its own mask. The words stay one readable sentence. */
-function Words({ text, start = 0.15, step = 0.1 }: { text: string; start?: number; step?: number }) {
-  const words = text.split(" ");
-  return (
-    <>
-      {words.map((w, i) => (
-        <span key={i}>
-          <span className="word"><span style={d(start + i * step)}>{w}</span></span>
-          {i < words.length - 1 ? " " : ""}
-        </span>
-      ))}
-    </>
-  );
+/**
+ * Headline set word by word, each rising out of its own mask. The words stay one readable sentence.
+ * Everything after the first comma is set in the display italic, the one expressive move in the headline.
+ */
+function Headline({ text, start = 0.15, step = 0.1 }: { text: string; start?: number; step?: number }) {
+  const cut = text.indexOf(",");
+  const head = cut === -1 ? text : text.slice(0, cut + 1);
+  const tail = cut === -1 ? "" : text.slice(cut + 1).trim();
+  const words = (t: string, offset: number, italic: boolean) =>
+    t.split(" ").map((w, i, all) => (
+      <span key={`${offset}-${i}`} className={italic ? "italic" : undefined}>
+        <span className="word"><span style={d(start + (offset + i) * step)}>{w}</span></span>
+        {i < all.length - 1 || (!italic && tail) ? " " : ""}
+      </span>
+    ));
+  const n = head.split(" ").length;
+  return <>{words(head, 0, false)}{tail && words(tail, n, true)}</>;
 }
 
 type Slide = { desktop: string; mobile: string; alt: string; mobilePosition: string };
@@ -152,19 +156,16 @@ export function Hero() {
           spots={[
             { x: "52%", y: "12%", size: 24, delay: 0.2 },
             { x: "88%", y: "14%", size: 18, delay: 0.7, fill: "var(--raspberry)" },
-            { x: "44%", y: "30%", size: 12, delay: 1.4 },
+            { x: "47%", y: "11%", size: 12, delay: 1.4 },
           ]}
         />
       </div>
 
       <div className="relative xl:pointer-events-none xl:absolute xl:inset-0">
         <div className="mx-auto flex h-full max-w-page items-center px-4 sm:px-6 lg:px-8">
-          <div className="w-full py-10 sm:py-12 xl:pointer-events-auto xl:max-w-[34rem] xl:py-0">
-            <span className="hero-in mb-5 block h-6 w-6">
-              <span className="twinkle block h-full w-full"><Sparkle className="h-full w-full" fill="var(--raspberry)" /></span>
-            </span>
-            <h1 className="font-display text-display font-medium text-claret">
-              <Words text={HOME.heroTitle} />
+          <div className="w-full py-10 sm:py-12 xl:pointer-events-auto xl:max-w-[38rem] xl:py-0">
+            <h1 className="font-display text-[clamp(2.5rem,1.2rem+2.7vw,3.5rem)] font-medium leading-[1.03] tracking-[-0.022em] text-claret">
+              <Headline text={HOME.heroTitle} />
             </h1>
             <p className="hero-in mt-5 max-w-[36ch] text-lg text-ink/80 sm:text-xl" style={d(0.75)}>{HOME.heroSupport}</p>
             <div className="hero-in mt-7 flex flex-col gap-3 sm:flex-row" style={d(0.95)}>
@@ -175,8 +176,7 @@ export function Hero() {
                 label={HOME.heroTalk}
               />
             </div>
-            <p className="hero-in mt-5 max-w-[40ch] text-sm text-ink/80" style={d(1.15)}>{HOME.heroNote}</p>
-            <nav aria-label={HOME.heroCollectionsLabel} className="hero-in mt-5 border-t border-gold pt-4 lg:hidden" style={d(1.3)}>
+            <nav aria-label={HOME.heroCollectionsLabel} className="hero-in mt-7 border-t border-gold/70 pt-3 lg:hidden" style={d(1.15)}>
               <ul className="grid grid-cols-2 gap-x-4 text-sm text-ink/80 sm:flex sm:flex-wrap sm:items-center sm:gap-x-3 sm:gap-y-1">
                 {areas.map((a, i) => (
                   <li key={a.id} className="flex items-center gap-3">
