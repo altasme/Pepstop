@@ -120,7 +120,7 @@ export const HERO_SLIDES = [
   { desktop: "/images/hero-3-desktop.webp", mobile: "/images/hero-3-mobile.webp", alt: "Five women smiling with their arms around each other against a warm peach wall", mobilePosition: "50% 30%" },
 ];
 /** Time each hero slide stays up, in milliseconds. */
-export const HERO_INTERVAL_MS = 4000;
+export const HERO_INTERVAL_MS = 5000;
 
 export const IMAGE_SLOTS = {
   hero: {

@@ -50,8 +50,9 @@ function Layer({ items, kind, active }: { items: Slide[]; kind: "desktop" | "mob
           decoding="async"
           fetchPriority={i === 0 ? "high" : "low"}
           sizes="100vw"
-          className="absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ease-out motion-reduce:transition-none"
-          style={{ opacity: i === active ? 1 : 0, objectPosition: kind === "desktop" ? "100% 20%" : sl.mobilePosition }}
+          data-active={i === active}
+          className="hero-slide absolute inset-0 h-full w-full object-cover"
+          style={{ objectPosition: kind === "desktop" ? "100% 20%" : sl.mobilePosition }}
         />
       ))}
     </>

@@ -1,7 +1,7 @@
 # HANDOVER: The Pep Stop · Phase 1 (Public Website)
 
 **Built by:** Altaventures Business Development Services
-**Handover date:** 2026-11-11 · **Spec version built:** v1.33 (storefront added per client direction; logo and palette applied)
+**Handover date:** 2026-11-11 · **Spec version built:** v1.34 (storefront added per client direction; logo and palette applied)
 **Preview URL:** https://pepstop.altasmeworks.workers.dev (moved to the dedicated account 2026-11-13, noindex) · **Live URL:** not live: gates open · **Repo:** altasme/pepstop
 
 ## 1. What was delivered
@@ -151,7 +151,7 @@
 
 - v1.31: colours and fonts live in `src/styles/tokens.css` (shared by the public site and the admin). To retune the brand, change values there and rebuild; DESIGN.md lists the roles and measured contrast.
 
-- v1.33: the home hero is a three-photo slideshow (4 seconds each, pause control, off under reduced motion). Slides and timing are `HERO_SLIDES` and `HERO_INTERVAL_MS` in `src/content/site.ts`.
+- v1.33: the home hero is a three-photo slideshow (5 seconds each, pause control, off under reduced motion). Slides and timing are `HERO_SLIDES` and `HERO_INTERVAL_MS` in `src/content/site.ts`.
 
 ### Hand-over checklist: only the client can supply these
 | Item | Where it goes | Until then |

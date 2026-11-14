@@ -147,6 +147,9 @@
 .hero-photo { animation: photo-in 1.8s var(--ease) both; }
 @keyframes photo-in { from { opacity: 0; transform: scale(1.08); } to { opacity: 1; transform: none; } }
 
+/* Hero slideshow: the incoming photograph fades up slowly while it settles from a slight zoom; the outgoing one drifts the other way as it leaves. */
+.hero-slide { opacity: 0; transform: scale(1.045); transition: opacity 1.8s cubic-bezier(0.4, 0, 0.2, 1), transform 6.5s var(--ease); will-change: opacity, transform; }
+.hero-slide[data-active="true"] { opacity: 1; transform: scale(1); }
 .kenburns { transform-origin: 100% 100%; animation: kenburns 32s ease-in-out 1.8s infinite alternate; }
 @keyframes kenburns { from { transform: scale(1); } to { transform: scale(1.02); } }
 
