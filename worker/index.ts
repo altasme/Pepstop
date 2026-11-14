@@ -55,7 +55,11 @@ export default {
     // Private catalog pages are always noindex, whatever the site-wide visibility setting says.
     const isPrivatePage = /^\/(shop|cart|checkout|coa|account)(\/|$)/.test(p);
     if (isApi || isAdmin || isPrivatePage || (html && (await searchHidden(env)))) out.headers.set("x-robots-tag", "noindex, nofollow");
-    if (isAdmin) { out.headers.set("x-frame-options", "DENY"); out.headers.set("cache-control", "no-store"); }
+    if (isAdmin) {
+      out.headers.set("x-frame-options", "DENY");
+      // Hashed bundles and fonts never change under the same name, so they are cached; the admin page itself is not.
+      if (!p.startsWith("/admin/assets/")) out.headers.set("cache-control", "no-store");
+    }
     return out;
   },
 } satisfies ExportedHandler<Env>;

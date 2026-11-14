@@ -7,6 +7,9 @@
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
 
+/admin/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
 # The workers.dev hostname and preview URLs are never indexed. The custom domain is.
 https://*.workers.dev/*
   X-Robots-Tag: noindex

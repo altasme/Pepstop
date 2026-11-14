@@ -202,29 +202,39 @@ async function counts(c: Ctx) {
 }
 
 async function dashboard(c: Ctx) {
-  const q = async (sql: string) => (await c.env.DB.prepare(sql).first<{ n: number }>())?.n ?? 0;
-  const all = c.env.DB;
-  const rows = async (sql: string) => (await all.prepare(sql).all()).results;
+  // One batched round trip to D1 instead of seventeen sequential ones.
+  const count = (sql: string) => c.env.DB.prepare(sql);
+  const list = (sql: string) => c.env.DB.prepare(sql);
+  const r = await c.env.DB.batch([
+    count("SELECT COUNT(*) n FROM customers"),
+    count("SELECT COUNT(*) n FROM customers WHERE status='pending'"),
+    count("SELECT COUNT(*) n FROM customers WHERE status='approved'"),
+    count("SELECT COUNT(*) n FROM customers WHERE status='rejected'"),
+    count("SELECT COUNT(*) n FROM customers WHERE status='suspended'"),
+    count("SELECT COUNT(*) n FROM products WHERE status!='archived'"),
+    count("SELECT COUNT(*) n FROM products WHERE status='published'"),
+    count("SELECT COUNT(*) n FROM products WHERE status IN ('draft') AND status!='archived'"),
+    count("SELECT COUNT(*) n FROM orders WHERE order_status='new_order'"),
+    count("SELECT COUNT(*) n FROM orders WHERE order_status IN ('under_review','awaiting_payment','payment_submitted')"),
+    count("SELECT COUNT(*) n FROM payments WHERE status='submitted'"),
+    count("SELECT COUNT(*) n FROM customer_inquiries WHERE archived=0"),
+    list("SELECT id,full_name,phone,created_at FROM customers WHERE status='pending' ORDER BY created_at DESC LIMIT 5"),
+    list("SELECT id,ref,full_name,total,order_status,created_at FROM orders ORDER BY created_at DESC LIMIT 5"),
+    list("SELECT id,name,status,updated_at FROM products ORDER BY updated_at DESC LIMIT 5"),
+    list("SELECT id,title,batch,uploaded_at FROM coa_documents ORDER BY uploaded_at DESC LIMIT 5"),
+    list("SELECT at,username,action,entity FROM admin_activity_logs WHERE action NOT IN ('login','logout','login_failed') ORDER BY at DESC LIMIT 8"),
+  ]);
+  const n = (i: number) => (r[i].results[0] as { n: number } | undefined)?.n ?? 0;
   return json({
     cards: {
-      customers: await q("SELECT COUNT(*) n FROM customers"),
-      pendingCustomers: await q("SELECT COUNT(*) n FROM customers WHERE status='pending'"),
-      approvedCustomers: await q("SELECT COUNT(*) n FROM customers WHERE status='approved'"),
-      rejectedCustomers: await q("SELECT COUNT(*) n FROM customers WHERE status='rejected'"),
-      suspendedCustomers: await q("SELECT COUNT(*) n FROM customers WHERE status='suspended'"),
-      totalProducts: await q("SELECT COUNT(*) n FROM products WHERE status!='archived'"),
-      published: await q("SELECT COUNT(*) n FROM products WHERE status='published'"),
-      unpublished: await q("SELECT COUNT(*) n FROM products WHERE status IN ('draft') AND status!='archived'"),
-      newOrders: await q("SELECT COUNT(*) n FROM orders WHERE order_status='new_order'"),
-      reviewOrders: await q("SELECT COUNT(*) n FROM orders WHERE order_status IN ('under_review','awaiting_payment','payment_submitted')"),
-      pendingPayments: await q("SELECT COUNT(*) n FROM payments WHERE status='submitted'"),
-      inquiries: await q("SELECT COUNT(*) n FROM customer_inquiries WHERE archived=0"),
+      customers: n(0), pendingCustomers: n(1), approvedCustomers: n(2), rejectedCustomers: n(3), suspendedCustomers: n(4),
+      totalProducts: n(5), published: n(6), unpublished: n(7), newOrders: n(8), reviewOrders: n(9), pendingPayments: n(10), inquiries: n(11),
     },
-    pendingList: await rows("SELECT id,full_name,phone,created_at FROM customers WHERE status='pending' ORDER BY created_at DESC LIMIT 5"),
-    latestOrders: await rows("SELECT id,ref,full_name,total,order_status,created_at FROM orders ORDER BY created_at DESC LIMIT 5"),
-    updatedProducts: await rows("SELECT id,name,status,updated_at FROM products ORDER BY updated_at DESC LIMIT 5"),
-    coas: await rows("SELECT id,title,batch,uploaded_at FROM coa_documents ORDER BY uploaded_at DESC LIMIT 5"),
-    activity: await rows("SELECT at,username,action,entity FROM admin_activity_logs WHERE action NOT IN ('login','logout','login_failed') ORDER BY at DESC LIMIT 8"),
+    pendingList: r[12].results,
+    latestOrders: r[13].results,
+    updatedProducts: r[14].results,
+    coas: r[15].results,
+    activity: r[16].results,
   });
 }
 
