@@ -243,8 +243,11 @@ export const HOME = {
     "Five collections. Pick the one that fits what you need, or message us and we will point you to it.",
   categoryLink: "See the Collection",
   matchName: "Pep Match",
-  matchTitle: "Not sure where to start? Get matched.",
-  matchBody: "is the quick way in. Tell us what you are looking for and we will point you to the right collection, then sort out availability, delivery and payment with you directly. One message is all it takes.",
+  matchTitle: "Not sure what you're looking for? Let Pep Match guide you.",
+  matchBody: [
+    "Finding the right collection starts with a conversation. Tell us what you have in mind, and our team will help you explore the available options and guide you through the next steps. We'll assist with availability, delivery, and payment details directly.",
+    "Just send us a message. We'll take it from there.",
+  ],
   matchCta: "Get matched",
   matchMessage: "Hi The Pep Stop, I would like help choosing a collection.",
   featuredTitle: "Featured Picks",
@@ -273,14 +276,12 @@ export const HOME = {
     { title: "Pay Your Way", body: "Pay by e-wallet or bank transfer. We send the account details once we confirm your order." },
   ],
   howTitle: "How ordering works",
-  howIntro: "Three steps from browsing to confirmation.",
+  howIntro: "Three steps from browsing to your door.",
   howSteps: [
     { title: "Browse", body: "Pick a collection and check the details and options." },
-    { title: "Send Your Order", body: "Add items to your cart and enter your contact and delivery details." },
-    { title: "We Confirm", body: "Our team checks availability, confirms delivery and sends you the payment instructions." },
+    { title: "Check Out & Pay", body: "Add items to your cart, enter your delivery details, pay, and upload a screenshot of your payment." },
+    { title: "We Ship", body: "Once we have checked your payment, we pack your order and send it to you." },
   ],
-  howNote:
-    "Sending your order is not a payment, and it is not yet a confirmed order. It is confirmed once The Pep Stop has reviewed it and replied to you.",
   approachTitle: "How we work",
   educationTitle: "Read before you buy",
   educationBody:

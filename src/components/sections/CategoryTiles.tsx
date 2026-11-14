@@ -40,8 +40,8 @@ export function CategoryTiles() {
         <div id="match" className="relative mt-10 scroll-mt-40 md:mt-14 grid gap-8 overflow-hidden rounded-[28px] bg-petal p-6 sm:p-10 md:grid-cols-[1.1fr_0.9fr] md:items-center md:gap-12">
                     <div className="relative">
             <Sparkle className="mb-4 h-5 w-5" fill="var(--raspberry)" />
-            <h3 className="max-w-[20ch] font-display text-h2 font-medium text-raspberry-deep">{HOME.matchTitle}</h3>
-            <p className="mt-4 max-w-prose text-ink/80"><span className="font-semibold text-raspberry-deep">{HOME.matchName}</span> {HOME.matchBody}</p>
+            <h3 className="max-w-[24ch] font-display text-h2 font-medium text-raspberry-deep">{HOME.matchTitle}</h3>
+            <div className="mt-4 max-w-prose space-y-3 text-ink/80">{HOME.matchBody.map((p) => <p key={p}>{p}</p>)}</div>
           </div>
           <div className="relative">
             {primary && <CtaButton channel={primary} label={HOME.matchCta} variant="primary" className="w-full" />}

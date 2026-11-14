@@ -22,7 +22,6 @@ export function HowItWorks() {
             </RuleItem>
           ))}
         </ol>
-        <p className="mt-8 max-w-prose text-sm text-ink/80 md:mt-10">{HOME.howNote}</p>
       </div>
     </section>
   );
