@@ -18,17 +18,17 @@ export function Logo({ onDark = false, compact = false }: { onDark?: boolean; co
           <img
             src={url}
             srcSet={local ? LOGO_ASSET.srcSet : undefined}
-            sizes="80px"
+            sizes="100px"
             alt=""
             width={LOGO_ASSET.width}
             height={LOGO_ASSET.height}
-            className={`block w-auto transition-all duration-200 ease-out ${compact ? "h-11 sm:h-[3.75rem]" : "h-14 sm:h-20"}`}
+            className={`block w-auto transition-all duration-200 ease-out ${onDark ? (compact ? "h-11 sm:h-[3.75rem]" : "h-14 sm:h-20") : compact ? "h-[3.4375rem] sm:h-[4.6875rem]" : "h-[4.375rem] sm:h-[6.25rem]"}`}
           />
         </span>
       )}
       <span className="flex flex-col whitespace-nowrap">
-        <span className={`font-display font-semibold leading-[1.05] tracking-[0.005em] ${compact ? "text-xl sm:text-2xl" : "text-xl sm:text-[1.75rem]"} ${onDark ? "text-white" : "text-raspberry-deep"}`}>{ORG.name}</span>
-        <span className={`mt-1 text-sm font-medium leading-none tracking-[0.02em] sm:mt-1.5 ${onDark ? "text-white/75" : "text-mute"}`}>{ORG.descriptor}</span>
+        <span className={`font-display font-semibold leading-[1.05] tracking-[0.005em] ${onDark ? (compact ? "text-xl sm:text-2xl" : "text-xl sm:text-[1.75rem]") : compact ? "text-[1.5625rem] sm:text-[1.875rem]" : "text-[1.5625rem] sm:text-[2.1875rem]"} ${onDark ? "text-white" : "text-raspberry-deep"}`}>{ORG.name}</span>
+        <span className={`mt-1 font-medium leading-none tracking-[0.02em] sm:mt-1.5 ${onDark ? "text-sm text-white/75" : "text-[1.0938rem] text-mute"}`}>{ORG.descriptor}</span>
       </span>
     </Link>
   );
