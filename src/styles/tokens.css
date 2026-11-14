@@ -69,7 +69,7 @@
   --display-opsz: 14;
 
   /* Shape and depth */
-  --r-sm: 12px; --r-md: 16px; --r-lg: 20px; --r-xl: 28px;
+  --r-chip: 8px; --r-ctl: 10px; --r-card: 14px; --r-sm: 12px; --r-md: 16px; --r-lg: 20px; --r-xl: 28px;
   --shadow-lift: 0 1px 2px rgb(var(--c-ink) / 0.05), 0 18px 36px -18px rgb(var(--c-ink) / 0.26);
 
   /* Motion */

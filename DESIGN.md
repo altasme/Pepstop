@@ -69,10 +69,10 @@ typography:
     fontWeight: 600
     lineHeight: 1
   admin-title:
-    fontFamily: "Bodoni Moda Variable, Georgia, serif"
-    fontSize: "2rem"
-    fontWeight: 500
-    lineHeight: 1.1
+    fontFamily: "Hanken Grotesk Variable, system-ui, sans-serif"
+    fontSize: "1.625rem"
+    fontWeight: 650
+    lineHeight: 1.2
   admin-heading:
     fontFamily: "Hanken Grotesk Variable, system-ui, sans-serif"
     fontSize: "1.0625rem"
@@ -104,6 +104,9 @@ typography:
     fontWeight: 500
     lineHeight: 1.08
 rounded:
+  chip: "8px"
+  ctl: "10px"
+  card: "14px"
   sm: "8px"
   md: "12px"
   lg: "20px"
