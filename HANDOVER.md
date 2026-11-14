@@ -2,7 +2,7 @@
 
 **Built by:** Altaventures Business Development Services
 **Handover date:** 2026-11-11 · **Spec version built:** v1.44 (storefront added per client direction; logo and palette applied)
-**Preview URL:** https://pepstop.altasmeworks.workers.dev (moved to the dedicated account 2026-11-13, noindex) · **Live URL:** not live: gates open · **Repo:** altasme/pepstop
+**Preview URL:** https://pepstop.vanamaranto1.workers.dev (working account from 2026-11-14 by the owner's decision; noindex). The dedicated altasmeworks copy (https://pepstop.altasmeworks.workers.dev) stops at v1.43 until launch · **Live URL:** not live: gates open · **Repo:** altasme/pepstop
 
 ## 1. What was delivered
 - Routes, all prerendered: `/`, `/about`, `/health-beauty`, `/education`, `/education/:slug` (published articles only; none published yet, so none generated), `/contact`, `/privacy`, `/404` plus `404.html`.
@@ -100,7 +100,7 @@
 - Tools: Cloudflare Web Analytics loads only when `ANALYTICS.cfBeaconToken` is set (★C8). Meta Pixel is not loaded; ID slot exists, public routes only. Conversion = outbound chat or call click. Events: `cta_*_click`, `article_view`, payloads `{ page, cta }` or `{ slug }` only. Events also dispatch a `pepstop:event` window event.
 
 ## 8. Accounts & infrastructure (pointers, never secrets)
-- Cloudflare Worker `pepstop` with D1 `pepstop_db` and R2 `pepstop-files`, in a dedicated account (Altasmeworks@gmail.com's Account, subdomain `altasmeworks`), separate from other Altaventures client sites as Appendix C-15 recommends. The shared account (`pepstop.vanamaranto1.workers.dev`) also runs the current build (redeployed 2026-11-14 at the owner's request with its own D1 `pepstop_db`, R2 `pepstop-files` and Worker secrets, deployed with `D1_DATABASE_ID=<that database id> npm run deploy:inline`); it holds test data only and is separate from the live database above. 
+- Cloudflare Worker `pepstop` with D1 `pepstop_db` and R2 `pepstop-files`, in a dedicated account (Altasmeworks@gmail.com's Account, subdomain `altasmeworks`), separate from other Altaventures client sites as Appendix C-15 recommends. The shared account (`pepstop.vanamaranto1.workers.dev`) also runs the current build (redeployed 2026-11-14 at the owner's request with its own D1 `pepstop_db`, R2 `pepstop-files` and Worker secrets, deployed with `D1_DATABASE_ID=<that database id> npm run deploy:inline`); it holds test data only and is separate from the live database above. Decision 2026-11-14: develop and deploy on the shared account for now; at launch, deploy the current build to the dedicated altasmeworks account (needs a Cloudflare token for that account; do not set `D1_DATABASE_ID`), then re-check the admin account, secrets and payment QR images there. 
 - Cloudinary: cloud name not set · Repo: altasme/pepstop
 
 ## 9. Known limitations / conflicts noted
