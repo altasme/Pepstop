@@ -3,7 +3,6 @@ import { ArrowRight } from "lucide-react";
 import { HOME } from "../../content/site";
 import { SlotImage } from "../ui/SlotImage";
 import { SectionHeading } from "../ui/SectionHeading";
-import { Sparkle } from "../ui/Sparkle";
 import { Reveal } from "../ui/Reveal";
 import { RuleItem } from "../ui/RuleItem";
 
@@ -23,7 +22,6 @@ export function BrandStory() {
             </div>
           </Reveal>
           <div>
-            <Sparkle className="mb-4 h-5 w-5" fill="var(--raspberry)" />
             <SectionHeading title={HOME.storyHeading} className="max-w-[22ch] text-claret" />
             <div className="mt-5 max-w-prose space-y-4 text-lg text-ink/80">
               {HOME.storyBody.map((p) => <p key={p}>{p}</p>)}

@@ -2,7 +2,6 @@ import { CHAT_HELPER, CONTACT, CONTACT_PAGE, HOME } from "../../content/site";
 import { getChannels, hasChatChannel } from "../../lib/cta";
 import { CtaButton } from "../ui/CtaButton";
 import { SectionHeading } from "../ui/SectionHeading";
-import { Sparkle } from "../ui/Sparkle";
 import { SparkleField } from "../ui/SparkleField";
 import { Sprig } from "../ui/Sprig";
 
@@ -19,7 +18,6 @@ export function ContactBlock() {
         ]}
       />
       <div className="relative mx-auto max-w-page px-4 py-12 sm:px-6 md:py-24 lg:px-8">
-        <Sparkle className="mb-5 h-6 w-6" fill="var(--raspberry)" />
         <SectionHeading title={HOME.contactTitle} className="max-w-[22ch] text-raspberry-deep" />
         <p className="mt-5 max-w-prose text-lg text-ink/80">{HOME.contactBody} {hasChatChannel() ? CHAT_HELPER.withChat : CHAT_HELPER.phoneOnly}</p>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">

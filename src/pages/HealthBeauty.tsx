@@ -8,7 +8,6 @@ import { PageBanner } from "../components/sections/PageBanner";
 import { SlotImage } from "../components/ui/SlotImage";
 import { Button } from "../components/ui/Button";
 import { Reveal } from "../components/ui/Reveal";
-import { Sparkle } from "../components/ui/Sparkle";
 
 /** Five collections, set as a quiet editorial index: numeral, name, plain summary, one action. */
 export default function HealthBeauty() {
@@ -48,7 +47,6 @@ export default function HealthBeauty() {
           })}
         </ol>
         <section className="border-t border-line py-14 text-center md:py-16">
-          <Sparkle className="mx-auto mb-4 h-5 w-5" fill="var(--raspberry)" />
           <h2 className="font-display text-h2 font-medium text-claret">{HEALTH_BEAUTY.closingTitle}</h2>
           <p className="mx-auto mt-4 max-w-prose text-lg text-ink/80">{HEALTH_BEAUTY.closingBody}</p>
           <div className="mt-6"><Button to="/contact">{HEALTH_BEAUTY.closingCta}</Button></div>

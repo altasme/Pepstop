@@ -7,6 +7,7 @@ import Layout from "./Layout";
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 import { requireCustomer } from "./components/ui/RequireCustomer";
+import RouteError from "./pages/RouteError";
 
 /**
  * Code splitting: every page except Home loads on demand, so a visitor downloads only what they open.
@@ -19,6 +20,7 @@ export const routes: RouteRecord[] = [
   {
     path: "/",
     Component: Layout,
+    ErrorBoundary: RouteError,
     entry: "src/Layout.tsx",
     children: [
       { index: true, Component: Home },
