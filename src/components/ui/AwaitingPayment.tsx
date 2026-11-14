@@ -11,7 +11,7 @@ export function AwaitingPayment({ className = "" }: { className?: string }) {
     if (!customer) return;
     let live = true;
     fetch("/api/customer/orders/awaiting-payment", { credentials: "same-origin", headers: { "x-pepstop": "1" } })
-      .then((r) => (r.ok ? r.json() : null))
+      .then((r) => r.json().catch(() => null))
       .then((d: { order: { ref: string } | null } | null) => { if (live) setRef(d?.order?.ref ?? null); })
       .catch(() => {});
     return () => { live = false; };

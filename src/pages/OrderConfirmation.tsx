@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Check, Copy } from "lucide-react";
 import { CART, CHECKOUT, CONFIRMATION } from "../content/site";
 import { Seo } from "../lib/seo";
@@ -12,6 +13,7 @@ import { Card } from "../components/ui/Card";
 import { CtaButton } from "../components/ui/CtaButton";
 
 function PaymentDetails({ order, paid }: { order: Order; paid: boolean }) {
+  const navigate = useNavigate();
   const { paymentMethods } = useRemote();
   const method = paymentMethods.find((m) => m.id === order.customer.payment);
   const due = order.total !== undefined && !order.hasUnpriced ? formatPhp(order.total) : null;
@@ -39,7 +41,7 @@ function PaymentDetails({ order, paid }: { order: Order; paid: boolean }) {
           setState("sending");
           const fd = new FormData();
           fd.set("proof", file);
-          try { const r = await fetch(`/api/customer/orders/${encodeURIComponent(order.ref)}/payment`, { method: "POST", credentials: "same-origin", headers: { "x-pepstop": "1" }, body: fd }); setState(r.ok ? "sent" : "error"); } catch { setState("error"); }
+          try { const r = await fetch(`/api/customer/orders/${encodeURIComponent(order.ref)}/payment`, { method: "POST", credentials: "same-origin", headers: { "x-pepstop": "1" }, body: fd }); if (r.ok) { navigate("/checkout/thank-you"); return; } setState("error"); } catch { setState("error"); }
         }}>
           <label className="text-sm font-semibold text-ink">{CONFIRMATION.payProof}<input name="proof" type="file" required accept="image/png,image/jpeg,image/webp" className={input} /></label>
           {(state === "error" || state === "need") && <p role="alert" className="text-sm font-medium text-raspberry-deep">{state === "need" ? CONFIRMATION.payNeed : CONFIRMATION.payError}</p>}
@@ -58,7 +60,7 @@ export default function OrderConfirmation() {
     // The server knows which order still needs its proof of payment, even after the tab was closed.
     const stored = loadLastOrder();
     fetch("/api/customer/orders/awaiting-payment", { credentials: "same-origin", headers: { "x-pepstop": "1" } })
-      .then((r) => (r.ok ? r.json() : null))
+      .then((r) => r.json().catch(() => null))
       .then((d: { order: Order | null } | null) => {
         if (d?.order) { setOrder(d.order); return; }
         setPaid(!!stored?.remote);

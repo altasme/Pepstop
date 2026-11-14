@@ -37,6 +37,7 @@ export const routes: RouteRecord[] = [
       { path: "cart", ...privatePage(() => import("./pages/Cart")) },
       { path: "checkout", ...privatePage(() => import("./pages/Checkout")) },
       { path: "checkout/confirmation", ...page(() => import("./pages/OrderConfirmation")) },
+      { path: "checkout/thank-you", ...page(() => import("./pages/ThankYou")) },
       { path: "contact", ...page(() => import("./pages/Contact")) },
       { path: "privacy", ...page(() => import("./pages/Privacy")) },
       { path: "404", Component: NotFound },

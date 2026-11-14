@@ -34,7 +34,7 @@ export const CONTACT = {
   whatsapp: false, // ★C4
   email: null as null | string, // ★C2
   facebookUrl: null as null | string, // ★C3
-  messengerUrl: null as null | string, // ★C3, m.me link
+  messengerUrl: "https://m.me/61594962883882" as null | string, // ★C3, m.me link (supplied 2026-11-14)
   hours: null as null | string, // ★C6
 };
 
@@ -86,7 +86,7 @@ export const NAV = [
 ];
 
 /** Routes where the mobile sticky CTA bar is hidden (§9.8). */
-export const STICKY_CTA_HIDDEN_ON = ["/account", "/contact", "/privacy", "/404", "/cart", "/checkout", "/checkout/confirmation"];
+export const STICKY_CTA_HIDDEN_ON = ["/account", "/contact", "/privacy", "/404", "/cart", "/checkout", "/checkout/confirmation", "/checkout/thank-you"];
 
 /* ------------------------------------------------------------------ */
 /* Image slots. No images are generated or bundled. Each slot renders  */
@@ -606,6 +606,19 @@ export const CONFIRMATION = {
   payNeed: "Please choose a screenshot to upload.",
 };
 
+export const THANKS = {
+  title: "Thank you for your order!",
+  lead: "We have your proof of payment. Our team will check it and confirm your order.",
+  orderLabel: "Your order number",
+  stepTitle: "One last thing",
+  step: "Take a screenshot of this page and send it to The Pep Stop on Messenger. It helps us find your order quickly.",
+  messenger: "Send it on Messenger",
+  copy: "Copy order number",
+  copied: "Copied",
+  shop: "Back to Products",
+  noOrder: "Your order has been received.",
+};
+
 export const ACCOUNT = {
   title: "Log in to view products",
   intro: "Products and prices are for registered customers. Log in, or create an account and message us so we can approve it.",
@@ -825,6 +838,7 @@ export const SEO = {
     },
     "/cart": { title: "Your Cart | The Pep Stop", description: "Review the items in your cart." },
     "/checkout": { title: "Checkout | The Pep Stop", description: "Enter your delivery details to place your order." },
+    "/checkout/thank-you": { title: "Thank You | The Pep Stop", description: "Your order has been received." },
     "/checkout/confirmation": { title: "Order Summary | The Pep Stop", description: "Send your order summary to The Pep Stop." },
     "/account": { title: "View Products | The Pep Stop", description: "Log in or create an account to see products and prices." },
     "/coa": { title: "Certificates of Analysis | The Pep Stop", description: "Search published certificates of analysis by product name or batch number." },
